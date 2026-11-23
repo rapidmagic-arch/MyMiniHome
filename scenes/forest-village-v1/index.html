@@ -28,6 +28,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 .actor{position:absolute;z-index:4;width:var(--hit-width);height:var(--size);transform:translate(-50%,var(--foot-neg));border:0;background:none;padding:0}
 .actor::before{content:"";position:absolute;width:46%;height:8%;left:27%;top:calc(var(--foot) - 5%);background:#1b38194d;filter:blur(5px);border-radius:50%;transform:translateX(var(--sprite-dx,0px))}
 .actor img{position:absolute;display:block;left:calc((100% - var(--size))/2);top:0;width:var(--size);height:var(--size);object-fit:contain;pointer-events:none}
+.actor[data-kind=water]::before{display:none}
 .actor.is-selected{filter:drop-shadow(0 0 6px #fff8a5)}
 .debug .actor{outline:2px dashed #fddc77}
 .debug .actor::after{content:"";position:absolute;width:8px;height:8px;background:#ff3b64;border:2px solid #fff;border-radius:50%;left:calc(50% - 4px);top:calc(var(--foot) - 4px);pointer-events:none}
@@ -73,12 +74,12 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
    <p id="previewMessage" hidden></p>
   </section>
  </div>
- <p class="legend" id="statusNote">캐릭터가 각자 정해진 잔디 구간 안에서만 움직이는 시제품이야. 사물은 클릭 반응을 제공하고, 연결하지 않은 프로젝트·GPT 링크는 열리지 않아.</p>
+ <p class="legend" id="statusNote">다람쥐·토끼·여우·늑대는 짧은 잔디 구간을 순찰하고, 부엉이·곰·개구리·고슴도치는 제자리에서 반응하는 시제품이야. 사물은 클릭 반응을 제공하고, 연결하지 않은 프로젝트·GPT 링크는 열리지 않아.</p>
  <p class="legend" id="responsiveNote">장면은 원본 1774×887 비율로 관리돼. 좁은 화면에서는 최소 확대율을 유지하므로 마을을 좌우로 스크롤해 탐색할 수 있어.</p>
 </div>
 <script id="scene" type="application/json">
 {
-  "version": "scene-v1-motion-prototype",
+  "version": "scene-v1-eight-actor-prototype",
   "status": "prototype_not_approved",
   "designSize": {
     "width": 1774,
@@ -314,9 +315,97 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
           0
         ]
       ]
+    },
+    {
+      "id": "owl",
+      "label": "부엉이",
+      "x": 930,
+      "y": 530,
+      "size": 94,
+      "footFraction": 0.9125,
+      "kind": "gpt",
+      "motion": "idle",
+      "idleFrames": [
+        1,
+        2,
+        3,
+        6
+      ],
+      "idleFrameMs": 1750,
+      "idleOffsetMs": 650,
+      "frame": "../../assets/review/v0.2/frames/owl/owl_01.png",
+      "link": null,
+      "note": "벤치 옆에서 책을 읽고 있습니다. GPT 링크 미설정."
+    },
+    {
+      "id": "bear",
+      "label": "곰",
+      "x": 735,
+      "y": 551,
+      "size": 116,
+      "footFraction": 0.9104,
+      "kind": "project",
+      "motion": "idle",
+      "idleFrames": [
+        1,
+        2,
+        3,
+        6
+      ],
+      "idleFrameMs": 2050,
+      "idleOffsetMs": 300,
+      "frame": "../../assets/review/v0.2/frames/bear/bear_01.png",
+      "link": null,
+      "note": "오두막 아래 산책로에 머무르고 있습니다. 프로젝트 링크 미설정."
+    },
+    {
+      "id": "frog",
+      "label": "개구리",
+      "x": 1440,
+      "y": 750,
+      "size": 145,
+      "footFraction": 0.925,
+      "kind": "gpt",
+      "motion": "pond-idle",
+      "idleFrames": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "idleFrameMs": 1450,
+      "idleOffsetMs": 750,
+      "frame": "../../assets/review/v0.2/frames/frog/frog_01.png",
+      "link": null,
+      "note": "연못의 수련잎 위에서 쉬고 있습니다. GPT 링크 미설정."
+    },
+    {
+      "id": "hedgehog",
+      "label": "고슴도치",
+      "x": 615,
+      "y": 855,
+      "size": 94,
+      "footFraction": 0.91,
+      "kind": "project",
+      "motion": "idle",
+      "idleFrames": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "idleFrameMs": 1920,
+      "idleOffsetMs": 1250,
+      "frame": "../../assets/review/v0.2/frames/hedgehog/hedgehog_01.png",
+      "link": null,
+      "note": "전경 산책로에서 꽃을 들고 있습니다. 프로젝트 링크 미설정."
     }
   ],
-  "walkSpriteCandidate": "assets/review/walk-v0.1"
+  "walkSpriteCandidate": "assets/review/walk-v0.1",
+  "placementStatus": "eight_characters_provisional_layout",
+  "notes": "Four walk cycles use walk-v0.1; owl, bear, frog, hedgehog use gesture frames and are intentionally stationary."
 }
 </script>
 <script>
@@ -337,8 +426,8 @@ for(const obj of scene.hotspots){
  btn.addEventListener('click',()=>openInfo(obj));objectButtons.set(obj.id,btn);$('hotspots').append(btn);
 }
 for(const actor of scene.characters){
- const btn=document.createElement('button');btn.type='button';btn.className='actor';btn.title=actor.label+' 프로필';
- btn.setAttribute('aria-label',actor.label+' 프로필 열기');btn.style.setProperty('--size',actor.size+'px');btn.style.setProperty('--hit-width',(actor.patrol.endX-actor.patrol.startX+actor.size*0.68)+'px');btn.style.left=((actor.patrol.startX+actor.patrol.endX)/2)+'px';btn.style.top=actor.patrol.y+'px';
+ const btn=document.createElement('button');btn.type='button';btn.className='actor';btn.title=actor.label+' 프로필';btn.dataset.kind=actor.motion==='pond-idle'?'water':'land';
+ btn.setAttribute('aria-label',actor.label+' 프로필 열기');btn.style.setProperty('--size',actor.size+'px');const range=actor.patrol?actor.patrol.endX-actor.patrol.startX:0;btn.style.setProperty('--hit-width',(range+actor.size*(actor.patrol?0.68:0.95))+'px');btn.style.left=(actor.patrol?(actor.patrol.startX+actor.patrol.endX)/2:actor.x)+'px';btn.style.top=(actor.patrol?actor.patrol.y:actor.y)+'px';
  btn.style.setProperty('--foot',(actor.footFraction*100)+'%');btn.style.setProperty('--foot-neg',(-actor.footFraction*100)+'%');
  const img=document.createElement('img');img.src=frameSrc(actor.id,1);img.alt='';img.decoding='async';img.draggable=false;
  btn.append(img);btn.addEventListener('click',()=>openInfo(actor));$('actors').append(btn);
@@ -352,7 +441,7 @@ function preloadWalkPack(){
   .then(m=>{
    if(!m||!m.count||m.count.totalPngs!==48||m.status!=='REVIEW_CANDIDATE_NOT_APPROVED')return;
    for(const info of characterNodes.values()){
-    const a=info.actor,pending=[];
+    const a=info.actor,pending=[];if(!a.patrol)continue;
     for(const dir of ['right','left'])for(let n=1;n<=6;n++){
      pending.push(new Promise((resolve,reject)=>{
       const candidate=new Image();candidate.onload=resolve;candidate.onerror=reject;
@@ -384,7 +473,7 @@ function openInfo(obj){
  $('panelBody').textContent=obj.note||((obj.kind==='gpt'?'GPT':'프로젝트')+' 프로필 시안 — 실제 정보 미연결');
  $('panelLink').replaceChildren();$('noteInput').value='';$('previewMessage').hidden=true;$('previewMessage').textContent='';
  $('noteForm').hidden=true;$('noteNotice').hidden=true;
- if(obj.patrol){
+ if(characterNodes.has(obj.id)){
   characterNodes.get(obj.id).btn.classList.add('is-selected');
   if(typeof obj.link==='string' && /^https:\/\/[^ ]+$/.test(obj.link)){
    const a=document.createElement('a');a.href=obj.link;a.rel='noopener noreferrer';a.target='_blank';a.textContent='기존 ChatGPT 프로젝트·GPT 열기';$('panelLink').append(a);
@@ -441,7 +530,16 @@ function render(t){
  const canMove=!paused&&!motionQuery.matches&&panel.hidden&&!document.hidden;
  if(canMove)clock+=delta;
  for(const info of characterNodes.values()){
-  const a=info.actor,step=track(a,clock);
+  const a=info.actor;
+  if(!a.patrol){
+   const frames=a.idleFrames||[1],stepTime=a.idleFrameMs||1600;
+   const next=(canMove&&frames.length>1)?frames[Math.floor((clock+(a.idleOffsetMs||0))/stepTime)%frames.length]:1;
+   if(info.frame!==next){info.frame=next;info.img.src=frameSrc(a.id,next);}
+   info.img.style.transform='';
+   info.btn.style.setProperty('--sprite-dx','0px');
+   continue;
+  }
+  const step=track(a,clock);
   info.x=step.x;info.y=step.y;
   // Keep the clickable button stationary; only the sprite moves inside its corridor.
   const isWalk=info.walkReady,dir=step.left?'left':'right';
