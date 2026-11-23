@@ -25,7 +25,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 .hotspot:hover,.hotspot:focus-visible,.hotspot.is-active,.debug .hotspot{border-color:#f9e790;background:#ffe78a2b;color:#fff}
 .hotspot::after{content:attr(data-label);position:absolute;bottom:-21px;left:10%;font-weight:800;font-size:18px;white-space:nowrap;text-shadow:1px 2px 2px #153b2d,0 0 3px #153b2d;opacity:0}
 .hotspot:hover::after,.hotspot:focus-visible::after,.debug .hotspot::after{opacity:1}
-.actor{position:absolute;z-index:4;width:var(--size);height:var(--size);transform:translate(-50%,calc(-1 * var(--foot)));border:0;background:none;padding:0}
+.actor{position:absolute;z-index:4;width:var(--size);height:var(--size);transform:translate(-50%,var(--foot-neg));border:0;background:none;padding:0}
 .actor::before{content:"";position:absolute;width:46%;height:8%;left:27%;top:calc(var(--foot) - 5%);background:#1b38194d;filter:blur(5px);border-radius:50%}
 .actor img{position:relative;display:block;width:100%;height:100%;object-fit:contain}
 .actor.is-selected{filter:drop-shadow(0 0 6px #fff8a5)}
@@ -53,7 +53,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 <body>
 <div class="shell">
  <div class="toolbar"><div><strong>MyMiniHome · 기본 숲 마을 템플릿 1종</strong> <small>v1 · 움직임/반응 검토용</small></div>
-  <div class="tools"><button id="toggleMotion" type="button" aria-pressed="false">움직임 정지</button><button id="toggleGuides" type="button" aria-pressed="false">앵커 표시</button><button id="reset" type="button">팝업 닫기</button></div>
+  <div class="tools"><button id="toggleFit" type="button" aria-pressed="false">전체 보기</button><button id="toggleMotion" type="button" aria-pressed="false">움직임 정지</button><button id="toggleGuides" type="button" aria-pressed="false">앵커 표시</button><button id="reset" type="button">팝업 닫기</button></div>
  </div>
  <div class="scene-area">
   <div class="viewport" id="viewport" role="region" tabindex="0" aria-label="숲 마을 장면. 좁은 화면에서는 가로로 스크롤하여 탐색">
@@ -104,7 +104,7 @@ const spriteBase='../../assets/review/v0.2/frames/';
 const frameSrc=(id,n)=>spriteBase+id+'/'+id+'_'+String(n).padStart(2,'0')+'.png';
 const objectButtons=new Map(),characterNodes=new Map();
 const motionQuery=window.matchMedia('(prefers-reduced-motion: reduce)');
-let paused=false,selected=null,clock=0,lastTime=0,lastScale=0;
+let paused=false,selected=null,clock=0,lastTime=0,lastScale=0,fitAll=false;
 $('background').src=scene.background;
 for(const obj of scene.hotspots){
  const btn=document.createElement('button');btn.type='button';btn.className='hotspot';btn.dataset.label=obj.label;
@@ -114,7 +114,7 @@ for(const obj of scene.hotspots){
 for(const actor of scene.characters){
  const btn=document.createElement('button');btn.type='button';btn.className='actor';btn.title=actor.label+' 프로필';
  btn.setAttribute('aria-label',actor.label+' 프로필 열기');btn.style.setProperty('--size',actor.size+'px');
- btn.style.setProperty('--foot',(actor.footFraction*100)+'%');
+ btn.style.setProperty('--foot',(actor.footFraction*100)+'%');btn.style.setProperty('--foot-neg',(-actor.footFraction*100)+'%');
  const img=document.createElement('img');img.src=frameSrc(actor.id,1);img.alt='';img.decoding='async';img.draggable=false;
  btn.append(img);btn.addEventListener('click',()=>openInfo(actor));$('actors').append(btn);
  characterNodes.set(actor.id,{btn,img,actor,frame:1,x:actor.x,y:actor.y});
@@ -123,7 +123,7 @@ for(const actor of scene.characters){
 const clearEffects=()=>{
  for(const btn of objectButtons.values())btn.classList.remove('is-active');
  for(const info of characterNodes.values())info.btn.classList.remove('is-selected');
- $('bridgeGuide').hidden=true;$('pondRipple').hidden=true;$('pondRipple').classList.remove('play');
+ $('bridgeGuide').setAttribute('hidden','');$('pondRipple').hidden=true;$('pondRipple').classList.remove('play');
 };
 function closeInfo(){
  panel.hidden=true;$('noteForm').hidden=true;$('noteNotice').hidden=true;$('previewMessage').hidden=true;
@@ -142,7 +142,7 @@ function openInfo(obj){
   }else $('panelLink').textContent='연결 URL 미설정 · 실제 ChatGPT 이동하지 않음';
  }else{
   objectButtons.get(obj.id).classList.add('is-active');
-  if(obj.action==='highlight-path')$('bridgeGuide').hidden=false;
+  if(obj.action==='highlight-path')$('bridgeGuide').removeAttribute('hidden');
   if(obj.action==='ripple'){$('pondRipple').hidden=false;if(!motionQuery.matches && !paused)$('pondRipple').classList.add('play')}
   if(obj.action==='local-note'){$('noteForm').hidden=false;$('noteNotice').hidden=false}
  }
@@ -170,14 +170,14 @@ if(motionQuery.addEventListener)motionQuery.addEventListener('change',updateMoti
 updateMotionLabel();
 function layout(){
  const width=viewport.clientWidth;
- const scale=Math.min(1,Math.max(scene.minSceneScale,width/scene.designSize.width));
+ const nativeFit=Math.min(1,width/scene.designSize.width);const scale=fitAll?nativeFit:Math.min(1,Math.max(scene.minSceneScale,nativeFit));
  if(Math.abs(scale-lastScale)<0.0001)return;
  lastScale=scale;
  const sw=scene.designSize.width*scale,sh=scene.designSize.height*scale;
  $('frameSizer').style.width=sw+'px';$('frameSizer').style.height=sh+'px';
  viewport.style.height=sh+'px';stage.style.transform='scale('+scale+')';
 }
-new ResizeObserver(layout).observe(viewport);layout();
+$('toggleFit').addEventListener('click',()=>{fitAll=!fitAll;lastScale=0;layout();$('toggleFit').textContent=fitAll?'확대 보기':'전체 보기';$('toggleFit').setAttribute('aria-pressed',String(fitAll));});new ResizeObserver(layout).observe(viewport);layout();
 function track(actor,t){
  const p=actor.patrol,walk=p.walkMs,pause=p.pauseMs;
  const cycle=2*(walk+pause),phase=(t+p.offsetMs)%cycle;
