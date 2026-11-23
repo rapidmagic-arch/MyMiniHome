@@ -1,0 +1,323 @@
+{
+  "version": "0.2.0-review",
+  "created_on": "2026-11-23",
+  "status": "REVIEW_CANDIDATE_NOT_APPROVED",
+  "expectation": "Q1–Q6 retained; original visual reference from user is the design target, not exact artwork source",
+  "sourceNote": "Generated six-frame concept sheets, not pixel-perfect registered animation frames",
+  "frameLayout": {
+    "columns": 3,
+    "rows": 2,
+    "fullSheetPixels": [
+      1536,
+      1024
+    ],
+    "sourceCellPixels": [
+      512,
+      512
+    ],
+    "innerCropMarginPixels": 16
+  },
+  "previewDurationMs": 300,
+  "previewDurationIsApproved": false,
+  "images": {
+    "squirrel": {
+      "type": "character",
+      "sheet": "sheets/squirrel_sheet.png",
+      "frames": [
+        "frames/squirrel/squirrel_01.png",
+        "frames/squirrel/squirrel_02.png",
+        "frames/squirrel/squirrel_03.png",
+        "frames/squirrel/squirrel_04.png",
+        "frames/squirrel/squirrel_05.png",
+        "frames/squirrel/squirrel_06.png"
+      ],
+      "preview": "previews/squirrel_preview.gif",
+      "frameCount": 6,
+      "frameDimensions": [
+        480,
+        480
+      ],
+      "frameDurationMs": null,
+      "loop": null,
+      "anchor": null,
+      "alphaProcessing": "heuristic edge-connected cream matte removal; requires visual QA",
+      "transparentPercentagePerFrame": [
+        51.4,
+        50.9,
+        51.5,
+        53.1,
+        50.1,
+        52.0
+      ],
+      "hasExactRegistrationTest": false,
+      "status": "REVIEW_CANDIDATE_NOT_APPROVED"
+    },
+    "rabbit": {
+      "type": "character",
+      "sheet": "sheets/rabbit_sheet.png",
+      "frames": [
+        "frames/rabbit/rabbit_01.png",
+        "frames/rabbit/rabbit_02.png",
+        "frames/rabbit/rabbit_03.png",
+        "frames/rabbit/rabbit_04.png",
+        "frames/rabbit/rabbit_05.png",
+        "frames/rabbit/rabbit_06.png"
+      ],
+      "preview": "previews/rabbit_preview.gif",
+      "frameCount": 6,
+      "frameDimensions": [
+        480,
+        480
+      ],
+      "frameDurationMs": null,
+      "loop": null,
+      "anchor": null,
+      "alphaProcessing": "heuristic edge-connected cream matte removal; requires visual QA",
+      "transparentPercentagePerFrame": [
+        60.8,
+        61.1,
+        59.8,
+        59.9,
+        68.6,
+        60.0
+      ],
+      "hasExactRegistrationTest": false,
+      "status": "REVIEW_CANDIDATE_NOT_APPROVED"
+    },
+    "fox": {
+      "type": "character",
+      "sheet": "sheets/fox_sheet.png",
+      "frames": [
+        "frames/fox/fox_01.png",
+        "frames/fox/fox_02.png",
+        "frames/fox/fox_03.png",
+        "frames/fox/fox_04.png",
+        "frames/fox/fox_05.png",
+        "frames/fox/fox_06.png"
+      ],
+      "preview": "previews/fox_preview.gif",
+      "frameCount": 6,
+      "frameDimensions": [
+        480,
+        480
+      ],
+      "frameDurationMs": null,
+      "loop": null,
+      "anchor": null,
+      "alphaProcessing": "heuristic edge-connected cream matte removal; requires visual QA",
+      "transparentPercentagePerFrame": [
+        57.6,
+        57.6,
+        57.0,
+        57.5,
+        58.3,
+        57.6
+      ],
+      "hasExactRegistrationTest": false,
+      "status": "REVIEW_CANDIDATE_NOT_APPROVED"
+    },
+    "wolf": {
+      "type": "character",
+      "sheet": "sheets/wolf_sheet.png",
+      "frames": [
+        "frames/wolf/wolf_01.png",
+        "frames/wolf/wolf_02.png",
+        "frames/wolf/wolf_03.png",
+        "frames/wolf/wolf_04.png",
+        "frames/wolf/wolf_05.png",
+        "frames/wolf/wolf_06.png"
+      ],
+      "preview": "previews/wolf_preview.gif",
+      "frameCount": 6,
+      "frameDimensions": [
+        480,
+        480
+      ],
+      "frameDurationMs": null,
+      "loop": null,
+      "anchor": null,
+      "alphaProcessing": "heuristic edge-connected cream matte removal; requires visual QA",
+      "transparentPercentagePerFrame": [
+        54.0,
+        54.0,
+        53.4,
+        54.9,
+        54.8,
+        54.1
+      ],
+      "hasExactRegistrationTest": false,
+      "status": "REVIEW_CANDIDATE_NOT_APPROVED"
+    },
+    "owl": {
+      "type": "character",
+      "sheet": "sheets/owl_sheet.png",
+      "frames": [
+        "frames/owl/owl_01.png",
+        "frames/owl/owl_02.png",
+        "frames/owl/owl_03.png",
+        "frames/owl/owl_04.png",
+        "frames/owl/owl_05.png",
+        "frames/owl/owl_06.png"
+      ],
+      "preview": "previews/owl_preview.gif",
+      "frameCount": 6,
+      "frameDimensions": [
+        480,
+        480
+      ],
+      "frameDurationMs": null,
+      "loop": null,
+      "anchor": null,
+      "alphaProcessing": "heuristic edge-connected cream matte removal; requires visual QA",
+      "transparentPercentagePerFrame": [
+        57.0,
+        56.7,
+        57.0,
+        54.6,
+        55.1,
+        56.3
+      ],
+      "hasExactRegistrationTest": false,
+      "status": "REVIEW_CANDIDATE_NOT_APPROVED"
+    },
+    "bear": {
+      "type": "character",
+      "sheet": "sheets/bear_sheet.png",
+      "frames": [
+        "frames/bear/bear_01.png",
+        "frames/bear/bear_02.png",
+        "frames/bear/bear_03.png",
+        "frames/bear/bear_04.png",
+        "frames/bear/bear_05.png",
+        "frames/bear/bear_06.png"
+      ],
+      "preview": "previews/bear_preview.gif",
+      "frameCount": 6,
+      "frameDimensions": [
+        480,
+        480
+      ],
+      "frameDurationMs": null,
+      "loop": null,
+      "anchor": null,
+      "alphaProcessing": "heuristic edge-connected cream matte removal; requires visual QA",
+      "transparentPercentagePerFrame": [
+        59.0,
+        59.0,
+        56.2,
+        57.7,
+        59.7,
+        59.1
+      ],
+      "hasExactRegistrationTest": false,
+      "status": "REVIEW_CANDIDATE_NOT_APPROVED"
+    },
+    "frog": {
+      "type": "character",
+      "sheet": "sheets/frog_sheet.png",
+      "frames": [
+        "frames/frog/frog_01.png",
+        "frames/frog/frog_02.png",
+        "frames/frog/frog_03.png",
+        "frames/frog/frog_04.png",
+        "frames/frog/frog_05.png",
+        "frames/frog/frog_06.png"
+      ],
+      "preview": "previews/frog_preview.gif",
+      "frameCount": 6,
+      "frameDimensions": [
+        480,
+        480
+      ],
+      "frameDurationMs": null,
+      "loop": null,
+      "anchor": null,
+      "alphaProcessing": "heuristic edge-connected cream matte removal; requires visual QA",
+      "transparentPercentagePerFrame": [
+        60.0,
+        60.7,
+        58.1,
+        58.3,
+        57.9,
+        60.2
+      ],
+      "hasExactRegistrationTest": false,
+      "status": "REVIEW_CANDIDATE_NOT_APPROVED"
+    },
+    "hedgehog": {
+      "type": "character",
+      "sheet": "sheets/hedgehog_sheet.png",
+      "frames": [
+        "frames/hedgehog/hedgehog_01.png",
+        "frames/hedgehog/hedgehog_02.png",
+        "frames/hedgehog/hedgehog_03.png",
+        "frames/hedgehog/hedgehog_04.png",
+        "frames/hedgehog/hedgehog_05.png",
+        "frames/hedgehog/hedgehog_06.png"
+      ],
+      "preview": "previews/hedgehog_preview.gif",
+      "frameCount": 6,
+      "frameDimensions": [
+        480,
+        480
+      ],
+      "frameDurationMs": null,
+      "loop": null,
+      "anchor": null,
+      "alphaProcessing": "heuristic edge-connected cream matte removal; requires visual QA",
+      "transparentPercentagePerFrame": [
+        60.4,
+        60.4,
+        60.9,
+        60.5,
+        60.6,
+        60.9
+      ],
+      "hasExactRegistrationTest": false,
+      "status": "REVIEW_CANDIDATE_NOT_APPROVED"
+    },
+    "pond_ambient": {
+      "type": "environment",
+      "sheet": "sheets/pond_ambient_sheet.png",
+      "frames": [
+        "frames/pond_ambient/pond_ambient_01.png",
+        "frames/pond_ambient/pond_ambient_02.png",
+        "frames/pond_ambient/pond_ambient_03.png",
+        "frames/pond_ambient/pond_ambient_04.png",
+        "frames/pond_ambient/pond_ambient_05.png",
+        "frames/pond_ambient/pond_ambient_06.png"
+      ],
+      "preview": "previews/pond_ambient_preview.gif",
+      "frameCount": 6,
+      "frameDimensions": [
+        480,
+        480
+      ],
+      "frameDurationMs": null,
+      "loop": null,
+      "anchor": null,
+      "alphaProcessing": "heuristic edge-connected cream matte removal; requires visual QA",
+      "transparentPercentagePerFrame": [
+        14.8,
+        14.9,
+        14.9,
+        15.0,
+        14.9,
+        15.0
+      ],
+      "hasExactRegistrationTest": false,
+      "status": "REVIEW_CANDIDATE_NOT_APPROVED"
+    }
+  },
+  "validation": {
+    "sheets_detected": 9,
+    "frames_extracted": 54,
+    "frame_files_exist": true,
+    "alpha_nontrivial": true,
+    "frame_sequence_registration": "NOT_VERIFIED",
+    "visual_matches_user_original": "NOT_VERIFIED",
+    "browser_render": "NOT_TESTED",
+    "animation_app_playback": "NOT_BUILT",
+    "repo_upload": "NOT_DONE"
+  }
+}
