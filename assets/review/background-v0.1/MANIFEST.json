@@ -1,0 +1,169 @@
+{
+  "name": "MyMiniHome background concepts",
+  "version": "v0.1",
+  "approval": "NOT_APPROVED",
+  "items": [
+    {
+      "group": "01_background",
+      "path": "01_background/far_forest_mountains_v1.png",
+      "source_filename": "a_detailed_high_quality_pixel_art_isometric_style.png",
+      "label": "원경 A · 깊이감 있는 산과 숲",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB",
+      "alpha_extrema": null,
+      "size_bytes": 2030620,
+      "sha256": "2d263f0f9e5888586bffec27eec6b3f4eed662a7d632d9d0532de08e52011798",
+      "status": "visual_concept_unapproved"
+    },
+    {
+      "group": "01_background",
+      "path": "01_background/far_forest_mountains_v2.png",
+      "source_filename": "a_bright_detailed_isometric_style_pixel_art_backg.png",
+      "label": "원경 B · 숲 능선과 구름",
+      "width": 1774,
+      "height": 887,
+      "mode": "RGB",
+      "alpha_extrema": null,
+      "size_bytes": 2188481,
+      "sha256": "bb9bd23ac3b280fd4ee16fbd06e38ea38f2467d517bf4152e79fe00fc13af736",
+      "status": "visual_concept_unapproved"
+    },
+    {
+      "group": "01_background",
+      "path": "01_background/open_meadow_background.png",
+      "source_filename": "a_wide_pixel_art_isometric_style_but_flat_layere.png",
+      "label": "원경 C · 열린 풀밭",
+      "width": 1774,
+      "height": 887,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        14,
+        250
+      ],
+      "size_bytes": 2562900,
+      "sha256": "f684dd27467ea0ba6730c36064197739134b2582890985e78c74fd12405b5b42",
+      "status": "visual_concept_unapproved"
+    },
+    {
+      "group": "01_background",
+      "path": "01_background/village_composite_concept.png",
+      "source_filename": "a_vibrant_detailed_isometric_pixel_art_illustrati.png",
+      "label": "전체 장면 · 숲 마을 합성 참고",
+      "width": 1774,
+      "height": 887,
+      "mode": "RGB",
+      "alpha_extrema": null,
+      "size_bytes": 3121432,
+      "sha256": "8c0dd7becbc452987fec237719da64d1799153a827a6c78d9300e7c1cb90ddc8",
+      "status": "visual_concept_unapproved"
+    },
+    {
+      "group": "02_terrain",
+      "path": "02_terrain/terrain_sheet_dark_reference.png",
+      "source_filename": "a_highly_detailed_isometric_pixel_art_asset_tilese.png",
+      "label": "지형 A · 타일 구성 참고",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "alpha_extrema": null,
+      "size_bytes": 2909740,
+      "sha256": "8823d93db191d8b21b1ad3d2d705e7e1300374cdec7ff602e2b182c7e1647195",
+      "status": "visual_concept_unapproved"
+    },
+    {
+      "group": "02_terrain",
+      "path": "02_terrain/terrain_layout_plus_tiles.png",
+      "source_filename": "a_detailed_isometric_pixel_art_tilemap_game_back.png",
+      "label": "지형 B · 큰 장면 + 타일",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGBA",
+      "alpha_extrema": [
+        181,
+        251
+      ],
+      "size_bytes": 2786067,
+      "sha256": "ecb24ab01995dc5eddf1bdb4ba150a0322981549a7889f40c149b9d33ac33b0b",
+      "status": "visual_concept_unapproved"
+    },
+    {
+      "group": "02_terrain",
+      "path": "02_terrain/terrain_sheet_light_reference.png",
+      "source_filename": "a_detailed_clean_high_resolution_pixel_art_tiles.png",
+      "label": "지형 C · 분류형 타일 시트",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "alpha_extrema": null,
+      "size_bytes": 2572017,
+      "sha256": "e9a2bca3d6160eeecd1ce019b9b121b501032a18b2d188c6560d350872816110",
+      "status": "visual_concept_unapproved"
+    },
+    {
+      "group": "03_structures",
+      "path": "03_structures/forest_cottage.png",
+      "source_filename": "a_detailed_isometric_pixel_art_pixel_perfect_hig.png",
+      "label": "오두막 · 정지 이미지",
+      "width": 1312,
+      "height": 1199,
+      "mode": "RGB",
+      "alpha_extrema": null,
+      "size_bytes": 2243487,
+      "sha256": "e27a426073dd17ae5fe4ab26b870e2d7e2dc240407a932f2036d0aa3f8caed76",
+      "status": "visual_concept_unapproved"
+    },
+    {
+      "group": "03_structures",
+      "path": "03_structures/rocky_waterfall.png",
+      "source_filename": "a_detailed_pixel_art_isometric_isometric_like_illu.png",
+      "label": "폭포 · 정지 이미지",
+      "width": 1312,
+      "height": 1199,
+      "mode": "RGB",
+      "alpha_extrema": null,
+      "size_bytes": 2298742,
+      "sha256": "738983fc7263c98215caf8ee0d2a91b43669106e41f0d78fe07efccbce5ddb4c",
+      "status": "visual_concept_unapproved"
+    },
+    {
+      "group": "03_structures",
+      "path": "03_structures/pond_diorama.png",
+      "source_filename": "a_highly_detailed_bright_clean_pixel_art_isometr.png",
+      "label": "연못 · 정지 이미지",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "alpha_extrema": null,
+      "size_bytes": 2372213,
+      "sha256": "a301758cd8fcc0a32a97841ed862aa84e2b579cf33a6f1ae645abe7d1ee25f81",
+      "status": "visual_concept_unapproved"
+    },
+    {
+      "group": "03_structures",
+      "path": "03_structures/wood_bridges_decks.png",
+      "source_filename": "a_clean_asset_sheet_sprite_sheet_on_a_transparen.png",
+      "label": "교량·데크 · 시트",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "alpha_extrema": null,
+      "size_bytes": 2469428,
+      "sha256": "582f9a826e55d19ccffc102d7ca090000d004a2d708f10bc1306d72b1a608240",
+      "status": "visual_concept_unapproved"
+    },
+    {
+      "group": "04_nature_motion",
+      "path": "04_nature_motion/nature_props_motion_reference.png",
+      "source_filename": "a_highly_detailed_clean_sprite_sheet_asset_board.png",
+      "label": "나무·꽃·환경 모션 후보 시트",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "alpha_extrema": null,
+      "size_bytes": 2836634,
+      "sha256": "1ebf8aae2bffb44f491b076f7d038cbc9b6ca3981e0a42047b712a1f0842f466",
+      "status": "visual_concept_unapproved"
+    }
+  ]
+}
