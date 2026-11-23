@@ -17,7 +17,15 @@ const toolMeta = {
 
 async function sceneHtml() {
   const source = process.env.MYMINIHOME_SCENE_HTML_PATH || resolve(ROOT, '../../scenes/forest-village-v1/index.html');
-  const html = await readFile(source, 'utf8');
+  let html;
+  try { html = await readFile(source, 'utf8'); }
+  catch (e) {
+    if (e.code !== 'ENOENT') throw e;
+    const remote = 'https://raw.githubusercontent.com/rapidmagic-arch/MyMiniHome/main/scenes/forest-village-v1/index.html';
+    const res = await fetch(remote, {signal: AbortSignal.timeout(12000)});
+    if (!res.ok) throw new Error('Public scene unavailable: HTTP ' + res.status);
+    html = await res.text();
+  }
   if (!html.includes('id="scene"') || !html.includes('id="actors"')) {
     throw new Error('MyMiniHome scene HTML is missing required elements');
   }
