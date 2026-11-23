@@ -1,0 +1,1859 @@
+{
+  "name": "MyMiniHome Walking Cycle Candidates",
+  "version": "0.1.0",
+  "status": "REVIEW_CANDIDATE_NOT_APPROVED",
+  "source": {
+    "file": "source/walk_sheet_source.png",
+    "sha256": "bbd93ec05c3a12c7dfdceb80359286a0cb150075e43c794b12587340d12a8433",
+    "size": [
+      1536,
+      1024
+    ],
+    "layout": "four quadrants (squirrel/rabbit/fox/wolf) each 3 columns x 2 rows; 24 connected-alpha components"
+  },
+  "count": {
+    "characters": 4,
+    "framesPerCharacter": 6,
+    "directions": 2,
+    "totalPngs": 48
+  },
+  "sprite": {
+    "canvasPixels": [
+      256,
+      256
+    ],
+    "anchorPixels": {
+      "x": 128,
+      "y": 230
+    },
+    "idleFrame": 1,
+    "loopFrameDurationMs": 160,
+    "turnLeft": "HORIZONTAL_MIRROR_OF_RIGHT",
+    "frameAnimationApproval": "PENDING_VISUAL_QA"
+  },
+  "qa": {
+    "passAllHaveTransparentAlpha": true,
+    "alphaComponentCount": 24,
+    "framesWithOpaqueCanvasBoundary": [],
+    "perCharacter": {
+      "squirrel": {
+        "frames": 6,
+        "bboxCenterRangePixels": 0.5,
+        "bboxBottomRangePixels": 0,
+        "maxEdgeOpaquePixels": 0,
+        "transparentFractionRange": [
+          0.5647,
+          0.609
+        ]
+      },
+      "rabbit": {
+        "frames": 6,
+        "bboxCenterRangePixels": 1.0,
+        "bboxBottomRangePixels": 0,
+        "maxEdgeOpaquePixels": 0,
+        "transparentFractionRange": [
+          0.6314,
+          0.6602
+        ]
+      },
+      "fox": {
+        "frames": 6,
+        "bboxCenterRangePixels": 1.0,
+        "bboxBottomRangePixels": 0,
+        "maxEdgeOpaquePixels": 0,
+        "transparentFractionRange": [
+          0.6267,
+          0.6513
+        ]
+      },
+      "wolf": {
+        "frames": 6,
+        "bboxCenterRangePixels": 0.5,
+        "bboxBottomRangePixels": 0,
+        "maxEdgeOpaquePixels": 0,
+        "transparentFractionRange": [
+          0.6284,
+          0.6541
+        ]
+      }
+    }
+  },
+  "items": [
+    {
+      "id": "squirrel_walk_right_01",
+      "character": "squirrel",
+      "direction": "right",
+      "frameIndex": 1,
+      "file": "frames/squirrel/squirrel_walk_right_01.png",
+      "sha256": "147076b76e4e28cd1711300c2765d6ccf822f6da8808b0cf93ab402379f3338f",
+      "bytes": 65166,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        29,
+        38,
+        227,
+        230
+      ],
+      "sourceComponent": 5,
+      "sourceBbox": [
+        63,
+        39,
+        199,
+        193
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.5647,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "squirrel_walk_left_01",
+      "character": "squirrel",
+      "direction": "left",
+      "frameIndex": 1,
+      "file": "frames/squirrel/squirrel_walk_left_01.png",
+      "sha256": "63a38214b11c1875b11814050e08bb9a35e69f5044b0e95737336fd6c17107d1",
+      "bytes": 64953,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        28,
+        38,
+        226,
+        230
+      ],
+      "sourceComponent": 5,
+      "sourceBbox": [
+        63,
+        39,
+        199,
+        193
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.5647,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "squirrel_walk_right_02",
+      "character": "squirrel",
+      "direction": "right",
+      "frameIndex": 2,
+      "file": "frames/squirrel/squirrel_walk_right_02.png",
+      "sha256": "f0e3af6af3614a20fdef32d47d4e83baf7046d76764272083a7d3d416f601934",
+      "bytes": 63640,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        28,
+        48,
+        227,
+        230
+      ],
+      "sourceComponent": 6,
+      "sourceBbox": [
+        294,
+        47,
+        200,
+        183
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.5795,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "squirrel_walk_left_02",
+      "character": "squirrel",
+      "direction": "left",
+      "frameIndex": 2,
+      "file": "frames/squirrel/squirrel_walk_left_02.png",
+      "sha256": "6f5dc1f71dbe3a8b54d516e991a62c0802c55516364372d11388ff6b00c0a16e",
+      "bytes": 63529,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        28,
+        48,
+        227,
+        230
+      ],
+      "sourceComponent": 6,
+      "sourceBbox": [
+        294,
+        47,
+        200,
+        183
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.5795,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "squirrel_walk_right_03",
+      "character": "squirrel",
+      "direction": "right",
+      "frameIndex": 3,
+      "file": "frames/squirrel/squirrel_walk_right_03.png",
+      "sha256": "91aaa97c7c4dae69cbc861b8996564d17a4604942417b60165c5bcaedf879f58",
+      "bytes": 61253,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        33,
+        37,
+        222,
+        230
+      ],
+      "sourceComponent": 4,
+      "sourceBbox": [
+        528,
+        37,
+        190,
+        194
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.5981,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "squirrel_walk_left_03",
+      "character": "squirrel",
+      "direction": "left",
+      "frameIndex": 3,
+      "file": "frames/squirrel/squirrel_walk_left_03.png",
+      "sha256": "c8222dfcf46927643d03eae0adc1fdca0ee280449e340f7eaa73ec4bc5a2e900",
+      "bytes": 61229,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        33,
+        37,
+        222,
+        230
+      ],
+      "sourceComponent": 4,
+      "sourceBbox": [
+        528,
+        37,
+        190,
+        194
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.5981,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "squirrel_walk_right_04",
+      "character": "squirrel",
+      "direction": "right",
+      "frameIndex": 4,
+      "file": "frames/squirrel/squirrel_walk_right_04.png",
+      "sha256": "77d38483948ca827fe5b22b6aa7230a4e7c5b147fa71a6b03f0ff05a7b1944b3",
+      "bytes": 59066,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        32,
+        34,
+        223,
+        230
+      ],
+      "sourceComponent": 11,
+      "sourceBbox": [
+        67,
+        269,
+        192,
+        197
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.609,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "squirrel_walk_left_04",
+      "character": "squirrel",
+      "direction": "left",
+      "frameIndex": 4,
+      "file": "frames/squirrel/squirrel_walk_left_04.png",
+      "sha256": "292365443de004beb758eed85e4b14a9a75eb8a31dfe18d3cd164ff4f1ee5446",
+      "bytes": 58868,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        32,
+        34,
+        223,
+        230
+      ],
+      "sourceComponent": 11,
+      "sourceBbox": [
+        67,
+        269,
+        192,
+        197
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.609,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "squirrel_walk_right_05",
+      "character": "squirrel",
+      "direction": "right",
+      "frameIndex": 5,
+      "file": "frames/squirrel/squirrel_walk_right_05.png",
+      "sha256": "d05b94216f76ac24a04343c1bd8384bfa1340d5c6d7135791d20c21b9bb575e3",
+      "bytes": 62820,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        29,
+        33,
+        227,
+        230
+      ],
+      "sourceComponent": 12,
+      "sourceBbox": [
+        295,
+        268,
+        199,
+        198
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.5816,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "squirrel_walk_left_05",
+      "character": "squirrel",
+      "direction": "left",
+      "frameIndex": 5,
+      "file": "frames/squirrel/squirrel_walk_left_05.png",
+      "sha256": "996b22ae20e07520412403bfc461dffc6467196dd77b34844f57c1b07fab53d3",
+      "bytes": 62717,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        28,
+        33,
+        226,
+        230
+      ],
+      "sourceComponent": 12,
+      "sourceBbox": [
+        295,
+        268,
+        199,
+        198
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.5816,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "squirrel_walk_right_06",
+      "character": "squirrel",
+      "direction": "right",
+      "frameIndex": 6,
+      "file": "frames/squirrel/squirrel_walk_right_06.png",
+      "sha256": "e7bcc088c9bb64da931d2f7db509c6df7d4a5949008fd1fde54810cf3fc074fa",
+      "bytes": 63272,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        33,
+        32,
+        223,
+        230
+      ],
+      "sourceComponent": 10,
+      "sourceBbox": [
+        530,
+        267,
+        191,
+        199
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.5799,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "squirrel_walk_left_06",
+      "character": "squirrel",
+      "direction": "left",
+      "frameIndex": 6,
+      "file": "frames/squirrel/squirrel_walk_left_06.png",
+      "sha256": "625777fbb52873ed42752edfe52bd85dd5a0a4b1060a508d3a5ef42403f6baac",
+      "bytes": 63225,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        32,
+        32,
+        222,
+        230
+      ],
+      "sourceComponent": 10,
+      "sourceBbox": [
+        530,
+        267,
+        191,
+        199
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.5799,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "rabbit_walk_right_01",
+      "character": "rabbit",
+      "direction": "right",
+      "frameIndex": 1,
+      "file": "frames/rabbit/rabbit_walk_right_01.png",
+      "sha256": "8305cd7f89b270f6765ea776e9ab5e3c4c84dc95bea9c552bee40b19c93b4e08",
+      "bytes": 57746,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        53,
+        14,
+        202,
+        230
+      ],
+      "sourceComponent": 2,
+      "sourceBbox": [
+        867,
+        15,
+        150,
+        217
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6314,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "rabbit_walk_left_01",
+      "character": "rabbit",
+      "direction": "left",
+      "frameIndex": 1,
+      "file": "frames/rabbit/rabbit_walk_left_01.png",
+      "sha256": "156ada7d3e89ba52e105862233ee65307e7e4416847333a20b64d0acbdd445db",
+      "bytes": 57229,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        53,
+        14,
+        202,
+        230
+      ],
+      "sourceComponent": 2,
+      "sourceBbox": [
+        867,
+        15,
+        150,
+        217
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6314,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "rabbit_walk_right_02",
+      "character": "rabbit",
+      "direction": "right",
+      "frameIndex": 2,
+      "file": "frames/rabbit/rabbit_walk_right_02.png",
+      "sha256": "843c99cae4f617770716f2497f0200469810bdb7cef8485a0ae8bd5bc29cd4c7",
+      "bytes": 55694,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        57,
+        16,
+        197,
+        230
+      ],
+      "sourceComponent": 3,
+      "sourceBbox": [
+        1100,
+        17,
+        141,
+        215
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6493,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "rabbit_walk_left_02",
+      "character": "rabbit",
+      "direction": "left",
+      "frameIndex": 2,
+      "file": "frames/rabbit/rabbit_walk_left_02.png",
+      "sha256": "850e4fda39ef86f8b869c49645f1bea37297fa02fc1b9f7ba86b73cc7b0e98f8",
+      "bytes": 55233,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        58,
+        16,
+        198,
+        230
+      ],
+      "sourceComponent": 3,
+      "sourceBbox": [
+        1100,
+        17,
+        141,
+        215
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6493,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "rabbit_walk_right_03",
+      "character": "rabbit",
+      "direction": "right",
+      "frameIndex": 3,
+      "file": "frames/rabbit/rabbit_walk_right_03.png",
+      "sha256": "a4d4f811fe5d2091e549455d6a3c5b7528760192cc4095a8f982b91869f98024",
+      "bytes": 53850,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        58,
+        11,
+        197,
+        230
+      ],
+      "sourceComponent": 1,
+      "sourceBbox": [
+        1324,
+        11,
+        140,
+        220
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6602,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "rabbit_walk_left_03",
+      "character": "rabbit",
+      "direction": "left",
+      "frameIndex": 3,
+      "file": "frames/rabbit/rabbit_walk_left_03.png",
+      "sha256": "19f8fda10067ce34a0e74532d3d88b4739a33f1647108468af4ad0ca43473b82",
+      "bytes": 53438,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        58,
+        11,
+        197,
+        230
+      ],
+      "sourceComponent": 1,
+      "sourceBbox": [
+        1324,
+        11,
+        140,
+        220
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6602,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "rabbit_walk_right_04",
+      "character": "rabbit",
+      "direction": "right",
+      "frameIndex": 4,
+      "file": "frames/rabbit/rabbit_walk_right_04.png",
+      "sha256": "04ddaf68275c0dc869e38d283d7eb0a2a51593f7047df1de86d03008cfc9c42e",
+      "bytes": 54736,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        55,
+        13,
+        199,
+        230
+      ],
+      "sourceComponent": 7,
+      "sourceBbox": [
+        872,
+        251,
+        145,
+        218
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6555,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "rabbit_walk_left_04",
+      "character": "rabbit",
+      "direction": "left",
+      "frameIndex": 4,
+      "file": "frames/rabbit/rabbit_walk_left_04.png",
+      "sha256": "b49aaadd37454cfb66d3eb91e241c6fa4dbfa4a7ab909f770098e6f778a58360",
+      "bytes": 54227,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        56,
+        13,
+        200,
+        230
+      ],
+      "sourceComponent": 7,
+      "sourceBbox": [
+        872,
+        251,
+        145,
+        218
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6555,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "rabbit_walk_right_05",
+      "character": "rabbit",
+      "direction": "right",
+      "frameIndex": 5,
+      "file": "frames/rabbit/rabbit_walk_right_05.png",
+      "sha256": "cdcc5d162e81209b86fb8ee616a7f2398cb346841dcb4e12ecd6770551b8ea68",
+      "bytes": 54520,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        57,
+        23,
+        198,
+        230
+      ],
+      "sourceComponent": 9,
+      "sourceBbox": [
+        1103,
+        260,
+        142,
+        208
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6556,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "rabbit_walk_left_05",
+      "character": "rabbit",
+      "direction": "left",
+      "frameIndex": 5,
+      "file": "frames/rabbit/rabbit_walk_left_05.png",
+      "sha256": "b7d760908c81eecf9f3b8b5d9c1ca7b5ffc7e3e059c6037a062e1293021b178f",
+      "bytes": 53946,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        57,
+        23,
+        198,
+        230
+      ],
+      "sourceComponent": 9,
+      "sourceBbox": [
+        1103,
+        260,
+        142,
+        208
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6556,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "rabbit_walk_right_06",
+      "character": "rabbit",
+      "direction": "right",
+      "frameIndex": 6,
+      "file": "frames/rabbit/rabbit_walk_right_06.png",
+      "sha256": "52cc4cfb58506183c09105d4faaf40fbcb29953ff2ac615b7a414755c4949972",
+      "bytes": 55851,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        55,
+        14,
+        201,
+        230
+      ],
+      "sourceComponent": 8,
+      "sourceBbox": [
+        1328,
+        253,
+        147,
+        217
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6479,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "rabbit_walk_left_06",
+      "character": "rabbit",
+      "direction": "left",
+      "frameIndex": 6,
+      "file": "frames/rabbit/rabbit_walk_left_06.png",
+      "sha256": "724e249d1dcd7e2805d79da2a2672f9427ad930ee0d31a95029931c2027694fb",
+      "bytes": 55237,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        54,
+        14,
+        200,
+        230
+      ],
+      "sourceComponent": 8,
+      "sourceBbox": [
+        1328,
+        253,
+        147,
+        217
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6479,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "fox_walk_right_01",
+      "character": "fox",
+      "direction": "right",
+      "frameIndex": 1,
+      "file": "frames/fox/fox_walk_right_01.png",
+      "sha256": "d095f4f28f72466a8eb2560f1b6c9a823f51f474d8a179cfee10247befea845b",
+      "bytes": 58680,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        34,
+        35,
+        221,
+        230
+      ],
+      "sourceComponent": 16,
+      "sourceBbox": [
+        61,
+        550,
+        188,
+        196
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6267,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "fox_walk_left_01",
+      "character": "fox",
+      "direction": "left",
+      "frameIndex": 1,
+      "file": "frames/fox/fox_walk_left_01.png",
+      "sha256": "198d08c74a539547f8e37ae582c174020fbdfc3ad7a5e5705756f075add0143e",
+      "bytes": 58402,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        34,
+        35,
+        221,
+        230
+      ],
+      "sourceComponent": 16,
+      "sourceBbox": [
+        61,
+        550,
+        188,
+        196
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6267,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "fox_walk_right_02",
+      "character": "fox",
+      "direction": "right",
+      "frameIndex": 2,
+      "file": "frames/fox/fox_walk_right_02.png",
+      "sha256": "7662a062ae3ef67d38ffdfc8119fc668374f8ad38fc4e4a399a5657aa8c9bf45",
+      "bytes": 57466,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        35,
+        43,
+        220,
+        230
+      ],
+      "sourceComponent": 18,
+      "sourceBbox": [
+        294,
+        555,
+        186,
+        188
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.634,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "fox_walk_left_02",
+      "character": "fox",
+      "direction": "left",
+      "frameIndex": 2,
+      "file": "frames/fox/fox_walk_left_02.png",
+      "sha256": "aebd47155aa1f1fc92917f91c4b2f3f883a0f338525ac757d134558d130aa2b2",
+      "bytes": 57298,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        35,
+        43,
+        220,
+        230
+      ],
+      "sourceComponent": 18,
+      "sourceBbox": [
+        294,
+        555,
+        186,
+        188
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.634,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "fox_walk_right_03",
+      "character": "fox",
+      "direction": "right",
+      "frameIndex": 3,
+      "file": "frames/fox/fox_walk_right_03.png",
+      "sha256": "bc5ad85eefaafb573a764c3795c35ba25fccab6cde4d397ffcda4d8f9157e3e6",
+      "bytes": 55764,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        38,
+        35,
+        217,
+        230
+      ],
+      "sourceComponent": 15,
+      "sourceBbox": [
+        531,
+        549,
+        180,
+        196
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6513,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "fox_walk_left_03",
+      "character": "fox",
+      "direction": "left",
+      "frameIndex": 3,
+      "file": "frames/fox/fox_walk_left_03.png",
+      "sha256": "ab46c54798e2a3c536524e7716be55066da70ddf411fb3e168536d05cdec7aa6",
+      "bytes": 55561,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        38,
+        35,
+        217,
+        230
+      ],
+      "sourceComponent": 15,
+      "sourceBbox": [
+        531,
+        549,
+        180,
+        196
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6513,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "fox_walk_right_04",
+      "character": "fox",
+      "direction": "right",
+      "frameIndex": 4,
+      "file": "frames/fox/fox_walk_right_04.png",
+      "sha256": "5970d79f92f100860fe93d850c37af348a8e8c7966edf7b70c0b0b465dd3a5d0",
+      "bytes": 56876,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        33,
+        30,
+        223,
+        230
+      ],
+      "sourceComponent": 20,
+      "sourceBbox": [
+        52,
+        783,
+        191,
+        201
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6426,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "fox_walk_left_04",
+      "character": "fox",
+      "direction": "left",
+      "frameIndex": 4,
+      "file": "frames/fox/fox_walk_left_04.png",
+      "sha256": "acc8c273e60e7bef1a7c6a2ac167a8d7d42df8e0f63dc7744ae7d61dfca1da71",
+      "bytes": 56799,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        32,
+        30,
+        222,
+        230
+      ],
+      "sourceComponent": 20,
+      "sourceBbox": [
+        52,
+        783,
+        191,
+        201
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6426,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "fox_walk_right_05",
+      "character": "fox",
+      "direction": "right",
+      "frameIndex": 5,
+      "file": "frames/fox/fox_walk_right_05.png",
+      "sha256": "b2ca82b9e5490c1768536ede3f62f81bb62af1addc3843d476777cbd2fa4a4e1",
+      "bytes": 58106,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        33,
+        36,
+        221,
+        230
+      ],
+      "sourceComponent": 23,
+      "sourceBbox": [
+        289,
+        788,
+        189,
+        195
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6341,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "fox_walk_left_05",
+      "character": "fox",
+      "direction": "left",
+      "frameIndex": 5,
+      "file": "frames/fox/fox_walk_left_05.png",
+      "sha256": "fc56195e1a155c5fa68c43acddf22eedda6e7ff32f58286fdcd85a3afcb4b675",
+      "bytes": 57845,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        34,
+        36,
+        222,
+        230
+      ],
+      "sourceComponent": 23,
+      "sourceBbox": [
+        289,
+        788,
+        189,
+        195
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6341,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "fox_walk_right_06",
+      "character": "fox",
+      "direction": "right",
+      "frameIndex": 6,
+      "file": "frames/fox/fox_walk_right_06.png",
+      "sha256": "fbf00d07efeb272ae86c89d2513062eb623a5ec022f8bc33cc2fc9b3f15ecdc3",
+      "bytes": 57192,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        37,
+        33,
+        217,
+        230
+      ],
+      "sourceComponent": 21,
+      "sourceBbox": [
+        531,
+        785,
+        181,
+        198
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6382,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "fox_walk_left_06",
+      "character": "fox",
+      "direction": "left",
+      "frameIndex": 6,
+      "file": "frames/fox/fox_walk_left_06.png",
+      "sha256": "21e44a42ede3ed01f7b7fac787a66cbe0596790dc0194d8db585e8bd4676627a",
+      "bytes": 57084,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        38,
+        33,
+        218,
+        230
+      ],
+      "sourceComponent": 21,
+      "sourceBbox": [
+        531,
+        785,
+        181,
+        198
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6382,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "wolf_walk_right_01",
+      "character": "wolf",
+      "direction": "right",
+      "frameIndex": 1,
+      "file": "frames/wolf/wolf_walk_right_01.png",
+      "sha256": "474de9710432aec7b990c75f3398fdbdd52fbae1e5cef4a03757303ae37b163c",
+      "bytes": 59974,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        39,
+        30,
+        215,
+        230
+      ],
+      "sourceComponent": 13,
+      "sourceBbox": [
+        844,
+        545,
+        177,
+        201
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6284,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "wolf_walk_left_01",
+      "character": "wolf",
+      "direction": "left",
+      "frameIndex": 1,
+      "file": "frames/wolf/wolf_walk_left_01.png",
+      "sha256": "a22660b8d66a4aa13c6fff7eea80adbb226056ce01ccfbe100d4d4512b64d965",
+      "bytes": 60062,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        40,
+        30,
+        216,
+        230
+      ],
+      "sourceComponent": 13,
+      "sourceBbox": [
+        844,
+        545,
+        177,
+        201
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6284,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "wolf_walk_right_02",
+      "character": "wolf",
+      "direction": "right",
+      "frameIndex": 2,
+      "file": "frames/wolf/wolf_walk_right_02.png",
+      "sha256": "9fd1b3e513ea51e06d8af40ae05dd29654efd2dd9ca6901fa31875c84bf92895",
+      "bytes": 57186,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        39,
+        37,
+        216,
+        230
+      ],
+      "sourceComponent": 17,
+      "sourceBbox": [
+        1072,
+        552,
+        178,
+        194
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6471,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "wolf_walk_left_02",
+      "character": "wolf",
+      "direction": "left",
+      "frameIndex": 2,
+      "file": "frames/wolf/wolf_walk_left_02.png",
+      "sha256": "83af27d42881ab73c73bb5374123da3b5e2750a78af6c1ee70dcde769eee3931",
+      "bytes": 57186,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        39,
+        37,
+        216,
+        230
+      ],
+      "sourceComponent": 17,
+      "sourceBbox": [
+        1072,
+        552,
+        178,
+        194
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6471,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "wolf_walk_right_03",
+      "character": "wolf",
+      "direction": "right",
+      "frameIndex": 3,
+      "file": "frames/wolf/wolf_walk_right_03.png",
+      "sha256": "dfa177d2c2e8e20c7a2367a303fe81988df1b8f23ecc43595384ea968948eb01",
+      "bytes": 56027,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        39,
+        29,
+        216,
+        230
+      ],
+      "sourceComponent": 14,
+      "sourceBbox": [
+        1302,
+        544,
+        178,
+        202
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6541,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "wolf_walk_left_03",
+      "character": "wolf",
+      "direction": "left",
+      "frameIndex": 3,
+      "file": "frames/wolf/wolf_walk_left_03.png",
+      "sha256": "6ee324f1d6b81a6ba5efa7a82d00edbe3864d112ad5658fb1b9f35f8fa43250e",
+      "bytes": 56160,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        39,
+        29,
+        216,
+        230
+      ],
+      "sourceComponent": 14,
+      "sourceBbox": [
+        1302,
+        544,
+        178,
+        202
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6541,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "wolf_walk_right_04",
+      "character": "wolf",
+      "direction": "right",
+      "frameIndex": 4,
+      "file": "frames/wolf/wolf_walk_right_04.png",
+      "sha256": "a964513ed540bc9eb3bd58a9a95d31854157082bca82870cdab2f3338753e7e8",
+      "bytes": 58891,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        37,
+        26,
+        218,
+        230
+      ],
+      "sourceComponent": 19,
+      "sourceBbox": [
+        833,
+        781,
+        182,
+        205
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6384,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "wolf_walk_left_04",
+      "character": "wolf",
+      "direction": "left",
+      "frameIndex": 4,
+      "file": "frames/wolf/wolf_walk_left_04.png",
+      "sha256": "94002620eaca3ed299a00c14023252db3214bbb5f8b32ae48a656701b3fe6a74",
+      "bytes": 58881,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        37,
+        26,
+        218,
+        230
+      ],
+      "sourceComponent": 19,
+      "sourceBbox": [
+        833,
+        781,
+        182,
+        205
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6384,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "wolf_walk_right_05",
+      "character": "wolf",
+      "direction": "right",
+      "frameIndex": 5,
+      "file": "frames/wolf/wolf_walk_right_05.png",
+      "sha256": "80ad92cc9fba8cd463001cdab0cae9b963af227dc4ef8572fc820cbaa4aab004",
+      "bytes": 59244,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        37,
+        34,
+        217,
+        230
+      ],
+      "sourceComponent": 24,
+      "sourceBbox": [
+        1068,
+        788,
+        181,
+        197
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6333,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "wolf_walk_left_05",
+      "character": "wolf",
+      "direction": "left",
+      "frameIndex": 5,
+      "file": "frames/wolf/wolf_walk_left_05.png",
+      "sha256": "974059d55fe9d23a6147e82db49f1f5502a67199369a083d6760769309d4872c",
+      "bytes": 59038,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        38,
+        34,
+        218,
+        230
+      ],
+      "sourceComponent": 24,
+      "sourceBbox": [
+        1068,
+        788,
+        181,
+        197
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6333,
+      "faceGenerated": "mirror_of_right"
+    },
+    {
+      "id": "wolf_walk_right_06",
+      "character": "wolf",
+      "direction": "right",
+      "frameIndex": 6,
+      "file": "frames/wolf/wolf_walk_right_06.png",
+      "sha256": "809f65873966ca96a4be6b70967d69d87d7e5d8a129d86a4295fa712b9272832",
+      "bytes": 57581,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        38,
+        31,
+        217,
+        230
+      ],
+      "sourceComponent": 22,
+      "sourceBbox": [
+        1302,
+        786,
+        180,
+        200
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6429,
+      "faceGenerated": "right"
+    },
+    {
+      "id": "wolf_walk_left_06",
+      "character": "wolf",
+      "direction": "left",
+      "frameIndex": 6,
+      "file": "frames/wolf/wolf_walk_left_06.png",
+      "sha256": "e4ce6f64ec9fe19dcd0e0d1c0397c34fbcb66bbf6a880bf96d1f0374623813bd",
+      "bytes": 57443,
+      "canvas": [
+        256,
+        256
+      ],
+      "alphaBbox": [
+        38,
+        31,
+        217,
+        230
+      ],
+      "sourceComponent": 22,
+      "sourceBbox": [
+        1302,
+        786,
+        180,
+        200
+      ],
+      "anchorPixels": {
+        "x": 128,
+        "y": 230
+      },
+      "anchorNormalized": {
+        "x": 0.5,
+        "y": 0.8984375
+      },
+      "edgeOpaqueCount": 0,
+      "transparentFraction": 0.6429,
+      "faceGenerated": "mirror_of_right"
+    }
+  ]
+}
