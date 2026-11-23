@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MyMiniHome · 숲 마을 기본 장면 v1</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#1c2e30;color:#f9f8dc;font-family:system-ui,"Malgun Gothic",sans-serif}.shell{max-width:1800px;margin:auto;padding:12px}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}.toolbar strong{font-size:16px}.toolbar small{color:#bdd5d0}.tools{display:flex;gap:8px}button{font:inherit;cursor:pointer}.tools button,.panel button{background:#fff5c9;color:#293c2e;border:2px solid #654c30;border-radius:6px;padding:7px 12px;font-weight:700}.viewport{position:relative;width:100%;aspect-ratio:1774 / 887;border:4px solid #3d563a;border-radius:9px;overflow:hidden;background:#87d29b;box-shadow:0 12px 32px #091a1990}.stage{position:absolute;left:0;top:0;width:1774px;height:887px;transform-origin:0 0;overflow:hidden}.base{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:fill;pointer-events:none}.hotspot{position:absolute;border:2px dashed transparent;background:transparent;border-radius:20px}.debug .hotspot{border-color:#ffec93;background:#ffeb852b}.hotspot:focus-visible,.actor:focus-visible{outline:5px solid #ffcf56;outline-offset:4px}.actor{position:absolute;width:var(--size);height:var(--size);transform:translate(-50%,-90%);border:0;background:none;padding:0;filter:drop-shadow(0 2px 1px #334c3c44)}.actor::before{content:"";position:absolute;width:48%;height:10%;left:26%;bottom:6%;background:#1b38194d;filter:blur(7px);border-radius:50%}.actor img{position:relative;display:block;width:100%;height:100%;object-fit:contain}.debug .actor{outline:2px dashed #fddc77}.debug .actor::after{content:"";position:absolute;width:8px;height:8px;background:#ff3b64;border:2px solid white;border-radius:50%;left:calc(50% - 4px);top:calc(90% - 4px);pointer-events:none}.panel{position:absolute;z-index:20;left:24px;bottom:20px;max-width:420px;min-width:280px;padding:18px;background:#fff9d9f5;border:5px double #6d5138;border-radius:10px;color:#263f29;box-shadow:5px 6px 0 #193e31a1}.panel h2{margin:0 32px 8px 0;font-size:21px}.panel p{margin:0 0 10px;font-size:14px;line-height:1.55}.panel .close{position:absolute;right:10px;top:9px}.legend{color:#c7ded8;font-size:12px;margin:9px 3px 0}.guide-line{position:absolute;left:0;top:70%;height:1px;border-top:2px dashed #ffea9f;width:100%;pointer-events:none;display:none}.debug .guide-line{display:block}@media(max-width:650px){.toolbar{align-items:flex-start}.toolbar strong{font-size:14px}}
+</style>
+</head>
+<body>
+<div class="shell"><div class="toolbar"><div><strong>MyMiniHome · 기본 숲 마을 템플릿 1종</strong> <small>v1 · 레이아웃 시제품, 최종 승인 전</small></div><div class="tools"><button id="toggleGuides" type="button" aria-pressed="false">앵커 표시</button><button id="reset" type="button">팝업 닫기</button></div></div><div class="viewport" id="viewport"><div class="stage" id="stage"><img class="base" id="background" alt="픽셀 숲 마을, 오두막, 연못, 다리, 폭포, 정원"/><div class="guide-line"></div><div id="hotspots"></div><div id="actors"></div><div class="panel" id="panel" hidden><button class="close" id="close" type="button">닫기</button><h2 id="panelTitle"></h2><p id="panelBody"></p><p id="panelLink"></p></div></div></div><p class="legend">정적 건물·물길은 단일 마스터 장면에 고정하여 위치 불일치를 피했고, 동물만 독립 스프라이트로 배치했어. 연결할 GPT/프로젝트 URL이 없으면 이동은 실행되지 않아.</p></div>
+<script id="scene" type="application/json">
+{
+  "version":"scene-v1-draft", "designSize":{"width":1774,"height":887},
+  "status":"prototype_not_approved",
+  "background":"../../assets/review/background-v0.1/images/01_background/village_composite_concept.png",
+  "hotspots":[
+    {"id":"cottage","label":"오두막","x":282,"y":130,"w":458,"h":347,"note":"고정 배경에 포함. 클릭 영역만 독립 관리"},
+    {"id":"reading","label":"독서 쉼터","x":12,"y":270,"w":295,"h":260,"note":"정적 합성 배경. 향후 분리 자산으로 교체 가능"},
+    {"id":"mailbox","label":"우체통","x":476,"y":433,"w":86,"h":113,"note":"메일함 상호작용은 추후 연결"},
+    {"id":"bridge","label":"나무다리","x":1030,"y":476,"w":350,"h":144,"note":"연못과 지형에 고정된 연결 구조물"},
+    {"id":"pond","label":"연못","x":1025,"y":613,"w":688,"h":256,"note":"애니메이션이 없는 마스터 합성 수면"}
+  ],
+  "characters":[
+    {"id":"squirrel","label":"다람쥐","x":362,"y":755,"size":123,"footFraction":0.898,"kind":"project","frame":"../../assets/review/v0.2/frames/squirrel/squirrel_01.png","link":null},
+    {"id":"rabbit","label":"토끼","x":525,"y":745,"size":128,"footFraction":0.898,"kind":"gpt","frame":"../../assets/review/v0.2/frames/rabbit/rabbit_01.png","link":null},
+    {"id":"fox","label":"여우","x":686,"y":776,"size":123,"footFraction":0.917,"kind":"project","frame":"../../assets/review/v0.2/frames/fox/fox_01.png","link":null},
+    {"id":"wolf","label":"늑대","x":807,"y":834,"size":124,"footFraction":0.940,"kind":"gpt","frame":"../../assets/review/v0.2/frames/wolf/wolf_01.png","link":null}
+  ]
+}
+</script>
+<script>
+(()=>{"use strict";const scene=JSON.parse(document.getElementById('scene').textContent),$=id=>document.getElementById(id),stage=$('stage'),viewport=$('viewport'),panel=$('panel');$('background').src=scene.background;
+const open=(obj)=>{$('panelTitle').textContent=obj.label;$('panelBody').textContent=(obj.note||((obj.kind==='gpt'?'GPT':'프로젝트')+' 연결 후보'))+' · 검토용 시안';const link=$('panelLink');link.replaceChildren();if(obj.link){const a=document.createElement('a');a.href=obj.link;a.target='_blank';a.rel='noopener noreferrer';a.textContent='기존 ChatGPT 링크 열기';link.append(a)}else link.textContent='연결 주소 미정 — 임의 이동하지 않음';panel.hidden=false};
+for(const obj of scene.hotspots){const b=document.createElement('button');b.type='button';b.className='hotspot';b.title=obj.label;b.setAttribute('aria-label',obj.label);Object.assign(b.style,{left:obj.x+'px',top:obj.y+'px',width:obj.w+'px',height:obj.h+'px'});b.onclick=()=>open(obj);$('hotspots').append(b)}
+for(const obj of scene.characters){const b=document.createElement('button');b.type='button';b.className='actor';b.title=obj.label;b.setAttribute('aria-label',obj.label+' 프로필');b.style.cssText='left:'+obj.x+'px;top:'+obj.y+'px;--size:'+obj.size+'px;transform:translate(-50%,-'+(obj.footFraction*100)+'%)';const img=document.createElement('img');img.src=obj.frame;img.alt='';b.append(img);b.onclick=()=>open(obj);$('actors').append(b)}
+$('toggleGuides').onclick=()=>{const on=stage.classList.toggle('debug');$('toggleGuides').setAttribute('aria-pressed',String(on))};$('close').onclick=$('reset').onclick=()=>panel.hidden=true;
+function scale(){stage.style.transform='scale('+(viewport.clientWidth/scene.designSize.width)+')'}new ResizeObserver(scale).observe(viewport);scale();
+})();
+</script>
+</body></html>
