@@ -78,22 +78,244 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 </div>
 <script id="scene" type="application/json">
 {
- "version":"scene-v1-motion-prototype","status":"prototype_not_approved",
- "designSize":{"width":1774,"height":887},"minSceneScale":0.52,
- "background":"../../assets/review/background-v0.1/images/01_background/village_composite_concept.png",
- "hotspots":[
-  {"id":"cottage","label":"오두막","x":282,"y":130,"w":458,"h":347,"action":"inspect","note":"마을의 중심 건물. 현재 마스터 이미지의 고정 요소이며 독립 이동은 지원하지 않습니다."},
-  {"id":"reading","label":"독서 쉼터","x":12,"y":270,"w":295,"h":260,"action":"inspect","note":"책을 읽는 공간. 클릭하면 장소 정보를 보여주며 저장이나 예약 기능은 없습니다."},
-  {"id":"mailbox","label":"우체통","x":476,"y":433,"w":86,"h":113,"action":"local-note","note":"우체통에 적을 한 줄 메시지를 이 화면에서만 미리 볼 수 있습니다."},
-  {"id":"bridge","label":"나무다리","x":1030,"y":476,"w":350,"h":144,"action":"highlight-path","note":"다리의 통행 구간을 표시합니다. 실제 캐릭터 경로 탐색은 아직 지원하지 않습니다."},
-  {"id":"pond","label":"연못","x":1025,"y":613,"w":688,"h":256,"action":"ripple","note":"연못 수면에 시범 물결 표시를 켭니다. 실제 수면 프레임 애니메이션은 별도 제작이 필요합니다."}
- ],
- "characters":[
-  {"id":"squirrel","label":"다람쥐","x":362,"y":755,"size":123,"footFraction":0.898,"kind":"project","patrol":{"startX":340,"endX":412,"y":755,"walkMs":5200,"pauseMs":1700,"offsetMs":0},"link":null},
-  {"id":"rabbit","label":"토끼","x":525,"y":745,"size":128,"footFraction":0.898,"kind":"gpt","patrol":{"startX":492,"endX":554,"y":745,"walkMs":4900,"pauseMs":2100,"offsetMs":2200},"link":null},
-  {"id":"fox","label":"여우","x":686,"y":776,"size":123,"footFraction":0.917,"kind":"project","patrol":{"startX":652,"endX":729,"y":776,"walkMs":6200,"pauseMs":1600,"offsetMs":3800},"link":null},
-  {"id":"wolf","label":"늑대","x":807,"y":834,"size":124,"footFraction":0.940,"kind":"gpt","patrol":{"startX":786,"endX":850,"y":834,"walkMs":5700,"pauseMs":1900,"offsetMs":1000},"link":null}
- ]
+  "version": "scene-v1-motion-prototype",
+  "status": "prototype_not_approved",
+  "designSize": {
+    "width": 1774,
+    "height": 887
+  },
+  "minSceneScale": 0.52,
+  "background": "../../assets/review/background-v0.1/images/01_background/village_composite_concept.png",
+  "hotspots": [
+    {
+      "id": "cottage",
+      "label": "오두막",
+      "x": 282,
+      "y": 130,
+      "w": 458,
+      "h": 347,
+      "action": "inspect",
+      "note": "마을의 중심 건물. 현재 마스터 이미지의 고정 요소이며 독립 이동은 지원하지 않습니다."
+    },
+    {
+      "id": "reading",
+      "label": "독서 쉼터",
+      "x": 12,
+      "y": 270,
+      "w": 295,
+      "h": 260,
+      "action": "inspect",
+      "note": "책을 읽는 공간. 클릭하면 장소 정보를 보여주며 저장이나 예약 기능은 없습니다."
+    },
+    {
+      "id": "mailbox",
+      "label": "우체통",
+      "x": 476,
+      "y": 433,
+      "w": 86,
+      "h": 113,
+      "action": "local-note",
+      "note": "우체통에 적을 한 줄 메시지를 이 화면에서만 미리 볼 수 있습니다."
+    },
+    {
+      "id": "bridge",
+      "label": "나무다리",
+      "x": 1030,
+      "y": 476,
+      "w": 350,
+      "h": 144,
+      "action": "highlight-path",
+      "note": "다리의 통행 구간을 표시합니다. 실제 캐릭터 경로 탐색은 아직 지원하지 않습니다."
+    },
+    {
+      "id": "pond",
+      "label": "연못",
+      "x": 1025,
+      "y": 613,
+      "w": 688,
+      "h": 256,
+      "action": "ripple",
+      "note": "연못 수면에 시범 물결 표시를 켭니다. 실제 수면 프레임 애니메이션은 별도 제작이 필요합니다."
+    }
+  ],
+  "characters": [
+    {
+      "id": "squirrel",
+      "label": "다람쥐",
+      "x": 362,
+      "y": 755,
+      "size": 123,
+      "footFraction": 0.898,
+      "kind": "project",
+      "patrol": {
+        "startX": 340,
+        "endX": 412,
+        "y": 755,
+        "walkMs": 5200,
+        "pauseMs": 1700,
+        "offsetMs": 0
+      },
+      "link": null,
+      "alignmentPx": [
+        [
+          0,
+          0
+        ],
+        [
+          0.13,
+          0
+        ],
+        [
+          1.41,
+          0
+        ],
+        [
+          1.92,
+          0.26
+        ],
+        [
+          2.18,
+          0.26
+        ],
+        [
+          1.41,
+          0.26
+        ]
+      ]
+    },
+    {
+      "id": "rabbit",
+      "label": "토끼",
+      "x": 525,
+      "y": 745,
+      "size": 128,
+      "footFraction": 0.898,
+      "kind": "gpt",
+      "patrol": {
+        "startX": 492,
+        "endX": 554,
+        "y": 745,
+        "walkMs": 4900,
+        "pauseMs": 2100,
+        "offsetMs": 2200
+      },
+      "link": null,
+      "alignmentPx": [
+        [
+          0,
+          0
+        ],
+        [
+          2.8,
+          0
+        ],
+        [
+          5.2,
+          0
+        ],
+        [
+          -0.27,
+          -1.87
+        ],
+        [
+          4.4,
+          -2.67
+        ],
+        [
+          5.33,
+          -1.87
+        ]
+      ]
+    },
+    {
+      "id": "fox",
+      "label": "여우",
+      "x": 686,
+      "y": 776,
+      "size": 123,
+      "footFraction": 0.917,
+      "kind": "project",
+      "patrol": {
+        "startX": 652,
+        "endX": 729,
+        "y": 776,
+        "walkMs": 6200,
+        "pauseMs": 1600,
+        "offsetMs": 3800
+      },
+      "link": null,
+      "alignmentPx": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          2.56,
+          0
+        ],
+        [
+          -4.48,
+          0
+        ],
+        [
+          0.51,
+          -4.1
+        ],
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "id": "wolf",
+      "label": "늑대",
+      "x": 807,
+      "y": 834,
+      "size": 124,
+      "footFraction": 0.94,
+      "kind": "gpt",
+      "patrol": {
+        "startX": 786,
+        "endX": 850,
+        "y": 834,
+        "walkMs": 5700,
+        "pauseMs": 1900,
+        "offsetMs": 1000
+      },
+      "link": null,
+      "alignmentPx": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0.13,
+          0
+        ],
+        [
+          -2.2,
+          0
+        ],
+        [
+          3.1,
+          0
+        ],
+        [
+          -0.13,
+          0
+        ]
+      ]
+    }
+  ]
 }
 </script>
 <script>
@@ -197,7 +419,7 @@ function render(t){
   info.btn.style.left=step.x+'px';info.btn.style.top=step.y+'px';
   const nextFrame=canMove&&step.moving?1+(Math.floor(clock/320)%6):1;
   if(info.frame!==nextFrame){info.img.src=frameSrc(a.id,nextFrame);info.frame=nextFrame}
-  info.img.style.transform=step.moving&&step.left?'scaleX(-1)':'';
+  const align=a.alignmentPx[info.frame-1]||[0,0];info.img.style.transform='translate('+align[0]+'px,'+align[1]+'px)'+(step.moving&&step.left?' scaleX(-1)':'');
  }
  requestAnimationFrame(render);
 }
