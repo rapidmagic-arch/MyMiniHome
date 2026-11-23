@@ -62,7 +62,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 @keyframes water-ring{0%,25%{opacity:0;transform:scale(.4)}42%{opacity:.55}70%,100%{opacity:0;transform:scale(1.35)}}
 @keyframes fall-petal{0%{opacity:0;transform:translate(0,0) rotate(0)}8%,78%{opacity:.95}100%{opacity:0;transform:translate(-75px,155px) rotate(220deg)}}
 @keyframes mail-pop{0%{transform:translateY(17px) rotate(-9deg)}30%,70%{transform:translateY(-6px) rotate(-9deg)}100%{transform:translateY(17px) rotate(-9deg)}}
-@media(prefers-reduced-motion:reduce){.ambient-fall,.ambient-ring,.ambient-petal,.mailbox-signal{animation:none!important}.ambient-petal,.ambient-ring{opacity:0!important}.ambient-fall{opacity:.08}}
+@media(prefers-reduced-motion:reduce){body:not(.manual-motion) .ambient-fall,body:not(.manual-motion) .ambient-ring,body:not(.manual-motion) .ambient-petal,body:not(.manual-motion) .mailbox-signal{animation:none!important}body:not(.manual-motion) .ambient-petal,body:not(.manual-motion) .ambient-ring{opacity:0!important}body:not(.manual-motion) .ambient-fall{opacity:.08}}
 
 .guide-line{position:absolute;left:0;top:70%;height:1px;border-top:2px dashed #ffea9f;width:100%;pointer-events:none;display:none}
 .debug .guide-line{display:block}
@@ -73,9 +73,20 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 .panel input{flex:1;min-width:0;padding:9px;border:2px solid #79573a;background:white;color:#253e2b;border-radius:7px;font-size:15px}
 .panel form button{white-space:nowrap}
 .panel .notice{font-size:12px;color:#6d5945}
+.motion-indicator{background:#203e35;border:1px solid #638776;border-radius:7px;padding:8px 12px;margin:0 0 10px!important;font-weight:650;line-height:1.5}
+.actor-reaction{display:flex;gap:12px;align-items:center;margin:9px 0 12px;padding:10px;background:#f0eac9;border:2px solid #dbbd88;border-radius:10px}
+.actor-reaction img{width:76px;height:76px;object-fit:contain;image-rendering:pixelated;flex-shrink:0}
+.actor-reaction p{margin:0 0 8px!important;font-size:15px!important;font-weight:650}
+.actor-reaction button{font-size:13px;padding:5px 8px}
+#toggleLinkForm{font-size:13px;margin-bottom:8px}
+.speech-bubble{position:absolute;z-index:9;width:230px;max-width:230px;padding:12px;background:#fff9df;color:#3d3b24;border:5px solid #765233;box-shadow:6px 7px 0 #204e3399;border-radius:16px;transform:translate(-50%,-100%);font-size:18px;font-weight:800;text-align:center;pointer-events:none}
+.speech-bubble:after{content:"";position:absolute;left:calc(50% - 8px);bottom:-17px;width:18px;height:18px;background:#fff9df;border-right:4px solid #765233;border-bottom:4px solid #765233;transform:rotate(45deg)}
+.actor.is-reacting{filter:drop-shadow(0 0 6px #fff3a7)}
+.actor.is-reacting::after{content:"✦";position:absolute;right:18%;top:-15%;color:#fff2a0;font-size:28px;animation:reaction-pop .8s ease-in-out infinite;pointer-events:none;text-shadow:1px 2px 0 #96613f}
+@keyframes reaction-pop{50%{transform:translateY(-7px) rotate(12deg)}}
 .legend{color:#c7ded8;font-size:12px;line-height:1.6;margin:10px 3px 0}
 @media(max-width:740px){.toolbar strong{font-size:14px}.toolbar small{font-size:12px}.panel{position:relative;left:auto;bottom:auto;width:100%;margin-top:10px;box-shadow:none}.shell{padding:8px}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(prefers-reduced-motion:reduce){body:not(.manual-motion) *,body:not(.manual-motion) *::before,body:not(.manual-motion) *::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
@@ -83,6 +94,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
  <div class="toolbar"><div><strong>MyMiniHome · 기본 숲 마을 템플릿 1종</strong> <small>v1 · 움직임/반응 검토용</small></div>
   <div class="tools"><button id="toggleFit" type="button" aria-pressed="false">전체 보기</button><button id="toggleMotion" type="button" aria-pressed="false">움직임 정지</button><button id="toggleGuides" type="button" aria-pressed="false">앵커 표시</button><button id="reset" type="button">팝업 닫기</button></div>
  </div>
+ <p id="motionStatus" class="legend motion-indicator" role="status">움직임 확인 중…</p>
  <div class="scene-area">
   <div class="viewport" id="viewport" role="region" tabindex="0" aria-label="숲 마을 장면. 좁은 화면에서는 가로로 스크롤하여 탐색">
    <div class="frame-sizer" id="frameSizer"><div class="stage" id="stage">
@@ -96,12 +108,15 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
      <div class="ambient-petal p1"></div><div class="ambient-petal p2"></div><div class="ambient-petal p3"></div>
      <div class="ambient-petal p4"></div><div class="ambient-petal p5"></div><div class="ambient-petal p6"></div>
     </div><div id="mailboxSignal" class="mailbox-signal" hidden aria-hidden="true"></div>
-    <div id="actors"></div><div class="guide-line"></div>
+    <div id="actors"></div><div id="speechBubble" class="speech-bubble" aria-hidden="true" hidden></div><div class="guide-line"></div>
    </div></div>
   </div>
   <section class="panel" id="panel" hidden aria-label="마을 상호작용 패널" aria-live="polite">
    <button class="close" id="close" type="button" aria-label="정보창 닫기">×</button>
-   <h2 id="panelTitle"></h2><p id="panelBody"></p><p id="panelLink"></p>
+   <h2 id="panelTitle"></h2>
+   <div id="actorReaction" class="actor-reaction" hidden><img id="panelAvatar" alt=""/><div><p id="panelGreeting"></p><button id="reactButton" type="button">다른 반응 보기</button></div></div>
+   <p id="panelBody"></p><p id="panelLink"></p>
+   <button type="button" id="toggleLinkForm" hidden>프로젝트·GPT 링크 설정</button>
    <form id="linkForm" hidden><input id="linkInput" type="url" maxlength="450" placeholder="https://chatgpt.com/..." aria-label="기존 프로젝트 또는 GPT 링크"/><button type="submit">주소 연결</button></form>
    <p id="linkNotice" class="notice" hidden>이 화면에서만 연결합니다. 공개 GitHub나 ChatGPT 대화로 전송·저장하지 않습니다.</p>
    <form id="noteForm" hidden><input id="noteInput" maxlength="80" placeholder="한 줄 메시지 (80자)" aria-label="한 줄 메시지"/><button type="submit">미리보기</button></form>
@@ -114,7 +129,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 </div>
 <script id="scene" type="application/json">
 {
-  "version": "scene-v1-eight-actor-ambient-prototype",
+  "version": "scene-v1-motion-feedback-fix",
   "status": "prototype_not_approved",
   "designSize": {
     "width": 1774,
@@ -207,8 +222,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
         "startX": 340,
         "endX": 412,
         "y": 755,
-        "walkMs": 5200,
-        "pauseMs": 1700,
+        "walkMs": 3224,
+        "pauseMs": 782,
         "offsetMs": 0
       },
       "link": null,
@@ -237,6 +252,11 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
           1.41,
           0.26
         ]
+      ],
+      "greetings": [
+        "안녕! 숲길을 함께 구경할래?",
+        "오늘은 도토리를 세 개 찾았어!",
+        "마을 소식이 궁금하면 다시 눌러 줘."
       ]
     },
     {
@@ -251,8 +271,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
         "startX": 492,
         "endX": 554,
         "y": 745,
-        "walkMs": 4900,
-        "pauseMs": 2100,
+        "walkMs": 3038,
+        "pauseMs": 966,
         "offsetMs": 2200
       },
       "link": null,
@@ -281,6 +301,11 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
           5.33,
           -1.87
         ]
+      ],
+      "greetings": [
+        "반가워! 오늘 읽을 이야기가 있어?",
+        "파란 목도리가 잘 어울리지?",
+        "산책 끝나면 책을 읽을 거야."
       ]
     },
     {
@@ -295,8 +320,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
         "startX": 652,
         "endX": 729,
         "y": 776,
-        "walkMs": 6200,
-        "pauseMs": 1600,
+        "walkMs": 3844,
+        "pauseMs": 736,
         "offsetMs": 3800
       },
       "link": null,
@@ -325,6 +350,11 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
           0,
           0
         ]
+      ],
+      "greetings": [
+        "마을 지도를 살펴보고 있어!",
+        "새로운 길을 발견했어.",
+        "길을 잃으면 나를 찾아줘!"
       ]
     },
     {
@@ -339,8 +369,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
         "startX": 786,
         "endX": 850,
         "y": 834,
-        "walkMs": 5700,
-        "pauseMs": 1900,
+        "walkMs": 3534,
+        "pauseMs": 874,
         "offsetMs": 1000
       },
       "link": null,
@@ -369,6 +399,11 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
           -0.13,
           0
         ]
+      ],
+      "greetings": [
+        "안녕! 오늘도 꼼꼼히 살펴보자.",
+        "내 안경은 검토할 때 필수야.",
+        "산책하면서 생각을 정리 중이야."
       ]
     },
     {
@@ -403,6 +438,11 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
           2.2,
           0
         ]
+      ],
+      "greetings": [
+        "책 속에서 흥미로운 이야기를 찾았어.",
+        "조용한 숲속 독서 시간이 좋아.",
+        "한 권을 끝내면 또 다른 책을 펼쳐."
       ]
     },
     {
@@ -437,6 +477,11 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
           6.2,
           0
         ]
+      ],
+      "greetings": [
+        "우리 오두막에 놀러 와!",
+        "따뜻한 차 한 잔은 어때?",
+        "산책길에 쉬어 가도 좋아."
       ]
     },
     {
@@ -471,6 +516,11 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
           0,
           0
         ]
+      ],
+      "greetings": [
+        "연못 물결이 반짝이고 있어!",
+        "수련잎 위가 내 자리야.",
+        "첨벙! 물소리가 들리니?"
       ]
     },
     {
@@ -505,6 +555,11 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
           0,
           0
         ]
+      ],
+      "greetings": [
+        "작은 꽃 한 송이를 준비했어.",
+        "이 꽃은 너에게 줄게!",
+        "오늘도 숲길에 꽃이 피었어."
       ]
     }
   ],
@@ -518,7 +573,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
     "cherry": "6 falling petals",
     "mailbox": "visible envelope on interaction",
     "status": "candidate_not_approved"
-  }
+  },
+  "uxFix": "visible scene status, animal reactions, explicit motion override, optional URL form"
 }
 </script>
 <script>
@@ -531,7 +587,8 @@ const walkRoot='../../assets/review/walk-v0.1/';
 const walkFrameSrc=(id,direction,n)=>walkRoot+'frames/'+id+'/'+id+'_walk_'+direction+'_'+String(n).padStart(2,'0')+'.png';
 const objectButtons=new Map(),characterNodes=new Map(),manualLinks=new Map();
 const motionQuery=window.matchMedia('(prefers-reduced-motion: reduce)');
-let paused=false,selected=null,clock=0,lastTime=0,lastScale=0,fitAll=false;
+let paused=motionQuery.matches,userChoseMotion=false,selected=null,clock=0,lastTime=0,lastScale=0,fitAll=false;
+const reactionIndexes=new Map();
 $('background').src=scene.background;
 for(const obj of scene.hotspots){
  const btn=document.createElement('button');btn.type='button';btn.className='hotspot';btn.dataset.label=obj.label;
@@ -564,6 +621,7 @@ function preloadWalkPack(){
     Promise.all(pending).then(()=>{
      info.walkReady=true;info.frame=0;info.direction='';
      info.btn.dataset.animation='walk-v0.1-candidate';
+     updateMotionLabel();
      info.btn.style.setProperty('--foot','89.84375%');
      info.btn.style.setProperty('--foot-neg','-89.84375%');
     }).catch(()=>{info.walkReady=false;info.btn.dataset.animation='legacy-gestures'});
@@ -573,28 +631,30 @@ function preloadWalkPack(){
 preloadWalkPack();
 const clearEffects=()=>{
  for(const btn of objectButtons.values())btn.classList.remove('is-active');
- for(const info of characterNodes.values())info.btn.classList.remove('is-selected');
- $('bridgeGuide').setAttribute('hidden','');$('pondRipple').hidden=true;$('pondRipple').classList.remove('play');$('mailboxSignal').hidden=true;$('ambience').classList.remove('ambient-ripple-intense');
+ for(const info of characterNodes.values()){info.btn.classList.remove('is-selected');info.btn.classList.remove('is-reacting');}
+ $('bridgeGuide').setAttribute('hidden','');$('pondRipple').hidden=true;$('pondRipple').classList.remove('play');$('mailboxSignal').hidden=true;$('ambience').classList.remove('ambient-ripple-intense');$('speechBubble').hidden=true;
 };
 function closeInfo(){
  panel.hidden=true;$('noteForm').hidden=true;$('noteNotice').hidden=true;$('previewMessage').hidden=true;
- $('noteInput').value='';$('linkInput').value='';$('linkForm').hidden=true;$('linkNotice').hidden=true;selected=null;clearEffects();
+ $('noteInput').value='';$('linkInput').value='';$('linkForm').hidden=true;$('linkNotice').hidden=true;$('toggleLinkForm').hidden=true;$('actorReaction').hidden=true;selected=null;clearEffects();
 }
 function openInfo(obj){
  clearEffects();selected=obj.id;panel.hidden=false;
  $('panelTitle').textContent=obj.label;
  $('panelBody').textContent=obj.note||((obj.kind==='gpt'?'GPT':'프로젝트')+' 프로필 시안 — 실제 정보 미연결');
  $('panelLink').replaceChildren();$('noteInput').value='';$('previewMessage').hidden=true;$('previewMessage').textContent='';
- $('noteForm').hidden=true;$('noteNotice').hidden=true;$('linkForm').hidden=true;$('linkNotice').hidden=true;
+ $('noteForm').hidden=true;$('noteNotice').hidden=true;$('linkForm').hidden=true;$('linkNotice').hidden=true;$('toggleLinkForm').hidden=true;$('actorReaction').hidden=true;
  if(characterNodes.has(obj.id)){
-  characterNodes.get(obj.id).btn.classList.add('is-selected');
+  const info=characterNodes.get(obj.id);info.btn.classList.add('is-selected');info.btn.classList.add('is-reacting');
+  $('actorReaction').hidden=false;$('panelAvatar').src=frameSrc(obj.id,obj.idleFrames?obj.idleFrames[0]:1);
+  reactionIndexes.set(obj.id,0);showReaction(obj);
   const href=manualLinks.get(obj.id)||obj.link;
   if(typeof href==='string' && /^https:\/\/chatgpt\.com\//.test(href)){
    const a=document.createElement('a');a.href=href;a.rel='noopener noreferrer';a.target='_blank';a.textContent='기존 ChatGPT 프로젝트·GPT 열기';
    a.addEventListener('click',event=>{if(window.openai&&typeof window.openai.openExternal==='function'){event.preventDefault();window.openai.openExternal({href});}});
    $('panelLink').append(a);
-  }else $('panelLink').textContent='연결 URL 미설정 · 직접 입력하면 이 화면에서만 사용합니다.';
-  $('linkForm').hidden=false;$('linkNotice').hidden=false;$('linkInput').value=manualLinks.get(obj.id)||'';
+  }else $('panelLink').textContent='연결된 ChatGPT 프로젝트·GPT 없음. 필요할 때만 연결해 줘.';
+  $('toggleLinkForm').hidden=false;$('linkInput').value=manualLinks.get(obj.id)||'';
  }else{
   objectButtons.get(obj.id).classList.add('is-active');
   if(obj.action==='highlight-path')$('bridgeGuide').removeAttribute('hidden');
@@ -603,6 +663,27 @@ function openInfo(obj){
   if(obj.action==='local-note'){$('noteForm').hidden=false;$('noteNotice').hidden=false}
  }
 }
+function showReaction(obj){
+ const lines=obj.greetings||['안녕!'];const n=reactionIndexes.get(obj.id)||0;
+ const message=lines[n%lines.length];
+ $('panelGreeting').textContent=message;
+ const bubble=$('speechBubble');bubble.textContent=message;bubble.hidden=false;
+ const info=characterNodes.get(obj.id);
+ if(info){bubble.style.left=Math.max(135,Math.min(1639,info.x))+'px';bubble.style.top=(info.y-obj.size*.88-16)+'px';}
+}
+$('reactButton').addEventListener('click',()=>{
+ if(!selected||!characterNodes.has(selected))return;
+ const obj=characterNodes.get(selected).actor;
+ reactionIndexes.set(selected,(reactionIndexes.get(selected)||0)+1);
+ showReaction(obj);
+});
+$('toggleLinkForm').addEventListener('click',()=>{
+ if(!selected||!characterNodes.has(selected))return;
+ const opening=$('linkForm').hidden;
+ $('linkForm').hidden=!opening;$('linkNotice').hidden=!opening;
+ $('toggleLinkForm').textContent=opening?'주소 입력 닫기':'프로젝트·GPT 링크 설정';
+ if(opening)$('linkInput').focus();
+});
 $('linkForm').addEventListener('submit',e=>{
  e.preventDefault();
  const raw=$('linkInput').value.trim();
@@ -625,14 +706,19 @@ $('toggleGuides').addEventListener('click',()=>{
  const on=stage.classList.toggle('debug');$('toggleGuides').setAttribute('aria-pressed',String(on));
 });
 function updateMotionLabel(){
- const isStopped=paused||motionQuery.matches;
+ const isStopped=paused;
  $('toggleMotion').textContent=isStopped?'움직임 재생':'움직임 정지';
  $('toggleMotion').setAttribute('aria-pressed',String(isStopped));
- $('toggleMotion').disabled=motionQuery.matches;
- if(!$('pondRipple').hidden)$('pondRipple').classList.toggle('play',!isStopped);stage.classList.toggle('motion-paused',isStopped);
+ $('toggleMotion').disabled=false;
+ document.body.classList.toggle('manual-motion',!isStopped&&motionQuery.matches);
+ if(!$('pondRipple').hidden)$('pondRipple').classList.toggle('play',!isStopped);
+ stage.classList.toggle('motion-paused',isStopped);
+ const ready=Array.from(characterNodes.values()).filter(info=>info.walkReady).length;
+ const state=isStopped?(motionQuery.matches&&!userChoseMotion?'시스템 설정에 따라 정지됨 — 움직임 재생 버튼으로 켤 수 있어':'움직임 정지 중 — 재생 버튼을 눌러줘'):'움직임 재생 중 — 산책하는 동물 4종 · 환경 효과 실행';
+ $('motionStatus').textContent=state+' · 전용 보행 프레임 '+ready+'/4종';
 }
-$('toggleMotion').addEventListener('click',()=>{paused=!paused;updateMotionLabel()});
-if(motionQuery.addEventListener)motionQuery.addEventListener('change',updateMotionLabel);
+$('toggleMotion').addEventListener('click',()=>{userChoseMotion=true;paused=!paused;updateMotionLabel()});
+if(motionQuery.addEventListener)motionQuery.addEventListener('change',()=>{if(!userChoseMotion)paused=motionQuery.matches;updateMotionLabel()});
 updateMotionLabel();
 function layout(){
  const width=viewport.clientWidth;
@@ -655,7 +741,7 @@ function track(actor,t){
 function render(t){
  if(lastTime===0)lastTime=t;
  const delta=Math.min(Math.max(t-lastTime,0),100);lastTime=t;
- const canMove=!paused&&!motionQuery.matches&&panel.hidden&&!document.hidden;
+ const canMove=!paused&&!document.hidden;
  if(canMove)clock+=delta;
  for(const info of characterNodes.values()){
   const a=info.actor;
@@ -669,6 +755,7 @@ function render(t){
   }
   const step=track(a,clock);
   info.x=step.x;info.y=step.y;
+  if(selected===a.id&&!$('speechBubble').hidden)$('speechBubble').style.left=Math.max(135,Math.min(1639,info.x))+'px';
   // Keep the clickable button stationary; only the sprite moves inside its corridor.
   const isWalk=info.walkReady,dir=step.left?'left':'right';
   const nextFrame=isWalk?(canMove&&step.moving?1+(Math.floor(clock/160)%6):1):(canMove&&step.moving?[1,2,3,6][Math.floor(clock/900)%4]:1);
