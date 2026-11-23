@@ -4,38 +4,204 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MyMiniHome · 숲 마을 기본 장면 v1</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#1c2e30;color:#f9f8dc;font-family:system-ui,"Malgun Gothic",sans-serif}.shell{max-width:1800px;margin:auto;padding:12px}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}.toolbar strong{font-size:16px}.toolbar small{color:#bdd5d0}.tools{display:flex;gap:8px}button{font:inherit;cursor:pointer}.tools button,.panel button{background:#fff5c9;color:#293c2e;border:2px solid #654c30;border-radius:6px;padding:7px 12px;font-weight:700}.viewport{position:relative;width:100%;aspect-ratio:1774 / 887;border:4px solid #3d563a;border-radius:9px;overflow:hidden;background:#87d29b;box-shadow:0 12px 32px #091a1990}.stage{position:absolute;left:0;top:0;width:1774px;height:887px;transform-origin:0 0;overflow:hidden}.base{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:fill;pointer-events:none}.hotspot{position:absolute;border:2px dashed transparent;background:transparent;border-radius:20px}.debug .hotspot{border-color:#ffec93;background:#ffeb852b}.hotspot:focus-visible,.actor:focus-visible{outline:5px solid #ffcf56;outline-offset:4px}.actor{position:absolute;width:var(--size);height:var(--size);transform:translate(-50%,-90%);border:0;background:none;padding:0;filter:drop-shadow(0 2px 1px #334c3c44)}.actor::before{content:"";position:absolute;width:48%;height:10%;left:26%;bottom:6%;background:#1b38194d;filter:blur(7px);border-radius:50%}.actor img{position:relative;display:block;width:100%;height:100%;object-fit:contain}.debug .actor{outline:2px dashed #fddc77}.debug .actor::after{content:"";position:absolute;width:8px;height:8px;background:#ff3b64;border:2px solid white;border-radius:50%;left:calc(50% - 4px);top:calc(90% - 4px);pointer-events:none}.panel{position:absolute;z-index:20;left:24px;bottom:20px;max-width:420px;min-width:280px;padding:18px;background:#fff9d9f5;border:5px double #6d5138;border-radius:10px;color:#263f29;box-shadow:5px 6px 0 #193e31a1}.panel h2{margin:0 32px 8px 0;font-size:21px}.panel p{margin:0 0 10px;font-size:14px;line-height:1.55}.panel .close{position:absolute;right:10px;top:9px}.legend{color:#c7ded8;font-size:12px;margin:9px 3px 0}.guide-line{position:absolute;left:0;top:70%;height:1px;border-top:2px dashed #ffea9f;width:100%;pointer-events:none;display:none}.debug .guide-line{display:block}@media(max-width:650px){.toolbar{align-items:flex-start}.toolbar strong{font-size:14px}}
+:root{color-scheme:dark;--cream:#fff4d7;--brown:#765233;--leaf:#294837}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:#1c2e30;color:#f9f8dc;font-family:system-ui,"Malgun Gothic",sans-serif}
+.shell{width:min(100%,1530px);margin:auto;padding:12px}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.toolbar strong{font-size:16px}.toolbar small{color:#bdd5d0}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+button,input{font:inherit}
+button{cursor:pointer}
+.tools button,.panel button{background:var(--cream);color:#293c2e;border:2px solid var(--brown);border-radius:8px;padding:8px 11px;font-weight:700}
+button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offset:3px}
+.scene-area{position:relative}
+.viewport{width:100%;overflow:auto;overscroll-behavior:contain;scrollbar-color:#779c7c #274a42;border:4px solid #53774b;border-radius:10px;background:#88d6b1;box-shadow:0 10px 26px #071b185c}
+.frame-sizer{position:relative}
+.stage{position:absolute;left:0;top:0;width:1774px;height:887px;transform-origin:top left}
+.base{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none}
+.hotspot{position:absolute;z-index:2;border:2px dashed transparent;background:transparent;border-radius:24px;padding:0;color:transparent}
+.hotspot:hover,.hotspot:focus-visible,.hotspot.is-active,.debug .hotspot{border-color:#f9e790;background:#ffe78a2b;color:#fff}
+.hotspot::after{content:attr(data-label);position:absolute;bottom:-21px;left:10%;font-weight:800;font-size:18px;white-space:nowrap;text-shadow:1px 2px 2px #153b2d,0 0 3px #153b2d;opacity:0}
+.hotspot:hover::after,.hotspot:focus-visible::after,.debug .hotspot::after{opacity:1}
+.actor{position:absolute;z-index:4;width:var(--size);height:var(--size);transform:translate(-50%,calc(-1 * var(--foot)));border:0;background:none;padding:0}
+.actor::before{content:"";position:absolute;width:46%;height:8%;left:27%;top:calc(var(--foot) - 5%);background:#1b38194d;filter:blur(5px);border-radius:50%}
+.actor img{position:relative;display:block;width:100%;height:100%;object-fit:contain}
+.actor.is-selected{filter:drop-shadow(0 0 6px #fff8a5)}
+.debug .actor{outline:2px dashed #fddc77}
+.debug .actor::after{content:"";position:absolute;width:8px;height:8px;background:#ff3b64;border:2px solid #fff;border-radius:50%;left:calc(50% - 4px);top:calc(var(--foot) - 4px);pointer-events:none}
+.stage-overlay{position:absolute;inset:0;z-index:3;pointer-events:none}
+.bridge-guide{fill:none;stroke:#fef4a0;stroke-width:8;stroke-linecap:round;stroke-dasharray:16 12;filter:drop-shadow(0 2px 1px #493d23)}
+.pond-ripple{position:absolute;left:1380px;top:755px;width:135px;height:50px;border:8px solid #fff4ba;border-radius:50%;opacity:.85;box-shadow:0 0 10px #fff9d0}
+.pond-ripple.play{animation:pond 1.6s ease-out infinite}
+@keyframes pond{0%{transform:scale(.3);opacity:.95}100%{transform:scale(1.3);opacity:0}}
+.guide-line{position:absolute;left:0;top:70%;height:1px;border-top:2px dashed #ffea9f;width:100%;pointer-events:none;display:none}
+.debug .guide-line{display:block}
+.panel{position:absolute;z-index:20;bottom:16px;left:16px;width:min(370px,calc(100% - 32px));padding:17px;background:#fff8defa;border:4px solid #79573a;border-radius:12px;color:#263f29;box-shadow:5px 6px 0 #17392e91}
+.panel h2{margin:0 35px 8px 0;font-size:19px}.panel p{margin:0 0 10px;font-size:14px;line-height:1.55}.panel a{color:#174e7a}
+.panel .close{position:absolute;right:10px;top:9px;padding:4px 8px}
+.panel form{display:flex;gap:6px;margin:10px 0;align-items:stretch}
+.panel input{flex:1;min-width:0;padding:9px;border:2px solid #79573a;background:white;color:#253e2b;border-radius:7px;font-size:15px}
+.panel form button{white-space:nowrap}
+.panel .notice{font-size:12px;color:#6d5945}
+.legend{color:#c7ded8;font-size:12px;line-height:1.6;margin:10px 3px 0}
+@media(max-width:740px){.toolbar strong{font-size:14px}.toolbar small{font-size:12px}.panel{position:relative;left:auto;bottom:auto;width:100%;margin-top:10px;box-shadow:none}.shell{padding:8px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
-<div class="shell"><div class="toolbar"><div><strong>MyMiniHome · 기본 숲 마을 템플릿 1종</strong> <small>v1 · 레이아웃 시제품, 최종 승인 전</small></div><div class="tools"><button id="toggleGuides" type="button" aria-pressed="false">앵커 표시</button><button id="reset" type="button">팝업 닫기</button></div></div><div class="viewport" id="viewport"><div class="stage" id="stage"><img class="base" id="background" alt="픽셀 숲 마을, 오두막, 연못, 다리, 폭포, 정원"/><div class="guide-line"></div><div id="hotspots"></div><div id="actors"></div><div class="panel" id="panel" hidden><button class="close" id="close" type="button">닫기</button><h2 id="panelTitle"></h2><p id="panelBody"></p><p id="panelLink"></p></div></div></div><p class="legend">정적 건물·물길은 단일 마스터 장면에 고정하여 위치 불일치를 피했고, 동물만 독립 스프라이트로 배치했어. 연결할 GPT/프로젝트 URL이 없으면 이동은 실행되지 않아.</p></div>
+<div class="shell">
+ <div class="toolbar"><div><strong>MyMiniHome · 기본 숲 마을 템플릿 1종</strong> <small>v1 · 움직임/반응 검토용</small></div>
+  <div class="tools"><button id="toggleMotion" type="button" aria-pressed="false">움직임 정지</button><button id="toggleGuides" type="button" aria-pressed="false">앵커 표시</button><button id="reset" type="button">팝업 닫기</button></div>
+ </div>
+ <div class="scene-area">
+  <div class="viewport" id="viewport" role="region" tabindex="0" aria-label="숲 마을 장면. 좁은 화면에서는 가로로 스크롤하여 탐색">
+   <div class="frame-sizer" id="frameSizer"><div class="stage" id="stage">
+    <img class="base" id="background" alt="오두막, 연못, 폭포, 다리, 독서 공간이 있는 픽셀 숲 마을"/>
+    <div id="hotspots"></div>
+    <svg class="stage-overlay" viewBox="0 0 1774 887" aria-hidden="true"><path id="bridgeGuide" class="bridge-guide" d="M1058 611 Q1165 545 1285 585" hidden/></svg>
+    <div id="pondRipple" class="pond-ripple" hidden aria-hidden="true"></div>
+    <div id="actors"></div><div class="guide-line"></div>
+   </div></div>
+  </div>
+  <section class="panel" id="panel" hidden aria-label="마을 상호작용 패널" aria-live="polite">
+   <button class="close" id="close" type="button" aria-label="정보창 닫기">×</button>
+   <h2 id="panelTitle"></h2><p id="panelBody"></p><p id="panelLink"></p>
+   <form id="noteForm" hidden><input id="noteInput" maxlength="80" placeholder="한 줄 메시지 (80자)" aria-label="한 줄 메시지"/><button type="submit">미리보기</button></form>
+   <p class="notice" id="noteNotice" hidden>입력은 화면 안에서만 표시됩니다. ChatGPT로 전송하거나 저장하지 않습니다.</p>
+   <p id="previewMessage" hidden></p>
+  </section>
+ </div>
+ <p class="legend" id="statusNote">캐릭터가 각자 정해진 잔디 구간 안에서만 움직이는 시제품이야. 사물은 클릭 반응을 제공하고, 연결하지 않은 프로젝트·GPT 링크는 열리지 않아.</p>
+ <p class="legend" id="responsiveNote">장면은 원본 1774×887 비율로 관리돼. 좁은 화면에서는 최소 확대율을 유지하므로 마을을 좌우로 스크롤해 탐색할 수 있어.</p>
+</div>
 <script id="scene" type="application/json">
 {
-  "version":"scene-v1-draft", "designSize":{"width":1774,"height":887},
-  "status":"prototype_not_approved",
-  "background":"../../assets/review/background-v0.1/images/01_background/village_composite_concept.png",
-  "hotspots":[
-    {"id":"cottage","label":"오두막","x":282,"y":130,"w":458,"h":347,"note":"고정 배경에 포함. 클릭 영역만 독립 관리"},
-    {"id":"reading","label":"독서 쉼터","x":12,"y":270,"w":295,"h":260,"note":"정적 합성 배경. 향후 분리 자산으로 교체 가능"},
-    {"id":"mailbox","label":"우체통","x":476,"y":433,"w":86,"h":113,"note":"메일함 상호작용은 추후 연결"},
-    {"id":"bridge","label":"나무다리","x":1030,"y":476,"w":350,"h":144,"note":"연못과 지형에 고정된 연결 구조물"},
-    {"id":"pond","label":"연못","x":1025,"y":613,"w":688,"h":256,"note":"애니메이션이 없는 마스터 합성 수면"}
-  ],
-  "characters":[
-    {"id":"squirrel","label":"다람쥐","x":362,"y":755,"size":123,"footFraction":0.898,"kind":"project","frame":"../../assets/review/v0.2/frames/squirrel/squirrel_01.png","link":null},
-    {"id":"rabbit","label":"토끼","x":525,"y":745,"size":128,"footFraction":0.898,"kind":"gpt","frame":"../../assets/review/v0.2/frames/rabbit/rabbit_01.png","link":null},
-    {"id":"fox","label":"여우","x":686,"y":776,"size":123,"footFraction":0.917,"kind":"project","frame":"../../assets/review/v0.2/frames/fox/fox_01.png","link":null},
-    {"id":"wolf","label":"늑대","x":807,"y":834,"size":124,"footFraction":0.940,"kind":"gpt","frame":"../../assets/review/v0.2/frames/wolf/wolf_01.png","link":null}
-  ]
+ "version":"scene-v1-motion-prototype","status":"prototype_not_approved",
+ "designSize":{"width":1774,"height":887},"minSceneScale":0.52,
+ "background":"../../assets/review/background-v0.1/images/01_background/village_composite_concept.png",
+ "hotspots":[
+  {"id":"cottage","label":"오두막","x":282,"y":130,"w":458,"h":347,"action":"inspect","note":"마을의 중심 건물. 현재 마스터 이미지의 고정 요소이며 독립 이동은 지원하지 않습니다."},
+  {"id":"reading","label":"독서 쉼터","x":12,"y":270,"w":295,"h":260,"action":"inspect","note":"책을 읽는 공간. 클릭하면 장소 정보를 보여주며 저장이나 예약 기능은 없습니다."},
+  {"id":"mailbox","label":"우체통","x":476,"y":433,"w":86,"h":113,"action":"local-note","note":"우체통에 적을 한 줄 메시지를 이 화면에서만 미리 볼 수 있습니다."},
+  {"id":"bridge","label":"나무다리","x":1030,"y":476,"w":350,"h":144,"action":"highlight-path","note":"다리의 통행 구간을 표시합니다. 실제 캐릭터 경로 탐색은 아직 지원하지 않습니다."},
+  {"id":"pond","label":"연못","x":1025,"y":613,"w":688,"h":256,"action":"ripple","note":"연못 수면에 시범 물결 표시를 켭니다. 실제 수면 프레임 애니메이션은 별도 제작이 필요합니다."}
+ ],
+ "characters":[
+  {"id":"squirrel","label":"다람쥐","x":362,"y":755,"size":123,"footFraction":0.898,"kind":"project","patrol":{"startX":340,"endX":412,"y":755,"walkMs":5200,"pauseMs":1700,"offsetMs":0},"link":null},
+  {"id":"rabbit","label":"토끼","x":525,"y":745,"size":128,"footFraction":0.898,"kind":"gpt","patrol":{"startX":492,"endX":554,"y":745,"walkMs":4900,"pauseMs":2100,"offsetMs":2200},"link":null},
+  {"id":"fox","label":"여우","x":686,"y":776,"size":123,"footFraction":0.917,"kind":"project","patrol":{"startX":652,"endX":729,"y":776,"walkMs":6200,"pauseMs":1600,"offsetMs":3800},"link":null},
+  {"id":"wolf","label":"늑대","x":807,"y":834,"size":124,"footFraction":0.940,"kind":"gpt","patrol":{"startX":786,"endX":850,"y":834,"walkMs":5700,"pauseMs":1900,"offsetMs":1000},"link":null}
+ ]
 }
 </script>
 <script>
-(()=>{"use strict";const scene=JSON.parse(document.getElementById('scene').textContent),$=id=>document.getElementById(id),stage=$('stage'),viewport=$('viewport'),panel=$('panel');$('background').src=scene.background;
-const open=(obj)=>{$('panelTitle').textContent=obj.label;$('panelBody').textContent=(obj.note||((obj.kind==='gpt'?'GPT':'프로젝트')+' 연결 후보'))+' · 검토용 시안';const link=$('panelLink');link.replaceChildren();if(obj.link){const a=document.createElement('a');a.href=obj.link;a.target='_blank';a.rel='noopener noreferrer';a.textContent='기존 ChatGPT 링크 열기';link.append(a)}else link.textContent='연결 주소 미정 — 임의 이동하지 않음';panel.hidden=false};
-for(const obj of scene.hotspots){const b=document.createElement('button');b.type='button';b.className='hotspot';b.title=obj.label;b.setAttribute('aria-label',obj.label);Object.assign(b.style,{left:obj.x+'px',top:obj.y+'px',width:obj.w+'px',height:obj.h+'px'});b.onclick=()=>open(obj);$('hotspots').append(b)}
-for(const obj of scene.characters){const b=document.createElement('button');b.type='button';b.className='actor';b.title=obj.label;b.setAttribute('aria-label',obj.label+' 프로필');b.style.cssText='left:'+obj.x+'px;top:'+obj.y+'px;--size:'+obj.size+'px;transform:translate(-50%,-'+(obj.footFraction*100)+'%)';const img=document.createElement('img');img.src=obj.frame;img.alt='';b.append(img);b.onclick=()=>open(obj);$('actors').append(b)}
-$('toggleGuides').onclick=()=>{const on=stage.classList.toggle('debug');$('toggleGuides').setAttribute('aria-pressed',String(on))};$('close').onclick=$('reset').onclick=()=>panel.hidden=true;
-function scale(){stage.style.transform='scale('+(viewport.clientWidth/scene.designSize.width)+')'}new ResizeObserver(scale).observe(viewport);scale();
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id),scene=JSON.parse($('scene').textContent),stage=$('stage'),viewport=$('viewport'),panel=$('panel');
+const spriteBase='../../assets/review/v0.2/frames/';
+const frameSrc=(id,n)=>spriteBase+id+'/'+id+'_'+String(n).padStart(2,'0')+'.png';
+const objectButtons=new Map(),characterNodes=new Map();
+const motionQuery=window.matchMedia('(prefers-reduced-motion: reduce)');
+let paused=false,selected=null,clock=0,lastTime=0,lastScale=0;
+$('background').src=scene.background;
+for(const obj of scene.hotspots){
+ const btn=document.createElement('button');btn.type='button';btn.className='hotspot';btn.dataset.label=obj.label;
+ btn.setAttribute('aria-label',obj.label+' 상호작용');btn.style.left=obj.x+'px';btn.style.top=obj.y+'px';btn.style.width=obj.w+'px';btn.style.height=obj.h+'px';
+ btn.addEventListener('click',()=>openInfo(obj));objectButtons.set(obj.id,btn);$('hotspots').append(btn);
+}
+for(const actor of scene.characters){
+ const btn=document.createElement('button');btn.type='button';btn.className='actor';btn.title=actor.label+' 프로필';
+ btn.setAttribute('aria-label',actor.label+' 프로필 열기');btn.style.setProperty('--size',actor.size+'px');
+ btn.style.setProperty('--foot',(actor.footFraction*100)+'%');
+ const img=document.createElement('img');img.src=frameSrc(actor.id,1);img.alt='';img.decoding='async';img.draggable=false;
+ btn.append(img);btn.addEventListener('click',()=>openInfo(actor));$('actors').append(btn);
+ characterNodes.set(actor.id,{btn,img,actor,frame:1,x:actor.x,y:actor.y});
+ for(let n=2;n<=6;n++){const pre=new Image();pre.src=frameSrc(actor.id,n)}
+}
+const clearEffects=()=>{
+ for(const btn of objectButtons.values())btn.classList.remove('is-active');
+ for(const info of characterNodes.values())info.btn.classList.remove('is-selected');
+ $('bridgeGuide').hidden=true;$('pondRipple').hidden=true;$('pondRipple').classList.remove('play');
+};
+function closeInfo(){
+ panel.hidden=true;$('noteForm').hidden=true;$('noteNotice').hidden=true;$('previewMessage').hidden=true;
+ $('noteInput').value='';selected=null;clearEffects();
+}
+function openInfo(obj){
+ clearEffects();selected=obj.id;panel.hidden=false;
+ $('panelTitle').textContent=obj.label;
+ $('panelBody').textContent=obj.note||((obj.kind==='gpt'?'GPT':'프로젝트')+' 프로필 시안 — 실제 정보 미연결');
+ $('panelLink').replaceChildren();$('noteInput').value='';$('previewMessage').hidden=true;$('previewMessage').textContent='';
+ $('noteForm').hidden=true;$('noteNotice').hidden=true;
+ if(obj.patrol){
+  characterNodes.get(obj.id).btn.classList.add('is-selected');
+  if(typeof obj.link==='string' && /^https:\/\/[^ ]+$/.test(obj.link)){
+   const a=document.createElement('a');a.href=obj.link;a.rel='noopener noreferrer';a.target='_blank';a.textContent='기존 ChatGPT 프로젝트·GPT 열기';$('panelLink').append(a);
+  }else $('panelLink').textContent='연결 URL 미설정 · 실제 ChatGPT 이동하지 않음';
+ }else{
+  objectButtons.get(obj.id).classList.add('is-active');
+  if(obj.action==='highlight-path')$('bridgeGuide').hidden=false;
+  if(obj.action==='ripple'){$('pondRipple').hidden=false;if(!motionQuery.matches && !paused)$('pondRipple').classList.add('play')}
+  if(obj.action==='local-note'){$('noteForm').hidden=false;$('noteNotice').hidden=false}
+ }
+}
+$('noteForm').addEventListener('submit',e=>{
+ e.preventDefault();const txt=$('noteInput').value.trim();if(!txt)return;
+ $('previewMessage').textContent='우체통 메모 미리보기: '+txt;
+ $('previewMessage').hidden=false;
+});
+$('close').addEventListener('click',closeInfo);
+$('reset').addEventListener('click',closeInfo);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)closeInfo()});
+$('toggleGuides').addEventListener('click',()=>{
+ const on=stage.classList.toggle('debug');$('toggleGuides').setAttribute('aria-pressed',String(on));
+});
+function updateMotionLabel(){
+ const isStopped=paused||motionQuery.matches;
+ $('toggleMotion').textContent=isStopped?'움직임 재생':'움직임 정지';
+ $('toggleMotion').setAttribute('aria-pressed',String(isStopped));
+ $('toggleMotion').disabled=motionQuery.matches;
+ if(!$('pondRipple').hidden)$('pondRipple').classList.toggle('play',!isStopped);
+}
+$('toggleMotion').addEventListener('click',()=>{paused=!paused;updateMotionLabel()});
+if(motionQuery.addEventListener)motionQuery.addEventListener('change',updateMotionLabel);
+updateMotionLabel();
+function layout(){
+ const width=viewport.clientWidth;
+ const scale=Math.min(1,Math.max(scene.minSceneScale,width/scene.designSize.width));
+ if(Math.abs(scale-lastScale)<0.0001)return;
+ lastScale=scale;
+ const sw=scene.designSize.width*scale,sh=scene.designSize.height*scale;
+ $('frameSizer').style.width=sw+'px';$('frameSizer').style.height=sh+'px';
+ viewport.style.height=sh+'px';stage.style.transform='scale('+scale+')';
+}
+new ResizeObserver(layout).observe(viewport);layout();
+function track(actor,t){
+ const p=actor.patrol,walk=p.walkMs,pause=p.pauseMs;
+ const cycle=2*(walk+pause),phase=(t+p.offsetMs)%cycle;
+ if(phase<walk)return {x:p.startX+(p.endX-p.startX)*phase/walk,y:p.y,moving:true,left:false};
+ if(phase<walk+pause)return {x:p.endX,y:p.y,moving:false,left:false};
+ if(phase<2*walk+pause)return {x:p.endX-(p.endX-p.startX)*(phase-walk-pause)/walk,y:p.y,moving:true,left:true};
+ return {x:p.startX,y:p.y,moving:false,left:true};
+}
+function render(t){
+ if(lastTime===0)lastTime=t;
+ const delta=Math.min(Math.max(t-lastTime,0),100);lastTime=t;
+ const canMove=!paused&&!motionQuery.matches&&panel.hidden&&!document.hidden;
+ if(canMove)clock+=delta;
+ for(const info of characterNodes.values()){
+  const a=info.actor,step=track(a,clock);
+  info.x=step.x;info.y=step.y;
+  info.btn.style.left=step.x+'px';info.btn.style.top=step.y+'px';
+  const nextFrame=canMove&&step.moving?1+(Math.floor(clock/320)%6):1;
+  if(info.frame!==nextFrame){info.img.src=frameSrc(a.id,nextFrame);info.frame=nextFrame}
+  info.img.style.transform=step.moving&&step.left?'scaleX(-1)':'';
+ }
+ requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
 })();
 </script>
 </body></html>
