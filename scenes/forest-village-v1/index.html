@@ -37,6 +37,33 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 .pond-ripple{position:absolute;left:1380px;top:755px;width:135px;height:50px;border:8px solid #fff4ba;border-radius:50%;opacity:.85;box-shadow:0 0 10px #fff9d0}
 .pond-ripple.play{animation:pond 1.6s ease-out infinite}
 @keyframes pond{0%{transform:scale(.3);opacity:.95}100%{transform:scale(1.3);opacity:0}}
+
+/* Ambient overlays are deliberately independent of the painted master background. */
+.ambient{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+.ambient-fall{position:absolute;opacity:.19;mix-blend-mode:screen;background:repeating-linear-gradient(175deg,#c8fbffb8 0 5px,transparent 5px 16px,#a1ebffb0 16px 19px,transparent 19px 36px);background-size:100% 44px;animation:fall-flow 1.15s steps(6) infinite}
+.ambient-fall.upper{left:1392px;top:207px;width:60px;height:173px;clip-path:polygon(16% 0,89% 0,95% 77%,77% 100%,20% 100%,4% 83%)}
+.ambient-fall.lower{left:1313px;top:402px;width:45px;height:77px;clip-path:polygon(10% 0,96% 0,90% 100%,0 100%)}
+.ambient-ring{position:absolute;width:82px;height:25px;border:4px solid #e8ffffa8;border-radius:50%;opacity:0;animation:water-ring 4.4s ease-out infinite}
+.ambient-ring.r1{left:1117px;top:675px;animation-delay:-.8s}
+.ambient-ring.r2{left:1540px;top:711px;animation-delay:-2.5s}
+.ambient-ring.r3{left:1262px;top:773px;animation-delay:-1.2s}
+.ambient-petal{position:absolute;width:13px;height:9px;background:#ffd1df;border:2px solid #fff4f9;box-shadow:2px 2px 0 #c583b0;clip-path:polygon(0 45%,40% 0,100% 30%,68% 100%,20% 80%);opacity:0;animation:fall-petal 9s steps(80) infinite}
+.ambient-petal.p1{left:1588px;top:165px;animation-delay:-1s}
+.ambient-petal.p2{left:1648px;top:237px;animation-delay:-4s}
+.ambient-petal.p3{left:1722px;top:192px;animation-delay:-7s}
+.ambient-petal.p4{left:1603px;top:317px;animation-delay:-5.8s}
+.ambient-petal.p5{left:1684px;top:276px;animation-delay:-2.2s}
+.ambient-petal.p6{left:1754px;top:335px;animation-delay:-8.1s}
+.mailbox-signal{position:absolute;z-index:5;left:491px;top:407px;width:55px;height:36px;pointer-events:none;background:#fff9df;border:4px solid #714d32;box-shadow:4px 5px 0 #753d3466;transform:rotate(-8deg);animation:mail-pop 1.6s steps(12) infinite}
+.mailbox-signal::after{content:"";position:absolute;left:8px;right:8px;top:7px;height:14px;border-bottom:3px solid #d07b69;transform:rotate(-6deg)}
+.ambient-ripple-intense .ambient-ring{animation-duration:1.7s}
+.motion-paused .ambient-fall,.motion-paused .ambient-ring,.motion-paused .ambient-petal,.motion-paused .mailbox-signal{animation-play-state:paused!important}
+@keyframes fall-flow{from{background-position:0 0}to{background-position:0 44px}}
+@keyframes water-ring{0%,25%{opacity:0;transform:scale(.4)}42%{opacity:.55}70%,100%{opacity:0;transform:scale(1.35)}}
+@keyframes fall-petal{0%{opacity:0;transform:translate(0,0) rotate(0)}8%,78%{opacity:.95}100%{opacity:0;transform:translate(-75px,155px) rotate(220deg)}}
+@keyframes mail-pop{0%{transform:translateY(17px) rotate(-9deg)}30%,70%{transform:translateY(-6px) rotate(-9deg)}100%{transform:translateY(17px) rotate(-9deg)}}
+@media(prefers-reduced-motion:reduce){.ambient-fall,.ambient-ring,.ambient-petal,.mailbox-signal{animation:none!important}.ambient-petal,.ambient-ring{opacity:0!important}.ambient-fall{opacity:.08}}
+
 .guide-line{position:absolute;left:0;top:70%;height:1px;border-top:2px dashed #ffea9f;width:100%;pointer-events:none;display:none}
 .debug .guide-line{display:block}
 .panel{position:absolute;z-index:20;bottom:16px;left:16px;width:min(370px,calc(100% - 32px));padding:17px;background:#fff8defa;border:4px solid #79573a;border-radius:12px;color:#263f29;box-shadow:5px 6px 0 #17392e91}
@@ -63,6 +90,12 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
     <div id="hotspots"></div>
     <svg class="stage-overlay" viewBox="0 0 1774 887" aria-hidden="true"><path id="bridgeGuide" class="bridge-guide" d="M1058 611 Q1165 545 1285 585" hidden/></svg>
     <div id="pondRipple" class="pond-ripple" hidden aria-hidden="true"></div>
+    <div id="ambience" class="ambient" aria-hidden="true">
+     <div class="ambient-fall upper"></div><div class="ambient-fall lower"></div>
+     <div class="ambient-ring r1"></div><div class="ambient-ring r2"></div><div class="ambient-ring r3"></div>
+     <div class="ambient-petal p1"></div><div class="ambient-petal p2"></div><div class="ambient-petal p3"></div>
+     <div class="ambient-petal p4"></div><div class="ambient-petal p5"></div><div class="ambient-petal p6"></div>
+    </div><div id="mailboxSignal" class="mailbox-signal" hidden aria-hidden="true"></div>
     <div id="actors"></div><div class="guide-line"></div>
    </div></div>
   </div>
@@ -79,7 +112,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 </div>
 <script id="scene" type="application/json">
 {
-  "version": "scene-v1-eight-actor-prototype",
+  "version": "scene-v1-eight-actor-ambient-prototype",
   "status": "prototype_not_approved",
   "designSize": {
     "width": 1774,
@@ -137,6 +170,26 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
       "h": 256,
       "action": "ripple",
       "note": "연못 수면에 시범 물결 표시를 켭니다. 실제 수면 프레임 애니메이션은 별도 제작이 필요합니다."
+    },
+    {
+      "id": "waterfall",
+      "label": "폭포",
+      "x": 1381,
+      "y": 194,
+      "w": 100,
+      "h": 286,
+      "action": "inspect-motion",
+      "note": "상·하단 물줄기의 별도 강조 애니메이션을 확인할 수 있습니다. 실제 물리 시뮬레이션은 아닙니다."
+    },
+    {
+      "id": "cherry-tree",
+      "label": "벚꽃나무",
+      "x": 1522,
+      "y": 103,
+      "w": 248,
+      "h": 327,
+      "action": "inspect-motion",
+      "note": "벚꽃잎이 떨어지는 환경 효과를 표시합니다. 원본 나무 이미지는 고정돼 있습니다."
     }
   ],
   "characters": [
@@ -328,14 +381,27 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
       "idleFrames": [
         1,
         2,
-        3,
-        6
+        3
       ],
-      "idleFrameMs": 1750,
+      "idleFrameMs": 1650,
       "idleOffsetMs": 650,
       "frame": "../../assets/review/v0.2/frames/owl/owl_01.png",
       "link": null,
-      "note": "벤치 옆에서 책을 읽고 있습니다. GPT 링크 미설정."
+      "note": "벤치 옆에서 책을 읽고 있습니다. GPT 링크 미설정.",
+      "idleAlign": [
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2.2,
+          0
+        ]
+      ]
     },
     {
       "id": "bear",
@@ -349,14 +415,27 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
       "idleFrames": [
         1,
         2,
-        3,
-        6
+        3
       ],
-      "idleFrameMs": 2050,
+      "idleFrameMs": 1950,
       "idleOffsetMs": 300,
       "frame": "../../assets/review/v0.2/frames/bear/bear_01.png",
       "link": null,
-      "note": "오두막 아래 산책로에 머무르고 있습니다. 프로젝트 링크 미설정."
+      "note": "오두막 아래 산책로에 머무르고 있습니다. 프로젝트 링크 미설정.",
+      "idleAlign": [
+        [
+          0,
+          0
+        ],
+        [
+          7.8,
+          0
+        ],
+        [
+          6.2,
+          0
+        ]
+      ]
     },
     {
       "id": "frog",
@@ -370,15 +449,27 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
       "idleFrames": [
         1,
         2,
-        3,
-        4,
-        6
+        3
       ],
-      "idleFrameMs": 1450,
+      "idleFrameMs": 2500,
       "idleOffsetMs": 750,
       "frame": "../../assets/review/v0.2/frames/frog/frog_01.png",
       "link": null,
-      "note": "연못의 수련잎 위에서 쉬고 있습니다. GPT 링크 미설정."
+      "note": "연못의 수련잎 위에서 쉬고 있습니다. GPT 링크 미설정.",
+      "idleAlign": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ]
     },
     {
       "id": "hedgehog",
@@ -390,22 +481,42 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
       "kind": "project",
       "motion": "idle",
       "idleFrames": [
-        1,
-        2,
-        3,
         4,
+        5,
         6
       ],
-      "idleFrameMs": 1920,
+      "idleFrameMs": 2400,
       "idleOffsetMs": 1250,
       "frame": "../../assets/review/v0.2/frames/hedgehog/hedgehog_01.png",
       "link": null,
-      "note": "전경 산책로에서 꽃을 들고 있습니다. 프로젝트 링크 미설정."
+      "note": "전경 산책로에서 꽃을 들고 있습니다. 프로젝트 링크 미설정.",
+      "idleAlign": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ]
     }
   ],
   "walkSpriteCandidate": "assets/review/walk-v0.1",
   "placementStatus": "eight_characters_provisional_layout",
-  "notes": "Four walk cycles use walk-v0.1; owl, bear, frog, hedgehog use gesture frames and are intentionally stationary."
+  "notes": "Four walk cycles use walk-v0.1; owl, bear, frog, hedgehog use gesture frames and are intentionally stationary.",
+  "environment": {
+    "type": "css-pixel-overlays",
+    "waterfall": "2 animated water highlights",
+    "pond": "3 subtler ripples",
+    "cherry": "6 falling petals",
+    "mailbox": "visible envelope on interaction",
+    "status": "candidate_not_approved"
+  }
 }
 </script>
 <script>
@@ -429,9 +540,9 @@ for(const actor of scene.characters){
  const btn=document.createElement('button');btn.type='button';btn.className='actor';btn.title=actor.label+' 프로필';btn.dataset.kind=actor.motion==='pond-idle'?'water':'land';
  btn.setAttribute('aria-label',actor.label+' 프로필 열기');btn.style.setProperty('--size',actor.size+'px');const range=actor.patrol?actor.patrol.endX-actor.patrol.startX:0;btn.style.setProperty('--hit-width',(range+actor.size*(actor.patrol?0.68:0.95))+'px');btn.style.left=(actor.patrol?(actor.patrol.startX+actor.patrol.endX)/2:actor.x)+'px';btn.style.top=(actor.patrol?actor.patrol.y:actor.y)+'px';
  btn.style.setProperty('--foot',(actor.footFraction*100)+'%');btn.style.setProperty('--foot-neg',(-actor.footFraction*100)+'%');
- const img=document.createElement('img');img.src=frameSrc(actor.id,1);img.alt='';img.decoding='async';img.draggable=false;
+ const img=document.createElement('img');img.src=frameSrc(actor.id,actor.idleFrames?actor.idleFrames[0]:1);img.alt='';img.decoding='async';img.draggable=false;
  btn.append(img);btn.addEventListener('click',()=>openInfo(actor));$('actors').append(btn);
- characterNodes.set(actor.id,{btn,img,actor,frame:1,direction:'',walkReady:false,x:actor.x,y:actor.y});btn.dataset.animation='legacy-gestures';
+ characterNodes.set(actor.id,{btn,img,actor,frame:actor.idleFrames?actor.idleFrames[0]:1,direction:'',walkReady:false,x:actor.x,y:actor.y});btn.dataset.animation='legacy-gestures';
  for(let n=2;n<=6;n++){const pre=new Image();pre.src=frameSrc(actor.id,n)}
 }
 // Activate a candidate walk cycle only when its complete published pack is available.
@@ -461,7 +572,7 @@ preloadWalkPack();
 const clearEffects=()=>{
  for(const btn of objectButtons.values())btn.classList.remove('is-active');
  for(const info of characterNodes.values())info.btn.classList.remove('is-selected');
- $('bridgeGuide').setAttribute('hidden','');$('pondRipple').hidden=true;$('pondRipple').classList.remove('play');
+ $('bridgeGuide').setAttribute('hidden','');$('pondRipple').hidden=true;$('pondRipple').classList.remove('play');$('mailboxSignal').hidden=true;$('ambience').classList.remove('ambient-ripple-intense');
 };
 function closeInfo(){
  panel.hidden=true;$('noteForm').hidden=true;$('noteNotice').hidden=true;$('previewMessage').hidden=true;
@@ -481,7 +592,8 @@ function openInfo(obj){
  }else{
   objectButtons.get(obj.id).classList.add('is-active');
   if(obj.action==='highlight-path')$('bridgeGuide').removeAttribute('hidden');
-  if(obj.action==='ripple'){$('pondRipple').hidden=false;if(!motionQuery.matches && !paused)$('pondRipple').classList.add('play')}
+  if(obj.action==='ripple'){$('pondRipple').hidden=false;$('ambience').classList.add('ambient-ripple-intense');if(!motionQuery.matches && !paused)$('pondRipple').classList.add('play')}
+  if(obj.action==='local-note')$('mailboxSignal').hidden=false;
   if(obj.action==='local-note'){$('noteForm').hidden=false;$('noteNotice').hidden=false}
  }
 }
@@ -501,7 +613,7 @@ function updateMotionLabel(){
  $('toggleMotion').textContent=isStopped?'움직임 재생':'움직임 정지';
  $('toggleMotion').setAttribute('aria-pressed',String(isStopped));
  $('toggleMotion').disabled=motionQuery.matches;
- if(!$('pondRipple').hidden)$('pondRipple').classList.toggle('play',!isStopped);
+ if(!$('pondRipple').hidden)$('pondRipple').classList.toggle('play',!isStopped);stage.classList.toggle('motion-paused',isStopped);
 }
 $('toggleMotion').addEventListener('click',()=>{paused=!paused;updateMotionLabel()});
 if(motionQuery.addEventListener)motionQuery.addEventListener('change',updateMotionLabel);
@@ -535,7 +647,7 @@ function render(t){
    const frames=a.idleFrames||[1],stepTime=a.idleFrameMs||1600;
    const next=(canMove&&frames.length>1)?frames[Math.floor((clock+(a.idleOffsetMs||0))/stepTime)%frames.length]:1;
    if(info.frame!==next){info.frame=next;info.img.src=frameSrc(a.id,next);}
-   info.img.style.transform='';
+   const idx=frames.indexOf(next),shift=(a.idleAlign||[])[idx]||[0,0];info.img.style.transform='translate('+shift[0]+'px,'+shift[1]+'px)';
    info.btn.style.setProperty('--sprite-dx','0px');
    continue;
   }
