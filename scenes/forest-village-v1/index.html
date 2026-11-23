@@ -102,6 +102,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
   <section class="panel" id="panel" hidden aria-label="마을 상호작용 패널" aria-live="polite">
    <button class="close" id="close" type="button" aria-label="정보창 닫기">×</button>
    <h2 id="panelTitle"></h2><p id="panelBody"></p><p id="panelLink"></p>
+   <form id="linkForm" hidden><input id="linkInput" type="url" maxlength="450" placeholder="https://chatgpt.com/..." aria-label="기존 프로젝트 또는 GPT 링크"/><button type="submit">주소 연결</button></form>
+   <p id="linkNotice" class="notice" hidden>이 화면에서만 연결합니다. 공개 GitHub나 ChatGPT 대화로 전송·저장하지 않습니다.</p>
    <form id="noteForm" hidden><input id="noteInput" maxlength="80" placeholder="한 줄 메시지 (80자)" aria-label="한 줄 메시지"/><button type="submit">미리보기</button></form>
    <p class="notice" id="noteNotice" hidden>입력은 화면 안에서만 표시됩니다. ChatGPT로 전송하거나 저장하지 않습니다.</p>
    <p id="previewMessage" hidden></p>
@@ -527,7 +529,7 @@ const spriteBase='../../assets/review/v0.2/frames/';
 const frameSrc=(id,n)=>spriteBase+id+'/'+id+'_'+String(n).padStart(2,'0')+'.png';
 const walkRoot='../../assets/review/walk-v0.1/';
 const walkFrameSrc=(id,direction,n)=>walkRoot+'frames/'+id+'/'+id+'_walk_'+direction+'_'+String(n).padStart(2,'0')+'.png';
-const objectButtons=new Map(),characterNodes=new Map();
+const objectButtons=new Map(),characterNodes=new Map(),manualLinks=new Map();
 const motionQuery=window.matchMedia('(prefers-reduced-motion: reduce)');
 let paused=false,selected=null,clock=0,lastTime=0,lastScale=0,fitAll=false;
 $('background').src=scene.background;
@@ -576,19 +578,23 @@ const clearEffects=()=>{
 };
 function closeInfo(){
  panel.hidden=true;$('noteForm').hidden=true;$('noteNotice').hidden=true;$('previewMessage').hidden=true;
- $('noteInput').value='';selected=null;clearEffects();
+ $('noteInput').value='';$('linkInput').value='';$('linkForm').hidden=true;$('linkNotice').hidden=true;selected=null;clearEffects();
 }
 function openInfo(obj){
  clearEffects();selected=obj.id;panel.hidden=false;
  $('panelTitle').textContent=obj.label;
  $('panelBody').textContent=obj.note||((obj.kind==='gpt'?'GPT':'프로젝트')+' 프로필 시안 — 실제 정보 미연결');
  $('panelLink').replaceChildren();$('noteInput').value='';$('previewMessage').hidden=true;$('previewMessage').textContent='';
- $('noteForm').hidden=true;$('noteNotice').hidden=true;
+ $('noteForm').hidden=true;$('noteNotice').hidden=true;$('linkForm').hidden=true;$('linkNotice').hidden=true;
  if(characterNodes.has(obj.id)){
   characterNodes.get(obj.id).btn.classList.add('is-selected');
-  if(typeof obj.link==='string' && /^https:\/\/[^ ]+$/.test(obj.link)){
-   const a=document.createElement('a');a.href=obj.link;a.rel='noopener noreferrer';a.target='_blank';a.textContent='기존 ChatGPT 프로젝트·GPT 열기';$('panelLink').append(a);
-  }else $('panelLink').textContent='연결 URL 미설정 · 실제 ChatGPT 이동하지 않음';
+  const href=manualLinks.get(obj.id)||obj.link;
+  if(typeof href==='string' && /^https:\/\/chatgpt\.com\//.test(href)){
+   const a=document.createElement('a');a.href=href;a.rel='noopener noreferrer';a.target='_blank';a.textContent='기존 ChatGPT 프로젝트·GPT 열기';
+   a.addEventListener('click',event=>{if(window.openai&&typeof window.openai.openExternal==='function'){event.preventDefault();window.openai.openExternal({href});}});
+   $('panelLink').append(a);
+  }else $('panelLink').textContent='연결 URL 미설정 · 직접 입력하면 이 화면에서만 사용합니다.';
+  $('linkForm').hidden=false;$('linkNotice').hidden=false;$('linkInput').value=manualLinks.get(obj.id)||'';
  }else{
   objectButtons.get(obj.id).classList.add('is-active');
   if(obj.action==='highlight-path')$('bridgeGuide').removeAttribute('hidden');
@@ -597,6 +603,16 @@ function openInfo(obj){
   if(obj.action==='local-note'){$('noteForm').hidden=false;$('noteNotice').hidden=false}
  }
 }
+$('linkForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const raw=$('linkInput').value.trim();
+ if(!selected||!characterNodes.has(selected))return;
+ let url;try{url=new URL(raw)}catch{url=null}
+ if(!url||url.protocol!=='https:'||url.hostname!=='chatgpt.com'||!url.pathname.startsWith('/')){
+  $('panelLink').textContent='유효한 https://chatgpt.com/ 주소만 연결할 수 있습니다.';return;
+ }
+ manualLinks.set(selected,url.href);openInfo(characterNodes.get(selected).actor);
+});
 $('noteForm').addEventListener('submit',e=>{
  e.preventDefault();const txt=$('noteInput').value.trim();if(!txt)return;
  $('previewMessage').textContent='우체통 메모 미리보기: '+txt;
@@ -645,7 +661,7 @@ function render(t){
   const a=info.actor;
   if(!a.patrol){
    const frames=a.idleFrames||[1],stepTime=a.idleFrameMs||1600;
-   const next=(canMove&&frames.length>1)?frames[Math.floor((clock+(a.idleOffsetMs||0))/stepTime)%frames.length]:1;
+   const next=(canMove&&frames.length>1)?frames[Math.floor((clock+(a.idleOffsetMs||0))/stepTime)%frames.length]:frames[0];
    if(info.frame!==next){info.frame=next;info.img.src=frameSrc(a.id,next);}
    const idx=frames.indexOf(next),shift=(a.idleAlign||[])[idx]||[0,0];info.img.style.transform='translate('+shift[0]+'px,'+shift[1]+'px)';
    info.btn.style.setProperty('--sprite-dx','0px');
