@@ -1,0 +1,2001 @@
+{
+  "name": "MyMiniHome background isolated candidates",
+  "version": "0.2.0",
+  "status": "REVIEW_CANDIDATE_NOT_APPROVED",
+  "origin": "MyMiniHome background-v0.1 images; geometrically cropped and background-masked only",
+  "backgroundRemoval": "border connected near-neutral RGB plus optional disconnected fragment pruning (not final alpha matting)",
+  "notes": [
+    "Not final production sprites",
+    "Some sheet layout artifacts or neighbor clipping may remain",
+    "No separately rendered timeline animations provided"
+  ],
+  "items": [
+    {
+      "id": "bridge_arch",
+      "category": "structures",
+      "file": "assets/structures/bridge_arch.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        4,
+        2,
+        538,
+        310
+      ],
+      "trim_offset_xy": [
+        17,
+        18
+      ],
+      "size": [
+        517,
+        290
+      ],
+      "mode": "RGBA",
+      "bytes": 290465,
+      "sha256": "c287b657b0c041231ff37b913851dd88bf3bac5d0a4eeffbae2ede26f0d96021",
+      "transparentFraction": 0.3728,
+      "opaqueBorderPixels": 192,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "bridge_wooden_straight",
+      "category": "structures",
+      "file": "assets/structures/bridge_wooden_straight.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        546,
+        2,
+        1026,
+        308
+      ],
+      "trim_offset_xy": [
+        20,
+        7
+      ],
+      "size": [
+        460,
+        299
+      ],
+      "mode": "RGBA",
+      "bytes": 242214,
+      "sha256": "11f790d2d7629fc20a26fd5d6874f3575c2da18c7b6e664960c0c7ac0222c106",
+      "transparentFraction": 0.453,
+      "opaqueBorderPixels": 105,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "bridge_rope",
+      "category": "structures",
+      "file": "assets/structures/bridge_rope.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        1032,
+        2,
+        1534,
+        294
+      ],
+      "trim_offset_xy": [
+        26,
+        12
+      ],
+      "size": [
+        475,
+        280
+      ],
+      "mode": "RGBA",
+      "bytes": 229518,
+      "sha256": "f8f6f77753095faadb800ae8febdde256329d86d256bdf3f28fa2844194b6fe9",
+      "transparentFraction": 0.4848,
+      "opaqueBorderPixels": 20,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "dock_short",
+      "category": "structures",
+      "file": "assets/structures/dock_short.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        0,
+        340,
+        530,
+        601
+      ],
+      "trim_offset_xy": [
+        15,
+        0
+      ],
+      "size": [
+        508,
+        251
+      ],
+      "mode": "RGBA",
+      "bytes": 220168,
+      "sha256": "90b3d48c2fb9e6b4e28408266d382c341dbbc8fa8b4d75cf417205d44a5683b4",
+      "transparentFraction": 0.4926,
+      "opaqueBorderPixels": 16,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "heuristic_removed_disconnected_components"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "dock_fishing",
+      "category": "structures",
+      "file": "assets/structures/dock_fishing.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        535,
+        323,
+        1038,
+        608
+      ],
+      "trim_offset_xy": [
+        0,
+        0
+      ],
+      "size": [
+        501,
+        285
+      ],
+      "mode": "RGBA",
+      "bytes": 249085,
+      "sha256": "163ec70e7b5ce0efeff7250071a7fc0485cde26092682a7388c0abe1c8d53c59",
+      "transparentFraction": 0.4464,
+      "opaqueBorderPixels": 85,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "heuristic_removed_disconnected_components"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "deck_lounge",
+      "category": "structures",
+      "file": "assets/structures/deck_lounge.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        1027,
+        309,
+        1533,
+        616
+      ],
+      "trim_offset_xy": [
+        0,
+        0
+      ],
+      "size": [
+        499,
+        307
+      ],
+      "mode": "RGBA",
+      "bytes": 287623,
+      "sha256": "2056e460a39fdf5d76ca73f6d58750c48b6da9e051e975aade6a562aecfd6493",
+      "transparentFraction": 0.3442,
+      "opaqueBorderPixels": 104,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "steps_wooden",
+      "category": "structures",
+      "file": "assets/structures/steps_wooden.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        0,
+        613,
+        532,
+        876
+      ],
+      "trim_offset_xy": [
+        38,
+        0
+      ],
+      "size": [
+        494,
+        238
+      ],
+      "mode": "RGBA",
+      "bytes": 225283,
+      "sha256": "bf35ab40dfd8aac84cdfafc3bca8b7b9bcf1a73d7136902f2ac8bb7fbfe4220d",
+      "transparentFraction": 0.3713,
+      "opaqueBorderPixels": 169,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "deck_viewpoint",
+      "category": "structures",
+      "file": "assets/structures/deck_viewpoint.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        526,
+        613,
+        1009,
+        869
+      ],
+      "trim_offset_xy": [
+        0,
+        12
+      ],
+      "size": [
+        481,
+        228
+      ],
+      "mode": "RGBA",
+      "bytes": 202480,
+      "sha256": "7fcd11a05bf785f45bad869bf9b49ce558f67e9cdaed62e04bd82587093945be",
+      "transparentFraction": 0.289,
+      "opaqueBorderPixels": 15,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "deck_fenced",
+      "category": "structures",
+      "file": "assets/structures/deck_fenced.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        1025,
+        618,
+        1525,
+        864
+      ],
+      "trim_offset_xy": [
+        24,
+        16
+      ],
+      "size": [
+        441,
+        225
+      ],
+      "mode": "RGBA",
+      "bytes": 201523,
+      "sha256": "adc44ca46c0e64099f781aee66ea2c5d6baaedf97e2855935e567c50e0ea446c",
+      "transparentFraction": 0.3049,
+      "opaqueBorderPixels": 0,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "heuristic_removed_disconnected_components"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "plank_square",
+      "category": "modules",
+      "file": "assets/modules/plank_square.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        8,
+        881,
+        162,
+        1016
+      ],
+      "trim_offset_xy": [
+        12,
+        15
+      ],
+      "size": [
+        142,
+        106
+      ],
+      "mode": "RGBA",
+      "bytes": 29002,
+      "sha256": "6826d1602a1bc1e590493371f7146164a6c058923c74e7a8893e47264715bef5",
+      "transparentFraction": 0.4737,
+      "opaqueBorderPixels": 0,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "heuristic_removed_disconnected_components",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "plank_long",
+      "category": "modules",
+      "file": "assets/modules/plank_long.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        171,
+        881,
+        319,
+        1015
+      ],
+      "trim_offset_xy": [
+        0,
+        14
+      ],
+      "size": [
+        131,
+        99
+      ],
+      "mode": "RGBA",
+      "bytes": 24214,
+      "sha256": "92438335066a7e31b9a7f0c2c0a443ab9821ff6d7d1740e46425b24172571d03",
+      "transparentFraction": 0.5172,
+      "opaqueBorderPixels": 13,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "heuristic_removed_disconnected_components",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "plank_corner",
+      "category": "modules",
+      "file": "assets/modules/plank_corner.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        334,
+        878,
+        468,
+        1015
+      ],
+      "trim_offset_xy": [
+        0,
+        18
+      ],
+      "size": [
+        114,
+        89
+      ],
+      "mode": "RGBA",
+      "bytes": 20792,
+      "sha256": "e49013bede9fff541c60b84332ac05e19f92c8def83bcb7806184835a1245c93",
+      "transparentFraction": 0.4409,
+      "opaqueBorderPixels": 53,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "heuristic_removed_disconnected_components",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "plank_triangular",
+      "category": "modules",
+      "file": "assets/modules/plank_triangular.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        479,
+        884,
+        567,
+        1016
+      ],
+      "trim_offset_xy": [
+        0,
+        26
+      ],
+      "size": [
+        86,
+        73
+      ],
+      "mode": "RGBA",
+      "bytes": 12705,
+      "sha256": "016d9c0f9323cee32bcc38f5b8c6f64e734b7880fdd94fba733cfe336eb4ca5d",
+      "transparentFraction": 0.4532,
+      "opaqueBorderPixels": 35,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "heuristic_removed_disconnected_components",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "steps_component",
+      "category": "modules",
+      "file": "assets/modules/steps_component.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        565,
+        881,
+        743,
+        1016
+      ],
+      "trim_offset_xy": [
+        18,
+        0
+      ],
+      "size": [
+        147,
+        121
+      ],
+      "mode": "RGBA",
+      "bytes": 35174,
+      "sha256": "b26c7b3ef3bf49e302d7901ad1b3087f87eb5332f24d028e38539dd3670f7fe3",
+      "transparentFraction": 0.439,
+      "opaqueBorderPixels": 0,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "fence_component",
+      "category": "modules",
+      "file": "assets/modules/fence_component.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        747,
+        879,
+        899,
+        1016
+      ],
+      "trim_offset_xy": [
+        6,
+        18
+      ],
+      "size": [
+        131,
+        81
+      ],
+      "mode": "RGBA",
+      "bytes": 21277,
+      "sha256": "a034d04e18a0cdc9fdd6900d9a3d48e43209b671e9d9323c6d5d64491a76b41f",
+      "transparentFraction": 0.2593,
+      "opaqueBorderPixels": 0,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "rope_fence",
+      "category": "modules",
+      "file": "assets/modules/rope_fence.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        897,
+        879,
+        1041,
+        1016
+      ],
+      "trim_offset_xy": [
+        15,
+        12
+      ],
+      "size": [
+        129,
+        102
+      ],
+      "mode": "RGBA",
+      "bytes": 24371,
+      "sha256": "30cd86dc0793960de921650c79b94b6b6e4b80ddd472d1c5cf362cf2c64623bd",
+      "transparentFraction": 0.4103,
+      "opaqueBorderPixels": 0,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "plain_post",
+      "category": "modules",
+      "file": "assets/modules/plain_post.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        1220,
+        878,
+        1303,
+        1016
+      ],
+      "trim_offset_xy": [
+        25,
+        2
+      ],
+      "size": [
+        38,
+        121
+      ],
+      "mode": "RGBA",
+      "bytes": 8595,
+      "sha256": "142e6a93271cf6aae0c259b8e15bb3fe5d52d226ada85e3712c7ff181df14879",
+      "transparentFraction": 0.3432,
+      "opaqueBorderPixels": 0,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "railing_curve",
+      "category": "modules",
+      "file": "assets/modules/railing_curve.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        1042,
+        878,
+        1228,
+        1017
+      ],
+      "trim_offset_xy": [
+        31,
+        15
+      ],
+      "size": [
+        143,
+        92
+      ],
+      "mode": "RGBA",
+      "bytes": 23664,
+      "sha256": "821030996ffc377808091d1a11bb97a6110ad8c7249f651e247296a25ce0e671",
+      "transparentFraction": 0.3894,
+      "opaqueBorderPixels": 0,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "lamp_post",
+      "category": "modules",
+      "file": "assets/modules/lamp_post.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        1311,
+        864,
+        1427,
+        1016
+      ],
+      "trim_offset_xy": [
+        10,
+        0
+      ],
+      "size": [
+        80,
+        138
+      ],
+      "mode": "RGBA",
+      "bytes": 20071,
+      "sha256": "490d2424e9e90f922bfb693e0bec1b1222710e5cdee91c344518f14710d5f88a",
+      "transparentFraction": 0.4929,
+      "opaqueBorderPixels": 16,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "heuristic_removed_disconnected_components",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "banner_post",
+      "category": "modules",
+      "file": "assets/modules/banner_post.png",
+      "source": "images/03_structures/wood_bridges_decks.png",
+      "crop_xyxy": [
+        1425,
+        864,
+        1534,
+        1017
+      ],
+      "trim_offset_xy": [
+        10,
+        0
+      ],
+      "size": [
+        86,
+        138
+      ],
+      "mode": "RGBA",
+      "bytes": 20563,
+      "sha256": "b7dda87a798aa5d12c2c79372d07da9624601e251d9e070b56f60815e19fb5af",
+      "transparentFraction": 0.4622,
+      "opaqueBorderPixels": 36,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "heuristic_removed_disconnected_components",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "tree_green",
+      "category": "nature",
+      "file": "assets/nature/tree_green.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        0,
+        0,
+        239,
+        237
+      ],
+      "trim_offset_xy": [
+        6,
+        4
+      ],
+      "size": [
+        233,
+        233
+      ],
+      "mode": "RGBA",
+      "bytes": 123468,
+      "sha256": "1b295851fbe22b86cb2e2aca156338115fb0b6235328a97ca856f3f179b78a57",
+      "transparentFraction": 0.3517,
+      "opaqueBorderPixels": 101,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "tree_cherry",
+      "category": "nature",
+      "file": "assets/nature/tree_cherry.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        240,
+        0,
+        466,
+        244
+      ],
+      "trim_offset_xy": [
+        0,
+        9
+      ],
+      "size": [
+        226,
+        221
+      ],
+      "mode": "RGBA",
+      "bytes": 112508,
+      "sha256": "aa360f8a58910ab20c6ae6608cac898500d6a1a0f685a919ff166f0abd0b488a",
+      "transparentFraction": 0.3597,
+      "opaqueBorderPixels": 75,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "tree_gold",
+      "category": "nature",
+      "file": "assets/nature/tree_gold.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        461,
+        0,
+        635,
+        222
+      ],
+      "trim_offset_xy": [
+        0,
+        16
+      ],
+      "size": [
+        174,
+        204
+      ],
+      "mode": "RGBA",
+      "bytes": 83126,
+      "sha256": "5dcd11657d18d5f2195261466bd0aacfcfe502caece21fd50bfd54204586d24d",
+      "transparentFraction": 0.3526,
+      "opaqueBorderPixels": 46,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "tree_pine",
+      "category": "nature",
+      "file": "assets/nature/tree_pine.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        634,
+        0,
+        737,
+        228
+      ],
+      "trim_offset_xy": [
+        0,
+        16
+      ],
+      "size": [
+        103,
+        207
+      ],
+      "mode": "RGBA",
+      "bytes": 44572,
+      "sha256": "b4c81a74beb24cac6f212b24d0e2f45e33ae5f253ebfb657852c165eb87bc456",
+      "transparentFraction": 0.4748,
+      "opaqueBorderPixels": 51,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "shrub_white",
+      "category": "nature",
+      "file": "assets/nature/shrub_white.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        745,
+        64,
+        871,
+        224
+      ],
+      "trim_offset_xy": [
+        4,
+        0
+      ],
+      "size": [
+        122,
+        127
+      ],
+      "mode": "RGBA",
+      "bytes": 39860,
+      "sha256": "74f3ec7087b01fc7916f2bf117eced972bfd7d89abaa2d2c033f8bd165cbe01d",
+      "transparentFraction": 0.3075,
+      "opaqueBorderPixels": 26,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "heuristic_removed_disconnected_components"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "shrub_berries",
+      "category": "nature",
+      "file": "assets/nature/shrub_berries.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        876,
+        77,
+        991,
+        214
+      ],
+      "trim_offset_xy": [
+        2,
+        0
+      ],
+      "size": [
+        113,
+        137
+      ],
+      "mode": "RGBA",
+      "bytes": 31955,
+      "sha256": "b81d2942edc4731efed8f8cbcd928a67d1a7d1eeb479146712b98f617a4e33c1",
+      "transparentFraction": 0.5141,
+      "opaqueBorderPixels": 4,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "shrub_blue",
+      "category": "nature",
+      "file": "assets/nature/shrub_blue.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        1000,
+        77,
+        1114,
+        218
+      ],
+      "trim_offset_xy": [
+        0,
+        6
+      ],
+      "size": [
+        96,
+        95
+      ],
+      "mode": "RGBA",
+      "bytes": 23210,
+      "sha256": "adbb4646dd7eb46145bca4c57201832d0bbfde05803fb18b825510b95ca26845",
+      "transparentFraction": 0.3066,
+      "opaqueBorderPixels": 24,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "heuristic_removed_disconnected_components"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "rock_set",
+      "category": "nature",
+      "file": "assets/nature/rock_set.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        1101,
+        0,
+        1530,
+        215
+      ],
+      "trim_offset_xy": [
+        0,
+        35
+      ],
+      "size": [
+        426,
+        151
+      ],
+      "mode": "RGBA",
+      "bytes": 131253,
+      "sha256": "baee5344601ec1d488e6635899588a3501c30d347a119cb561611cd6a0b4adca",
+      "transparentFraction": 0.5301,
+      "opaqueBorderPixels": 3,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "contains_multiple_props",
+        "broad_sheet_crop"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "flowers_white",
+      "category": "nature",
+      "file": "assets/nature/flowers_white.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        0,
+        244,
+        99,
+        329
+      ],
+      "trim_offset_xy": [
+        13,
+        0
+      ],
+      "size": [
+        86,
+        79
+      ],
+      "mode": "RGBA",
+      "bytes": 17408,
+      "sha256": "9cd2d67d5f2a9a82760e0700d5e4a584b9a38efd4dea89d4861e5603d021d5da",
+      "transparentFraction": 0.344,
+      "opaqueBorderPixels": 12,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "flowers_yellow",
+      "category": "nature",
+      "file": "assets/nature/flowers_yellow.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        105,
+        244,
+        198,
+        330
+      ],
+      "trim_offset_xy": [
+        11,
+        3
+      ],
+      "size": [
+        80,
+        74
+      ],
+      "mode": "RGBA",
+      "bytes": 14394,
+      "sha256": "48abbb14eba065b8648e5191d6db70c62ed9ffc1e29f8d0dcfb2bf426de60d83",
+      "transparentFraction": 0.397,
+      "opaqueBorderPixels": 0,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "flowers_pink",
+      "category": "nature",
+      "file": "assets/nature/flowers_pink.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        193,
+        242,
+        300,
+        330
+      ],
+      "trim_offset_xy": [
+        16,
+        2
+      ],
+      "size": [
+        82,
+        76
+      ],
+      "mode": "RGBA",
+      "bytes": 15508,
+      "sha256": "a7e25c2933150e8c468840cccbdd5f035262ac321e93bea5d760ea6266b533e1",
+      "transparentFraction": 0.3933,
+      "opaqueBorderPixels": 0,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "lavender",
+      "category": "nature",
+      "file": "assets/nature/lavender.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        310,
+        240,
+        401,
+        330
+      ],
+      "trim_offset_xy": [
+        0,
+        1
+      ],
+      "size": [
+        78,
+        78
+      ],
+      "mode": "RGBA",
+      "bytes": 15932,
+      "sha256": "2cb60a42ed5bc7c9707580087d2bbff8029bbd3b1d332cd1b2cd3813252914ed",
+      "transparentFraction": 0.4186,
+      "opaqueBorderPixels": 22,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "sunflower",
+      "category": "nature",
+      "file": "assets/nature/sunflower.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        580,
+        238,
+        691,
+        330
+      ],
+      "trim_offset_xy": [
+        0,
+        0
+      ],
+      "size": [
+        106,
+        84
+      ],
+      "mode": "RGBA",
+      "bytes": 20292,
+      "sha256": "7da2851ce43bface7f6701126c9fa2f5601a6243e99fad5edf178be7aa80db31",
+      "transparentFraction": 0.4326,
+      "opaqueBorderPixels": 34,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "reeds",
+      "category": "nature",
+      "file": "assets/nature/reeds.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        879,
+        222,
+        1002,
+        329
+      ],
+      "trim_offset_xy": [
+        12,
+        0
+      ],
+      "size": [
+        103,
+        98
+      ],
+      "mode": "RGBA",
+      "bytes": 23133,
+      "sha256": "2d8dc339ff1a054afd4be172f6ff6cc2c8b14691458b7223457f353ae6a9bf40",
+      "transparentFraction": 0.52,
+      "opaqueBorderPixels": 15,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "lily_pads",
+      "category": "nature",
+      "file": "assets/nature/lily_pads.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        1104,
+        230,
+        1535,
+        329
+      ],
+      "trim_offset_xy": [
+        9,
+        0
+      ],
+      "size": [
+        413,
+        95
+      ],
+      "mode": "RGBA",
+      "bytes": 64779,
+      "sha256": "c9f7903152df7bedca8264eb44a01183b741574fc98786b818395b5caa295b3b",
+      "transparentFraction": 0.6742,
+      "opaqueBorderPixels": 0,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "contains_multiple_props",
+        "broad_sheet_crop"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "cottage_small",
+      "category": "structures",
+      "file": "assets/structures/cottage_small.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        0,
+        330,
+        324,
+        542
+      ],
+      "trim_offset_xy": [
+        6,
+        0
+      ],
+      "size": [
+        307,
+        212
+      ],
+      "mode": "RGBA",
+      "bytes": 152623,
+      "sha256": "70b6e2d31c60bcf69536af85987df5e8b2803b52f8bdd5af4473a5334f17003a",
+      "transparentFraction": 0.3091,
+      "opaqueBorderPixels": 192,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "shelter_reading",
+      "category": "structures",
+      "file": "assets/structures/shelter_reading.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        326,
+        331,
+        623,
+        543
+      ],
+      "trim_offset_xy": [
+        0,
+        0
+      ],
+      "size": [
+        297,
+        212
+      ],
+      "mode": "RGBA",
+      "bytes": 140505,
+      "sha256": "54e8995ee073938d264f142ea5491d9f29109181ac35eab61e6c7c78269835d8",
+      "transparentFraction": 0.3628,
+      "opaqueBorderPixels": 106,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "bench",
+      "category": "structures",
+      "file": "assets/structures/bench.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        616,
+        366,
+        771,
+        534
+      ],
+      "trim_offset_xy": [
+        2,
+        49
+      ],
+      "size": [
+        152,
+        109
+      ],
+      "mode": "RGBA",
+      "bytes": 37942,
+      "sha256": "390e873639f3db616e83c4dc9662c0bed00df84ef1dfb0eaadfa0757a1d49a0d",
+      "transparentFraction": 0.4109,
+      "opaqueBorderPixels": 0,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "mailbox_red",
+      "category": "structures",
+      "file": "assets/structures/mailbox_red.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        775,
+        376,
+        869,
+        528
+      ],
+      "trim_offset_xy": [
+        6,
+        32
+      ],
+      "size": [
+        82,
+        116
+      ],
+      "mode": "RGBA",
+      "bytes": 21689,
+      "sha256": "feece5f35d301ffe0e916b60b4018aabedebd726f2a7804e56a773d62291a75a",
+      "transparentFraction": 0.4158,
+      "opaqueBorderPixels": 0,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "heuristic_removed_disconnected_components"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "fence_flowers",
+      "category": "structures",
+      "file": "assets/structures/fence_flowers.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        890,
+        376,
+        1052,
+        528
+      ],
+      "trim_offset_xy": [
+        0,
+        53
+      ],
+      "size": [
+        155,
+        79
+      ],
+      "mode": "RGBA",
+      "bytes": 30662,
+      "sha256": "7c70ee6b3030c0c5181bae56ff8c8234d8e79a097a182f48082fb964855bb991",
+      "transparentFraction": 0.2482,
+      "opaqueBorderPixels": 61,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "heuristic_removed_disconnected_components"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "bridge_rail",
+      "category": "structures",
+      "file": "assets/structures/bridge_rail.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        1060,
+        352,
+        1266,
+        531
+      ],
+      "trim_offset_xy": [
+        0,
+        52
+      ],
+      "size": [
+        206,
+        123
+      ],
+      "mode": "RGBA",
+      "bytes": 56094,
+      "sha256": "52283ada92ebdf9b538c7f55ac3a49d34f525f892a7432f846c8ea9dd4e2e186",
+      "transparentFraction": 0.4118,
+      "opaqueBorderPixels": 44,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "heuristic_removed_disconnected_components"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "waterfall_small",
+      "category": "structures",
+      "file": "assets/structures/waterfall_small.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        1265,
+        335,
+        1533,
+        546
+      ],
+      "trim_offset_xy": [
+        0,
+        7
+      ],
+      "size": [
+        268,
+        204
+      ],
+      "mode": "RGBA",
+      "bytes": 123019,
+      "sha256": "6ec9037121690f7ca06dac66aa917574bd4bbf4812ddcf66a1cf5570e005f854",
+      "transparentFraction": 0.3126,
+      "opaqueBorderPixels": 41,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "tile_grass",
+      "category": "terrain",
+      "file": "assets/terrain/tile_grass.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        0,
+        557,
+        151,
+        686
+      ],
+      "trim_offset_xy": [
+        7,
+        9
+      ],
+      "size": [
+        133,
+        90
+      ],
+      "mode": "RGBA",
+      "bytes": 25820,
+      "sha256": "30c5cab79cd9a325c647588d0b78c9522e8bf7afc29a6baafa4ef49a913d83e0",
+      "transparentFraction": 0.4364,
+      "opaqueBorderPixels": 0,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "heuristic_removed_disconnected_components",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "tile_dirt",
+      "category": "terrain",
+      "file": "assets/terrain/tile_dirt.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        156,
+        555,
+        282,
+        686
+      ],
+      "trim_offset_xy": [
+        0,
+        14
+      ],
+      "size": [
+        117,
+        86
+      ],
+      "mode": "RGBA",
+      "bytes": 20377,
+      "sha256": "b5aa7f06262a31b0c9eb12602491d9ebe78edeff3e04dc69bfcee03540a4599a",
+      "transparentFraction": 0.4063,
+      "opaqueBorderPixels": 29,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "heuristic_removed_disconnected_components",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "tile_stone",
+      "category": "terrain",
+      "file": "assets/terrain/tile_stone.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        289,
+        557,
+        416,
+        685
+      ],
+      "trim_offset_xy": [
+        0,
+        10
+      ],
+      "size": [
+        119,
+        88
+      ],
+      "mode": "RGBA",
+      "bytes": 23734,
+      "sha256": "71b671220df5df0999646e7bb5647b97dc5cbf0d50cc3232c8b85b8565a18047",
+      "transparentFraction": 0.3963,
+      "opaqueBorderPixels": 31,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "heuristic_removed_disconnected_components",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "tile_grass_stone",
+      "category": "terrain",
+      "file": "assets/terrain/tile_grass_stone.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        426,
+        555,
+        565,
+        688
+      ],
+      "trim_offset_xy": [
+        0,
+        10
+      ],
+      "size": [
+        124,
+        91
+      ],
+      "mode": "RGBA",
+      "bytes": 27765,
+      "sha256": "a764c61fc4a5b7ff942789e11c049b64959cbfcb8e06df05efd15abed658ea41",
+      "transparentFraction": 0.3477,
+      "opaqueBorderPixels": 44,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "heuristic_removed_disconnected_components",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "cliff_small",
+      "category": "terrain",
+      "file": "assets/terrain/cliff_small.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        569,
+        533,
+        732,
+        694
+      ],
+      "trim_offset_xy": [
+        0,
+        6
+      ],
+      "size": [
+        163,
+        154
+      ],
+      "mode": "RGBA",
+      "bytes": 53225,
+      "sha256": "36459a524d52e76b223509a9bf5559884c973fa1bbfcabe725131b29854ed32b",
+      "transparentFraction": 0.3987,
+      "opaqueBorderPixels": 31,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "cliff_large",
+      "category": "terrain",
+      "file": "assets/terrain/cliff_large.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        730,
+        536,
+        909,
+        692
+      ],
+      "trim_offset_xy": [
+        0,
+        7
+      ],
+      "size": [
+        179,
+        149
+      ],
+      "mode": "RGBA",
+      "bytes": 54108,
+      "sha256": "f61f03cc9a72eb8e62bd530253111a136f780a5f1effb63baf784cd73f2c6669",
+      "transparentFraction": 0.474,
+      "opaqueBorderPixels": 2,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "cliff_stairs",
+      "category": "terrain",
+      "file": "assets/terrain/cliff_stairs.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        913,
+        554,
+        1086,
+        687
+      ],
+      "trim_offset_xy": [
+        0,
+        0
+      ],
+      "size": [
+        162,
+        114
+      ],
+      "mode": "RGBA",
+      "bytes": 45592,
+      "sha256": "7810ab73ebe9cf23332fa67885070a0c73cdb444cd77ba95a94ff629ff34a76b",
+      "transparentFraction": 0.2575,
+      "opaqueBorderPixels": 82,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge",
+        "heuristic_removed_disconnected_components",
+        "not_validated_seamless_tile"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "pond_small",
+      "category": "water",
+      "file": "assets/water/pond_small.png",
+      "source": "images/04_nature_motion/nature_props_motion_reference.png",
+      "crop_xyxy": [
+        1094,
+        532,
+        1535,
+        692
+      ],
+      "trim_offset_xy": [
+        0,
+        0
+      ],
+      "size": [
+        421,
+        160
+      ],
+      "mode": "RGBA",
+      "bytes": 148027,
+      "sha256": "5006429467c11aebf47639a83fb270a348807ba070a9e4d590e431e6ed496c7d",
+      "transparentFraction": 0.3694,
+      "opaqueBorderPixels": 110,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "cottage_isolated",
+      "category": "structures",
+      "file": "assets/structures/cottage_isolated.png",
+      "source": "images/03_structures/forest_cottage.png",
+      "crop_xyxy": [
+        0,
+        0,
+        1312,
+        1199
+      ],
+      "trim_offset_xy": [
+        13,
+        2
+      ],
+      "size": [
+        1267,
+        1186
+      ],
+      "mode": "RGBA",
+      "bytes": 2416604,
+      "sha256": "0a39ac222bdd0041e79d042b65ce550039ae91337814f706b0c45b5cc22639d6",
+      "transparentFraction": 0.2896,
+      "opaqueBorderPixels": 0,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "waterfall_isolated",
+      "category": "water",
+      "file": "assets/water/waterfall_isolated.png",
+      "source": "images/03_structures/rocky_waterfall.png",
+      "crop_xyxy": [
+        0,
+        0,
+        1312,
+        1199
+      ],
+      "trim_offset_xy": [
+        0,
+        3
+      ],
+      "size": [
+        1312,
+        1196
+      ],
+      "mode": "RGBA",
+      "bytes": 2513065,
+      "sha256": "b0386acb36a5d77a5899d96d52d1b93314e41972b970440b845bc6f2bde383d1",
+      "transparentFraction": 0.3576,
+      "opaqueBorderPixels": 25,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale",
+        "opaque_pixels_touch_canvas_edge"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    },
+    {
+      "id": "pond_isolated",
+      "category": "water",
+      "file": "assets/water/pond_isolated.png",
+      "source": "images/03_structures/pond_diorama.png",
+      "crop_xyxy": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "trim_offset_xy": [
+        17,
+        21
+      ],
+      "size": [
+        1502,
+        982
+      ],
+      "mode": "RGBA",
+      "bytes": 2475898,
+      "sha256": "888376063ce3a35dd3439d3463be8a3e45e9996f2eaa4232756d60ded240d80c",
+      "transparentFraction": 0.369,
+      "opaqueBorderPixels": 0,
+      "status": "needs_visual_qa",
+      "warnings": [
+        "unverified_alpha_edges",
+        "unverified_original_match",
+        "unverified_scene_scale"
+      ],
+      "anchorProposed": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "anchorVerified": false
+    }
+  ]
+}
