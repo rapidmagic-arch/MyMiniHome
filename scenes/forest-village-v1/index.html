@@ -315,7 +315,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
         ]
       ]
     }
-  ]
+  ],
+  "walkSpriteCandidate": "assets/review/walk-v0.1"
 }
 </script>
 <script>
@@ -324,6 +325,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 const $=id=>document.getElementById(id),scene=JSON.parse($('scene').textContent),stage=$('stage'),viewport=$('viewport'),panel=$('panel');
 const spriteBase='../../assets/review/v0.2/frames/';
 const frameSrc=(id,n)=>spriteBase+id+'/'+id+'_'+String(n).padStart(2,'0')+'.png';
+const walkRoot='../../assets/review/walk-v0.1/';
+const walkFrameSrc=(id,direction,n)=>walkRoot+'frames/'+id+'/'+id+'_walk_'+direction+'_'+String(n).padStart(2,'0')+'.png';
 const objectButtons=new Map(),characterNodes=new Map();
 const motionQuery=window.matchMedia('(prefers-reduced-motion: reduce)');
 let paused=false,selected=null,clock=0,lastTime=0,lastScale=0,fitAll=false;
@@ -339,9 +342,33 @@ for(const actor of scene.characters){
  btn.style.setProperty('--foot',(actor.footFraction*100)+'%');btn.style.setProperty('--foot-neg',(-actor.footFraction*100)+'%');
  const img=document.createElement('img');img.src=frameSrc(actor.id,1);img.alt='';img.decoding='async';img.draggable=false;
  btn.append(img);btn.addEventListener('click',()=>openInfo(actor));$('actors').append(btn);
- characterNodes.set(actor.id,{btn,img,actor,frame:1,x:actor.x,y:actor.y});
+ characterNodes.set(actor.id,{btn,img,actor,frame:1,direction:'',walkReady:false,x:actor.x,y:actor.y});btn.dataset.animation='legacy-gestures';
  for(let n=2;n<=6;n++){const pre=new Image();pre.src=frameSrc(actor.id,n)}
 }
+// Activate a candidate walk cycle only when its complete published pack is available.
+function preloadWalkPack(){
+ if(typeof fetch!=='function')return;
+ fetch(walkRoot+'MANIFEST.json',{cache:'no-store'}).then(r=>r.ok?r.json():null)
+  .then(m=>{
+   if(!m||!m.count||m.count.totalPngs!==48||m.status!=='REVIEW_CANDIDATE_NOT_APPROVED')return;
+   for(const info of characterNodes.values()){
+    const a=info.actor,pending=[];
+    for(const dir of ['right','left'])for(let n=1;n<=6;n++){
+     pending.push(new Promise((resolve,reject)=>{
+      const candidate=new Image();candidate.onload=resolve;candidate.onerror=reject;
+      candidate.src=walkFrameSrc(a.id,dir,n);
+     }));
+    }
+    Promise.all(pending).then(()=>{
+     info.walkReady=true;info.frame=0;info.direction='';
+     info.btn.dataset.animation='walk-v0.1-candidate';
+     info.btn.style.setProperty('--foot','89.84375%');
+     info.btn.style.setProperty('--foot-neg','-89.84375%');
+    }).catch(()=>{info.walkReady=false;info.btn.dataset.animation='legacy-gestures'});
+   }
+  }).catch(()=>{}); // File missing or denied: keep previous working visuals.
+}
+preloadWalkPack();
 const clearEffects=()=>{
  for(const btn of objectButtons.values())btn.classList.remove('is-active');
  for(const info of characterNodes.values())info.btn.classList.remove('is-selected');
@@ -417,11 +444,16 @@ function render(t){
   const a=info.actor,step=track(a,clock);
   info.x=step.x;info.y=step.y;
   // Keep the clickable button stationary; only the sprite moves inside its corridor.
-  const nextFrame=canMove&&step.moving?[1,2,3,6][Math.floor(clock/900)%4]:1;
-  if(info.frame!==nextFrame){info.img.src=frameSrc(a.id,nextFrame);info.frame=nextFrame}
-  const align=a.alignmentPx[info.frame-1]||[0,0];const center=(a.patrol.startX+a.patrol.endX)/2;
+  const isWalk=info.walkReady,dir=step.left?'left':'right';
+  const nextFrame=isWalk?(canMove&&step.moving?1+(Math.floor(clock/160)%6):1):(canMove&&step.moving?[1,2,3,6][Math.floor(clock/900)%4]:1);
+  if(info.frame!==nextFrame||info.direction!==dir){
+   info.img.src=isWalk?walkFrameSrc(a.id,dir,nextFrame):frameSrc(a.id,nextFrame);
+   info.frame=nextFrame;info.direction=dir;
+  }
+  const center=(a.patrol.startX+a.patrol.endX)/2;
+  const align=isWalk?[0,0]:(a.alignmentPx[info.frame-1]||[0,0]);
   info.btn.style.setProperty('--sprite-dx',(step.x-center)+'px');
-  const bob=(canMove&&step.moving)?Math.sin(clock/170)*1.1:0;
+  const bob=isWalk?0:((canMove&&step.moving)?Math.sin(clock/170)*1.1:0);
   info.img.style.transform='translate('+(step.x-center+align[0])+'px,'+(align[1]+bob)+'px)';
  }
  requestAnimationFrame(render);
