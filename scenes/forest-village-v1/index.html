@@ -25,9 +25,9 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 .hotspot:hover,.hotspot:focus-visible,.hotspot.is-active,.debug .hotspot{border-color:#f9e790;background:#ffe78a2b;color:#fff}
 .hotspot::after{content:attr(data-label);position:absolute;bottom:-21px;left:10%;font-weight:800;font-size:18px;white-space:nowrap;text-shadow:1px 2px 2px #153b2d,0 0 3px #153b2d;opacity:0}
 .hotspot:hover::after,.hotspot:focus-visible::after,.debug .hotspot::after{opacity:1}
-.actor{position:absolute;z-index:4;width:var(--size);height:var(--size);transform:translate(-50%,var(--foot-neg));border:0;background:none;padding:0}
+.actor{position:absolute;z-index:4;width:var(--hit-width);height:var(--size);transform:translate(-50%,var(--foot-neg));border:0;background:none;padding:0}
 .actor::before{content:"";position:absolute;width:46%;height:8%;left:27%;top:calc(var(--foot) - 5%);background:#1b38194d;filter:blur(5px);border-radius:50%}
-.actor img{position:relative;display:block;width:100%;height:100%;object-fit:contain}
+.actor img{position:absolute;display:block;left:calc((100% - var(--size))/2);top:0;width:var(--size);height:var(--size);object-fit:contain;pointer-events:none}
 .actor.is-selected{filter:drop-shadow(0 0 6px #fff8a5)}
 .debug .actor{outline:2px dashed #fddc77}
 .debug .actor::after{content:"";position:absolute;width:8px;height:8px;background:#ff3b64;border:2px solid #fff;border-radius:50%;left:calc(50% - 4px);top:calc(var(--foot) - 4px);pointer-events:none}
@@ -335,7 +335,7 @@ for(const obj of scene.hotspots){
 }
 for(const actor of scene.characters){
  const btn=document.createElement('button');btn.type='button';btn.className='actor';btn.title=actor.label+' 프로필';
- btn.setAttribute('aria-label',actor.label+' 프로필 열기');btn.style.setProperty('--size',actor.size+'px');
+ btn.setAttribute('aria-label',actor.label+' 프로필 열기');btn.style.setProperty('--size',actor.size+'px');btn.style.setProperty('--hit-width',(actor.patrol.endX-actor.patrol.startX+actor.size*0.68)+'px');btn.style.left=((actor.patrol.startX+actor.patrol.endX)/2)+'px';btn.style.top=actor.patrol.y+'px';
  btn.style.setProperty('--foot',(actor.footFraction*100)+'%');btn.style.setProperty('--foot-neg',(-actor.footFraction*100)+'%');
  const img=document.createElement('img');img.src=frameSrc(actor.id,1);img.alt='';img.decoding='async';img.draggable=false;
  btn.append(img);btn.addEventListener('click',()=>openInfo(actor));$('actors').append(btn);
@@ -416,10 +416,12 @@ function render(t){
  for(const info of characterNodes.values()){
   const a=info.actor,step=track(a,clock);
   info.x=step.x;info.y=step.y;
-  info.btn.style.left=step.x+'px';info.btn.style.top=step.y+'px';
-  const nextFrame=canMove&&step.moving?1+(Math.floor(clock/320)%6):1;
+  // Keep the clickable button stationary; only the sprite moves inside its corridor.
+  const nextFrame=canMove&&step.moving?[1,2,3,6][Math.floor(clock/900)%4]:1;
   if(info.frame!==nextFrame){info.img.src=frameSrc(a.id,nextFrame);info.frame=nextFrame}
-  const align=a.alignmentPx[info.frame-1]||[0,0];info.img.style.transform='translate('+align[0]+'px,'+align[1]+'px)'+(step.moving&&step.left?' scaleX(-1)':'');
+  const align=a.alignmentPx[info.frame-1]||[0,0];const center=(a.patrol.startX+a.patrol.endX)/2;
+  const bob=(canMove&&step.moving)?Math.sin(clock/170)*1.1:0;
+  info.img.style.transform='translate('+(step.x-center+align[0])+'px,'+(align[1]+bob)+'px)';
  }
  requestAnimationFrame(render);
 }
