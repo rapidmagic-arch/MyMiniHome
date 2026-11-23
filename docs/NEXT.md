@@ -37,3 +37,9 @@
 - Q1~Q6: `docs/requirements.md`
 - 작업 흐름 이력: `docs/scene-assembly-workflow.md`
 - 원본 자산과 QA: `assets/review/`, `docs/asset-guidelines.md`
+
+## 2026-11-24 실행 피드백 및 최신 동작 수정 (이전 상태보다 우선)
+- 사용자 관측: `움직임 반응 없음 / 클릭 시 URL 입력만 표시`.
+- [수정 원인·내용·모의 검증 보고서](runtime-interaction-fix-20261124.md) 확인. 템플릿의 프로필 개방 시 전역 정지, OS reduced-motion으로 재생 버튼 비활성화, 링크폼 선노출 문제를 수정. 캐릭터 인사말/말풍선/반응 버튼 추가.
+- **다음 재개 1순위:** 사용자의 Windows 브라우저에서 `git pull --ff-only` → `?v=motion-fix-20261124` 재로드 → 화면 상단 모션 상태/프레임 4/4, 동물 반응, 오브젝트 반응 확인. 실제 사용자 브라우저 검증 전에는 제품 동작 완료로 승격하지 않음.
+- 기존 자산 삭제, ChatGPT 호스트 설치·연결, 사용자 개인 링크 공용 등록은 수행하지 않음.
