@@ -1,0 +1,66 @@
+{
+  "version": "0.1.0",
+  "status": "prototype",
+  "style": "bright-isometric-pixel-forest",
+  "note": "이 파일은 아트 자산만 정의합니다. 실사용 ChatGPT URL과 프로필 데이터는 포함하지 않습니다.",
+  "characters": [
+    {
+      "id": "squirrel",
+      "path": "assets/characters/squirrel.svg",
+      "type": "character",
+      "status": "prototype"
+    },
+    {
+      "id": "rabbit",
+      "path": "assets/characters/rabbit.svg",
+      "type": "character",
+      "status": "prototype"
+    },
+    {
+      "id": "fox",
+      "path": "assets/characters/fox.svg",
+      "type": "character",
+      "status": "prototype"
+    },
+    {
+      "id": "wolf",
+      "path": "assets/characters/wolf.svg",
+      "type": "character",
+      "status": "prototype"
+    }
+  ],
+  "environment": [
+    {
+      "id": "pond",
+      "path": "assets/environment/pond.svg",
+      "type": "environment",
+      "status": "prototype"
+    },
+    {
+      "id": "terrain-tile",
+      "path": "assets/environment/terrain-tile.svg",
+      "type": "environment",
+      "status": "prototype"
+    },
+    {
+      "id": "tree",
+      "path": "assets/environment/tree.svg",
+      "type": "environment",
+      "status": "prototype"
+    },
+    {
+      "id": "forest-background",
+      "path": "assets/environment/forest-background.svg",
+      "type": "environment",
+      "status": "prototype"
+    }
+  ],
+  "objects": [
+    {
+      "id": "mailbox",
+      "path": "assets/objects/mailbox.svg",
+      "type": "object",
+      "status": "prototype"
+    }
+  ]
+}
