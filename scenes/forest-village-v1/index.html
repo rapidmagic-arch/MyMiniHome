@@ -26,7 +26,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 .hotspot::after{content:attr(data-label);position:absolute;bottom:-21px;left:10%;font-weight:800;font-size:18px;white-space:nowrap;text-shadow:1px 2px 2px #153b2d,0 0 3px #153b2d;opacity:0}
 .hotspot:hover::after,.hotspot:focus-visible::after,.debug .hotspot::after{opacity:1}
 .actor{position:absolute;z-index:4;width:var(--hit-width);height:var(--size);transform:translate(-50%,var(--foot-neg));border:0;background:none;padding:0}
-.actor::before{content:"";position:absolute;width:46%;height:8%;left:27%;top:calc(var(--foot) - 5%);background:#1b38194d;filter:blur(5px);border-radius:50%}
+.actor::before{content:"";position:absolute;width:46%;height:8%;left:27%;top:calc(var(--foot) - 5%);background:#1b38194d;filter:blur(5px);border-radius:50%;transform:translateX(var(--sprite-dx,0px))}
 .actor img{position:absolute;display:block;left:calc((100% - var(--size))/2);top:0;width:var(--size);height:var(--size);object-fit:contain;pointer-events:none}
 .actor.is-selected{filter:drop-shadow(0 0 6px #fff8a5)}
 .debug .actor{outline:2px dashed #fddc77}
@@ -420,6 +420,7 @@ function render(t){
   const nextFrame=canMove&&step.moving?[1,2,3,6][Math.floor(clock/900)%4]:1;
   if(info.frame!==nextFrame){info.img.src=frameSrc(a.id,nextFrame);info.frame=nextFrame}
   const align=a.alignmentPx[info.frame-1]||[0,0];const center=(a.patrol.startX+a.patrol.endX)/2;
+  info.btn.style.setProperty('--sprite-dx',(step.x-center)+'px');
   const bob=(canMove&&step.moving)?Math.sin(clock/170)*1.1:0;
   info.img.style.transform='translate('+(step.x-center+align[0])+'px,'+(align[1]+bob)+'px)';
  }
