@@ -81,7 +81,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 #toggleLinkForm{font-size:13px;margin-bottom:8px}
 .speech-bubble{position:absolute;z-index:9;width:230px;max-width:230px;padding:12px;background:#fff9df;color:#3d3b24;border:5px solid #765233;box-shadow:6px 7px 0 #204e3399;border-radius:16px;transform:translate(-50%,-100%);font-size:18px;font-weight:800;text-align:center;pointer-events:none}
 .speech-bubble:after{content:"";position:absolute;left:calc(50% - 8px);bottom:-17px;width:18px;height:18px;background:#fff9df;border-right:4px solid #765233;border-bottom:4px solid #765233;transform:rotate(45deg)}
-.actor.is-reacting{filter:drop-shadow(0 0 6px #fff3a7)}
+.actor.is-reacting{filter:drop-shadow(0 0 6px #fff3a7);transform-origin:center var(--foot);animation:actor-greeting .45s ease-in-out 2}
+@keyframes actor-greeting{0%,100%{transform:translate(-50%,var(--foot-neg)) rotate(0deg)}30%{transform:translate(-50%,var(--foot-neg)) rotate(-3deg)}65%{transform:translate(-50%,var(--foot-neg)) rotate(3deg)}}
 .actor.is-reacting::after{content:"✦";position:absolute;right:18%;top:-15%;color:#fff2a0;font-size:28px;animation:reaction-pop .8s ease-in-out infinite;pointer-events:none;text-shadow:1px 2px 0 #96613f}
 @keyframes reaction-pop{50%{transform:translateY(-7px) rotate(12deg)}}
 .legend{color:#c7ded8;font-size:12px;line-height:1.6;margin:10px 3px 0}
@@ -669,7 +670,10 @@ function showReaction(obj){
  $('panelGreeting').textContent=message;
  const bubble=$('speechBubble');bubble.textContent=message;bubble.hidden=false;
  const info=characterNodes.get(obj.id);
- if(info){bubble.style.left=Math.max(135,Math.min(1639,info.x))+'px';bubble.style.top=(info.y-obj.size*.88-16)+'px';}
+ if(info){
+  bubble.style.left=Math.max(135,Math.min(1639,info.x))+'px';bubble.style.top=(info.y-obj.size*.88-16)+'px';
+  info.btn.classList.remove('is-reacting');void info.btn.offsetWidth;info.btn.classList.add('is-reacting');
+ }
 }
 $('reactButton').addEventListener('click',()=>{
  if(!selected||!characterNodes.has(selected))return;
