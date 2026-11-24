@@ -10,7 +10,7 @@ class E{
   this.classes=new Set();this.classList={add:(...a)=>a.forEach(x=>this.classes.add(x)),remove:(...a)=>a.forEach(x=>this.classes.delete(x)),contains:x=>this.classes.has(x),toggle:(x,y)=>{const v=y===undefined?!this.classes.has(x):y;v?this.classes.add(x):this.classes.delete(x);return v}};
  }
  append(x){this.children.push(x)}replaceChildren(...x){this.children=x;this.textContent=''}
- addEventListener(t,f){this.events[t]=f}setAttribute(k,v){this.attrs[k]=v}removeAttribute(k){delete this.attrs[k]}focus(){}
+ addEventListener(t,f){this.events[t]=f}setAttribute(k,v){this.attrs[k]=v}removeAttribute(k){delete this.attrs[k]}focus(){}contains(n){return this.children.includes(n)}
  getBoundingClientRect(){
   if(this.id==='stage')return{left:10,top:100,width:scene.designSize.width*(Number(this.style.transform?.match(/scale\(([^)]+)\)/)?.[1])||1)};
   return{left:10,top:100,width:this.clientWidth};
@@ -52,8 +52,19 @@ runner(doc,win,Img,class{observe(){}},f=>raf=f,async url=>({ok:true,json:async()
  assert.equal(els.dropOverlay.hidden,true);
  const story=els.storyText.textContent;els.storyNext.events.click();assert.notEqual(els.storyText.textContent,story);
  els.close.events.click();
+ // A quick click on a different animal changes the carried character, not the open panel.
+ actor.events.click(event(firstX,firstY,1700));
+ const rabbit=els.actors.children[1];
+ const switchEvent=event(parseFloat(rabbit.style.left),parseFloat(rabbit.style.top),1900);
+ switchEvent.target=rabbit;
+ els.stage.events.click(switchEvent);
+ assert.equal(actor.classList.contains('is-carried'),false);
+ assert.equal(rabbit.classList.contains('is-carried'),true);
+ assert.equal(els.panel.hidden,true);
+ doc.events.keydown({key:'Escape'});
+ assert.equal(rabbit.classList.contains('is-carried'),false);
  // Single tap, invalid region, safe drop, patrol continuation.
- actor.events.click(event(firstX,firstY,2000));
+ actor.events.click(event(firstX,firstY,2300));
  assert.equal(els.panel.hidden,true);
  els.stage.events.click(event(1460,200,2600));assert.equal(actor.classList.contains('is-carried'),true);
  els.stage.events.pointermove(event(400,680,2650));tick(20,22);
@@ -84,5 +95,28 @@ runner(doc,win,Img,class{observe(){}},f=>raf=f,async url=>({ok:true,json:async()
  win.innerHeight=350;els.viewport.clientWidth=1100;win.events.resize();
  assert.ok(Number(els.stage.style.transform.match(/scale\(([^)]+)\)/)[1])<.3);
  els.toggleFit.events.click();assert.equal(els.viewport.style.overflow,'auto');
- console.log('PASS MyMiniHome: double-tap profile, single-tap carry, invalid/occupied landing, stationary idle, patrol, story, BGM controls, responsive fit');
+ // Meeting on a shared path: the stationary bear must not be displaced, walker detours.
+ const bear2=els.actors.children[5],walker=els.actors.children[0];
+ const originalBear={x:parseFloat(bear2.style.left),y:parseFloat(bear2.style.top)};
+ bear2.events.click(event(originalBear.x,originalBear.y,12000));
+ els.stage.events.click(event(520,680,13000));
+ assert.equal(bear2.classList.contains('is-carried'),false,'the stationary obstacle must be placed on grass');
+ let overlapCount=0,greetingFrames=0,detourFrames=0,closest=1e9;
+ for(let i=90;i<350;i++){
+  tick(i,i+1);
+  const wx=parseFloat(walker.style.left),wy=parseFloat(walker.style.top);
+  const bx=parseFloat(bear2.style.left),by=parseFloat(bear2.style.top);
+  const dx=Math.abs(wx-bx),dy=Math.abs(wy-by);
+  closest=Math.min(closest,Math.hypot(dx,dy));
+  if(dx<70&&dy<39)overlapCount++;
+  if(!els.meetingBubble.hidden)greetingFrames++;
+  if(Math.abs(wy-680)>8)detourFrames++;
+  assert.equal(bx,520,'idle bear must not be pushed horizontally');
+  assert.equal(by,680,'idle bear must not be pushed vertically');
+ }
+ assert.equal(overlapCount,0,'walking character never overlaps the parked one');
+ assert.ok(greetingFrames>0,'close approach triggers greeting');
+ assert.ok(detourFrames>0,'walker uses an alternate valid lane');
+ console.log('Collision QA:',{overlapCount,greetingFrames,detourFrames,closest});
+ console.log('PASS MyMiniHome: single/double tap, character switch, invalid/occupied landing, stop/detour/greet, stationary idle, story, BGM and responsive');
 })().catch(e=>{console.error('FAIL MyMiniHome regression',e);process.exitCode=1});
