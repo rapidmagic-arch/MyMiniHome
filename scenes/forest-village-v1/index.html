@@ -730,6 +730,139 @@ const objectButtons=new Map(),characterNodes=new Map(),manualLinks=new Map();
 const motionQuery=window.matchMedia('(prefers-reduced-motion: reduce)');
 let paused=motionQuery.matches,userChoseMotion=false,selected=null,clock=0,lastTime=0,lastScale=0,fitAll=false;
 const reactionIndexes=new Map();
+
+// --- Sound Manager: user-activated audio, folder playlist or original synthesized themes ---
+const builtInTracks=[
+ {title:'숲속 햇살 · 내장 오리지널',type:'synth',bpm:94,melody:[72,76,79,76,74,77,81,77,76,79,83,79,74,76,79,72],bass:[48,55,53,55]},
+ {title:'포근한 오두막 · 내장 오리지널',type:'synth',bpm:82,melody:[69,72,76,72,71,74,76,74,69,72,77,76,67,71,74,72],bass:[45,52,50,52]},
+ {title:'꽃잎 산책 · 내장 오리지널',type:'synth',bpm:102,melody:[76,79,81,79,74,76,79,76,72,76,79,83,81,79,76,74],bass:[48,55,57,53]}
+];
+let tracks=builtInTracks,trackIndex=0,musicEnabled=false,sfxEnabled=true,audioContext=null,musicTimer=null,trackPlayer=null,noteStep=0,nextNoteTime=0,completedLoops=0;
+const activeTrack=()=>tracks[trackIndex]||builtInTracks[0];
+const midiFrequency=n=>440*Math.pow(2,(n-69)/12);
+function ensureAudioContext(){
+ const AudioCtor=window.AudioContext||window.webkitAudioContext;
+ if(!AudioCtor)return null;
+ try{
+  if(!audioContext)audioContext=new AudioCtor();
+  if(audioContext.state==='suspended'&&audioContext.resume)audioContext.resume().catch(()=>{});
+  return audioContext;
+ }catch{return null}
+}
+function synthTone(midi,when,duration,level,type){
+ if(!Number.isFinite(midi)||!audioContext)return;
+ const osc=audioContext.createOscillator(),gain=audioContext.createGain();
+ osc.type=type||'sine';osc.frequency.setValueAtTime(midiFrequency(midi),when);
+ gain.gain.setValueAtTime(0.0001,when);
+ gain.gain.exponentialRampToValueAtTime(Math.max(level,0.0002),when+.018);
+ gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
+ osc.connect(gain);gain.connect(audioContext.destination);
+ osc.start(when);osc.stop(when+duration+.04);
+}
+function playSfx(event,id){
+ if(!sfxEnabled)return;
+ const ctx=ensureAudioContext();if(!ctx)return;
+ const base=({squirrel:79,rabbit:83,fox:76,wolf:72,owl:67,bear:64,frog:74,hedgehog:81,
+  pond:74,bridge:69,mailbox:88,waterfall:73,reading:76,cottage:72,'cherry-tree':86}[id]||76);
+ const n=event==='land'?base-12:event==='invalid'?55:base;
+ const at=ctx.currentTime+.008;
+ synthTone(n,at,.14,.075,'sine');
+ synthTone(n+(event==='invalid'?-2:7),at+.095,.19,.05,'triangle');
+}
+function stopCurrentTrack(){
+ if(musicTimer!==null){clearInterval(musicTimer);musicTimer=null}
+ if(trackPlayer){trackPlayer.pause();trackPlayer.removeAttribute('src');trackPlayer.load();trackPlayer=null}
+}
+function updateAudioStatus(extra=''){
+ $('musicToggle').textContent=musicEnabled?'음악 정지':'음악 켜기';
+ $('musicToggle').setAttribute('aria-pressed',String(musicEnabled));
+ $('sfxToggle').textContent=sfxEnabled?'효과음 켜짐':'효과음 꺼짐';
+ $('sfxToggle').setAttribute('aria-pressed',String(sfxEnabled));
+ const song=activeTrack();
+ $('audioStatus').textContent=extra||(musicEnabled?'재생 중':'대기 중')+' · '+song.title+' ('+(trackIndex+1)+'/'+tracks.length+')';
+}
+function musicScheduler(){
+ const song=activeTrack();if(!musicEnabled||song.type!=='synth'||!audioContext)return;
+ const stepLength=60/song.bpm/2;
+ while(nextNoteTime<audioContext.currentTime+.18&&musicEnabled){
+  const i=noteStep%song.melody.length,vol=Number($('musicVolume').value)/100;
+  synthTone(song.melody[i],nextNoteTime,stepLength*.83,.075*vol,'sine');
+  if(i%4===0)synthTone(song.bass[Math.floor(i/4)%song.bass.length],nextNoteTime,stepLength*3.5,.04*vol,'triangle');
+  noteStep+=1;nextNoteTime+=stepLength;
+  if(noteStep%song.melody.length===0){
+   completedLoops+=1;
+   if(completedLoops>=4){
+    // Defer track changes until after this interval tick to prevent schedule duplication.
+    window.setTimeout(()=>{if(musicEnabled&&activeTrack()===song)advanceTrack()},30);
+    break;
+   }
+  }
+ }
+}
+function playCurrentTrack(){
+ stopCurrentTrack();
+ const song=activeTrack();
+ if(song.type==='file'){
+  if(!window.Audio){updateAudioStatus('오디오 재생을 지원하지 않는 환경');musicEnabled=false;return}
+  trackPlayer=new window.Audio();
+  trackPlayer.preload='auto';trackPlayer.volume=Number($('musicVolume').value)/100;
+  trackPlayer.src=song.src;
+  trackPlayer.addEventListener('ended',()=>{if(musicEnabled)advanceTrack()});
+  trackPlayer.addEventListener('error',()=>{musicEnabled=false;stopCurrentTrack();updateAudioStatus('음악 파일을 읽을 수 없어. 파일 경로를 확인해 줘.')});
+  const playResult=trackPlayer.play();
+  if(playResult&&playResult.catch)playResult.catch(()=>{musicEnabled=false;stopCurrentTrack();updateAudioStatus('음악 재생이 차단됐어. 버튼을 다시 눌러줘.')});
+ }else{
+  const ctx=ensureAudioContext();
+  if(!ctx){musicEnabled=false;updateAudioStatus('이 브라우저는 Web Audio를 지원하지 않아.');return}
+  noteStep=0;completedLoops=0;nextNoteTime=ctx.currentTime+.06;
+  musicScheduler();musicTimer=setInterval(musicScheduler,100);
+ }
+ updateAudioStatus();
+}
+function advanceTrack(){
+ trackIndex=(trackIndex+1)%tracks.length;
+ if(musicEnabled)playCurrentTrack();else updateAudioStatus();
+}
+$('musicToggle').addEventListener('click',()=>{
+ musicEnabled=!musicEnabled;
+ if(musicEnabled)playCurrentTrack();else{stopCurrentTrack();updateAudioStatus()}
+});
+$('musicNext').addEventListener('click',advanceTrack);
+$('musicVolume').addEventListener('input',()=>{if(trackPlayer)trackPlayer.volume=Number($('musicVolume').value)/100});
+$('sfxToggle').addEventListener('click',()=>{sfxEnabled=!sfxEnabled;updateAudioStatus()});
+updateAudioStatus();
+// Static hosting does not expose directory listings: playlist.json is built from the BGM folder.
+if(typeof fetch==='function')fetch(scene.audio.playlist,{cache:'no-store'}).then(r=>r.ok?r.json():null).then(data=>{
+ if(!data||!Array.isArray(data.tracks))return;
+ const folder=scene.audio.playlist.slice(0,scene.audio.playlist.lastIndexOf('/')+1);
+ const files=data.tracks.filter(t=>t&&typeof t.file==='string'&&!t.file.includes('/')&&!t.file.includes('..')&&/\.(mp3|ogg|wav|m4a)$/i.test(t.file));
+ if(!files.length)return; // no file uploaded -> original built-in compositions remain
+ const previousSong=activeTrack();
+ tracks=files.map(t=>({title:String(t.title||t.file).slice(0,80),type:'file',src:folder+encodeURIComponent(t.file)}));
+ trackIndex=0;
+ if(musicEnabled&&previousSong.type==='synth')playCurrentTrack();else updateAudioStatus();
+}).catch(()=>{});
+
+// --- Story manager: prewritten, bounded and independently testable ---
+const storyProgress=new Map();
+function showStory(obj){
+ const lines=scene.stories?.[obj.id]||[];
+ if(!lines.length){$('storyBox').hidden=true;return}
+ $('storyBox').hidden=false;
+ const index=storyProgress.get(obj.id)||0;
+ $('storyText').textContent=lines[index%lines.length];
+ $('storyNext').textContent=index%lines.length===lines.length-1?'이야기 처음부터':'이야기 계속';
+}
+$('storyNext').addEventListener('click',()=>{
+ if(!selected)return;
+ const obj=characterNodes.get(selected)?.actor||scene.hotspots.find(h=>h.id===selected);
+ if(!obj)return;
+ const lines=scene.stories?.[selected]||[];
+ if(!lines.length)return;
+ storyProgress.set(selected,((storyProgress.get(selected)||0)+1)%lines.length);
+ showStory(obj);playSfx('story',selected);
+});
+
 $('background').src=scene.background;
 for(const obj of scene.hotspots){
  const btn=document.createElement('button');btn.type='button';btn.className='hotspot';btn.dataset.label=obj.label;
@@ -777,7 +910,7 @@ const clearEffects=()=>{
 };
 function closeInfo(){
  panel.hidden=true;$('noteForm').hidden=true;$('noteNotice').hidden=true;$('previewMessage').hidden=true;
- $('noteInput').value='';$('linkInput').value='';$('linkForm').hidden=true;$('linkNotice').hidden=true;$('toggleLinkForm').hidden=true;$('actorReaction').hidden=true;selected=null;clearEffects();
+ $('noteInput').value='';$('linkInput').value='';$('linkForm').hidden=true;$('linkNotice').hidden=true;$('toggleLinkForm').hidden=true;$('actorReaction').hidden=true;$('storyBox').hidden=true;selected=null;clearEffects();
 }
 function openInfo(obj){
  clearEffects();selected=obj.id;panel.hidden=false;
@@ -785,6 +918,7 @@ function openInfo(obj){
  $('panelBody').textContent=obj.note||((obj.kind==='gpt'?'GPT':'프로젝트')+' 프로필 시안 — 실제 정보 미연결');
  $('panelLink').replaceChildren();$('noteInput').value='';$('previewMessage').hidden=true;$('previewMessage').textContent='';
  $('noteForm').hidden=true;$('noteNotice').hidden=true;$('linkForm').hidden=true;$('linkNotice').hidden=true;$('toggleLinkForm').hidden=true;$('actorReaction').hidden=true;
+ showStory(obj);
  if(characterNodes.has(obj.id)){
   const info=characterNodes.get(obj.id);info.btn.classList.add('is-selected');info.btn.classList.add('is-reacting');
   $('actorReaction').hidden=false;$('panelAvatar').src=frameSrc(obj.id,obj.idleFrames?obj.idleFrames[0]:1);
@@ -796,8 +930,9 @@ function openInfo(obj){
    $('panelLink').append(a);
   }else $('panelLink').textContent='연결된 ChatGPT 프로젝트·GPT 없음. 필요할 때만 연결해 줘.';
   $('toggleLinkForm').hidden=false;$('linkInput').value=manualLinks.get(obj.id)||'';
+  playSfx('character',obj.id);
  }else{
-  objectButtons.get(obj.id).classList.add('is-active');
+  objectButtons.get(obj.id).classList.add('is-active');playSfx('object',obj.id);
   if(obj.action==='highlight-path')$('bridgeGuide').removeAttribute('hidden');
   if(obj.action==='ripple'){$('pondRipple').hidden=false;$('ambience').classList.add('ambient-ripple-intense');if(!motionQuery.matches && !paused)$('pondRipple').classList.add('play')}
   if(obj.action==='local-note')$('mailboxSignal').hidden=false;
