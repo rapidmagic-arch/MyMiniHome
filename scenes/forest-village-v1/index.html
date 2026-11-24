@@ -845,6 +845,7 @@ const builtInTracks=[
  {title:'꽃잎 산책 · 내장 오리지널',type:'synth',bpm:102,melody:[76,79,81,79,74,76,79,76,72,76,79,83,81,79,76,74],bass:[48,55,57,53]}
 ];
 let tracks=builtInTracks,trackIndex=0,musicEnabled=false,sfxEnabled=true,audioContext=null,musicTimer=null,trackPlayer=null,noteStep=0,nextNoteTime=0,completedLoops=0;
+let audioState='stopped',audioEpoch=0,pendingPlaylist=null,synthVoices=new Set();
 const activeTrack=()=>tracks[trackIndex]||builtInTracks[0];
 const midiFrequency=n=>440*Math.pow(2,(n-69)/12);
 function ensureAudioContext(){
@@ -856,29 +857,54 @@ function ensureAudioContext(){
   return audioContext;
  }catch{return null}
 }
-function synthTone(midi,when,duration,level,type){
- if(!Number.isFinite(midi)||!audioContext)return;
+function synthTone(midi,when,duration,level,type,music=false){
+ if(!Number.isFinite(midi)||!audioContext||level<=0)return;
  const osc=audioContext.createOscillator(),gain=audioContext.createGain();
  osc.type=type||'sine';osc.frequency.setValueAtTime(midiFrequency(midi),when);
  gain.gain.setValueAtTime(0.0001,when);
  gain.gain.exponentialRampToValueAtTime(Math.max(level,0.0002),when+.018);
  gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
  osc.connect(gain);gain.connect(audioContext.destination);
+ if(music){synthVoices.add(osc);osc.onended=()=>synthVoices.delete(osc)}
  osc.start(when);osc.stop(when+duration+.04);
 }
+// Original, low-volume event motifs; each animal and location has its own rhythm.
+const sfxMotifs={
+ squirrel:[[79,.00,.08],[84,.08,.09],[88,.17,.12]],
+ rabbit:[[83,.00,.09],[79,.11,.08],[86,.22,.12]],
+ fox:[[76,.00,.12],[81,.13,.14],[84,.27,.13]],
+ wolf:[[60,.00,.16],[67,.14,.17],[72,.28,.16]],
+ owl:[[67,.00,.19],[62,.20,.23]],
+ bear:[[55,.00,.17],[60,.18,.20],[64,.36,.16]],
+ frog:[[53,.00,.11],[60,.12,.12],[53,.25,.12]],
+ hedgehog:[[84,.00,.07],[83,.09,.07],[79,.18,.12]],
+ pond:[[84,.00,.11],[79,.13,.14],[74,.27,.16]],
+ bridge:[[60,.00,.08],[65,.11,.08],[60,.22,.10]],
+ mailbox:[[79,.00,.11],[86,.12,.15],[91,.25,.22]],
+ waterfall:[[76,.00,.16],[81,.06,.19],[84,.13,.23],[88,.22,.28]],
+ reading:[[71,.00,.14],[76,.15,.20],[79,.30,.20]],
+ cottage:[[60,.00,.22],[64,.06,.25],[67,.12,.30],[72,.20,.30]],
+ 'cherry-tree':[[88,.00,.15],[84,.14,.17],[79,.30,.22]]
+};
 function playSfx(event,id){
  if(!sfxEnabled)return;
- const ctx=ensureAudioContext();if(!ctx)return;
- const base=({squirrel:79,rabbit:83,fox:76,wolf:72,owl:67,bear:64,frog:74,hedgehog:81,
-  pond:74,bridge:69,mailbox:88,waterfall:73,reading:76,cottage:72,'cherry-tree':86}[id]||76);
- const n=event==='land'?base-12:event==='invalid'?55:base;
- const at=ctx.currentTime+.008;
- synthTone(n,at,.14,.075,'sine');
- synthTone(n+(event==='invalid'?-2:7),at+.095,.19,.05,'triangle');
+ const ctx=ensureAudioContext();if(!ctx||ctx.state==='suspended')return;
+ const motif=sfxMotifs[id]||sfxMotifs.reading;
+ const base=motif[0][0],at=ctx.currentTime+.012;
+ let notes=motif;
+ if(event==='land')notes=[[base-12,0,.13],[base-5,.12,.14]];
+ if(event==='invalid')notes=[[55,0,.10],[53,.12,.16]];
+ if(event==='pickup')notes=[[base-5,0,.10],[base,.10,.12]];
+ if(event==='greeting')notes=[[base,0,.14],[base+4,.15,.14],[base+7,.29,.16]];
+ const timbre=['bear','owl','wolf','bridge','frog'].includes(id)?'triangle':'sine';
+ notes.forEach(([m,offset,duration],i)=>synthTone(m,at+offset,duration,.035*(1-i*.08),timbre));
 }
 function stopCurrentTrack(){
+ audioEpoch++;
  if(musicTimer!==null){clearInterval(musicTimer);musicTimer=null}
- if(trackPlayer){trackPlayer.pause();trackPlayer.removeAttribute('src');trackPlayer.load();trackPlayer=null}
+ for(const voice of synthVoices){try{voice.stop()}catch{}}
+ synthVoices.clear();
+ if(trackPlayer){try{trackPlayer.pause()}catch{}}
 }
 function updateAudioStatus(extra=''){
  $('musicToggle').textContent=musicEnabled?'음악 정지':'음악 켜기';
@@ -886,7 +912,8 @@ function updateAudioStatus(extra=''){
  $('sfxToggle').textContent=sfxEnabled?'효과음 켜짐':'효과음 꺼짐';
  $('sfxToggle').setAttribute('aria-pressed',String(sfxEnabled));
  const song=activeTrack();
- $('audioStatus').textContent=extra||(musicEnabled?'재생 중':'대기 중')+' · '+song.title+' ('+(trackIndex+1)+'/'+tracks.length+')';
+ const status=audioState==='playing'?'재생 중':audioState==='starting'?'재생 요청 중':audioState==='error'?'재생 실패':'대기 중';
+ $('audioStatus').textContent=extra||status+' · '+song.title+' ('+(trackIndex+1)+'/'+tracks.length+')';
 }
 function musicScheduler(){
  const song=activeTrack();if(!musicEnabled||song.type!=='synth'||!audioContext)return;
@@ -894,40 +921,60 @@ function musicScheduler(){
  if(nextNoteTime<audioContext.currentTime-.5)nextNoteTime=audioContext.currentTime+.04;
  while(nextNoteTime<audioContext.currentTime+.18&&musicEnabled){
   const i=noteStep%song.melody.length,vol=Number($('musicVolume').value)/100;
-  synthTone(song.melody[i],nextNoteTime,stepLength*.83,.075*vol,'sine');
-  if(i%4===0)synthTone(song.bass[Math.floor(i/4)%song.bass.length],nextNoteTime,stepLength*3.5,.04*vol,'triangle');
+  synthTone(song.melody[i],nextNoteTime,stepLength*.83,.075*vol,'sine',true);
+  if(i%4===0)synthTone(song.bass[Math.floor(i/4)%song.bass.length],nextNoteTime,stepLength*3.5,.04*vol,'triangle',true);
   noteStep+=1;nextNoteTime+=stepLength;
   if(noteStep%song.melody.length===0){
    completedLoops+=1;
    if(completedLoops>=4){
     if(musicTimer!==null){clearInterval(musicTimer);musicTimer=null}
     // Defer the playlist advance until the scheduled notes have played.
-    window.setTimeout(()=>{if(musicEnabled&&activeTrack()===song)advanceTrack()},130);
+    const epoch=audioEpoch;
+    window.setTimeout(()=>{if(musicEnabled&&audioEpoch===epoch&&activeTrack()===song)advanceTrack()},Math.max(130,(nextNoteTime-audioContext.currentTime)*1000));
     break;
    }
   }
  }
 }
+function failAudio(message,epoch){
+ if(epoch!==audioEpoch)return;
+ musicEnabled=false;stopCurrentTrack();audioState='error';updateAudioStatus(message);
+}
 function playCurrentTrack(){
  stopCurrentTrack();
- const song=activeTrack();
+ const song=activeTrack(),epoch=audioEpoch;
+ audioState='starting';updateAudioStatus();
  if(song.type==='file'){
-  if(!window.Audio){updateAudioStatus('오디오 재생을 지원하지 않는 환경');musicEnabled=false;return}
-  trackPlayer=new window.Audio();
+  if(!window.Audio){failAudio('이 환경은 파일 음악 재생을 지원하지 않아.',epoch);return}
+  // Reuse the media element for the entire playlist, including automatic next-track play.
+  if(!trackPlayer){
+   trackPlayer=new window.Audio();
+   trackPlayer.preload='auto';
+   trackPlayer.addEventListener('ended',()=>{if(musicEnabled&&activeTrack().type==='file'&&trackPlayer.ended)advanceTrack()});
+   trackPlayer.addEventListener('error',()=>{if(musicEnabled&&activeTrack().type==='file'&&trackPlayer.error)failAudio('음악 파일을 읽을 수 없어. 폴더의 파일을 확인해 줘.',audioEpoch)});
+  }
   const player=trackPlayer;
-  player.preload='auto';player.volume=Number($('musicVolume').value)/100;
-  player.src=song.src;
-  player.addEventListener('ended',()=>{if(musicEnabled&&trackPlayer===player)advanceTrack()});
-  player.addEventListener('error',()=>{if(trackPlayer!==player)return;musicEnabled=false;stopCurrentTrack();updateAudioStatus('음악 파일을 읽을 수 없어. 파일 경로를 확인해 줘.')});
-  const playResult=player.play();
-  if(playResult&&playResult.catch)playResult.catch(()=>{if(trackPlayer!==player)return;musicEnabled=false;stopCurrentTrack();updateAudioStatus('음악 재생이 차단됐어. 버튼을 다시 눌러줘.')});
+  try{
+   player.volume=Number($('musicVolume').value)/100;
+   player.src=song.src;
+   const result=player.play();
+   Promise.resolve(result).then(()=>{
+    if(epoch!==audioEpoch||!musicEnabled)return;
+    audioState='playing';updateAudioStatus();
+   }).catch(()=>failAudio('음악 재생이 차단되었어. 음악 켜기를 다시 눌러 줘.',epoch));
+  }catch{failAudio('음악을 시작하지 못했어. 다시 눌러 줘.',epoch)}
  }else{
   const ctx=ensureAudioContext();
-  if(!ctx){musicEnabled=false;updateAudioStatus('이 브라우저는 Web Audio를 지원하지 않아.');return}
-  noteStep=0;completedLoops=0;nextNoteTime=ctx.currentTime+.06;
-  musicScheduler();musicTimer=setInterval(musicScheduler,100);
+  if(!ctx){failAudio('이 브라우저는 Web Audio를 지원하지 않아.',epoch);return}
+  function begin(){
+   if(!musicEnabled||epoch!==audioEpoch)return;
+   if(ctx.state!=='running'){failAudio('음악 시작이 차단되었어. 다시 눌러 줘.',epoch);return}
+   noteStep=0;completedLoops=0;nextNoteTime=ctx.currentTime+.06;
+   audioState='playing';musicScheduler();musicTimer=setInterval(musicScheduler,100);updateAudioStatus();
+  }
+  if(ctx.state==='running')begin();
+  else Promise.resolve(ctx.resume()).then(begin).catch(()=>failAudio('음악 시작이 차단되었어.',epoch));
  }
- updateAudioStatus();
 }
 function advanceTrack(){
  trackIndex=(trackIndex+1)%tracks.length;
@@ -935,24 +982,27 @@ function advanceTrack(){
 }
 $('musicToggle').addEventListener('click',()=>{
  musicEnabled=!musicEnabled;
- if(musicEnabled)playCurrentTrack();else{stopCurrentTrack();updateAudioStatus()}
+ if(musicEnabled){
+  if(pendingPlaylist){tracks=pendingPlaylist;pendingPlaylist=null;trackIndex=0}
+  playCurrentTrack();
+ }else{stopCurrentTrack();audioState='stopped';updateAudioStatus()}
 });
 $('musicNext').addEventListener('click',advanceTrack);
 $('musicVolume').addEventListener('input',()=>{if(trackPlayer)trackPlayer.volume=Number($('musicVolume').value)/100});
 $('sfxToggle').addEventListener('click',()=>{sfxEnabled=!sfxEnabled;updateAudioStatus()});
 updateAudioStatus();
-// Static hosting does not expose directory listings: playlist.json is built from the BGM folder.
+// Static hosting cannot enumerate arbitrary folders: read the generated manifest.
 if(typeof fetch==='function')fetch(scene.audio.playlist,{cache:'no-store'}).then(r=>r.ok?r.json():null).then(data=>{
  if(!data||!Array.isArray(data.tracks))return;
  const folder=scene.audio.playlist.slice(0,scene.audio.playlist.lastIndexOf('/')+1);
- const files=data.tracks.filter(t=>t&&typeof t.file==='string'&&!t.file.includes('/')&&!t.file.includes('..')&&/\.(mp3|ogg|wav|m4a)$/i.test(t.file));
- if(!files.length)return; // no file uploaded -> original built-in compositions remain
- const previousSong=activeTrack();
- tracks=files.map(t=>({title:String(t.title||t.file).slice(0,80),type:'file',src:folder+encodeURIComponent(t.file)}));
- trackIndex=0;
- if(musicEnabled&&previousSong.type==='synth')playCurrentTrack();else updateAudioStatus();
+ const files=data.tracks.filter(t=>t&&typeof t.file==='string'&&!/[\\/#?]/.test(t.file)&&!t.file.includes('..')&&/\.(mp3|ogg|wav|m4a)$/i.test(t.file));
+ if(!files.length)return;
+ const list=files.map(t=>({title:String(t.title||t.file).slice(0,80),type:'file',src:folder+encodeURIComponent(t.file)}));
+ // Do not interrupt a track if the manifest arrived after the user started the fallback.
+ if(musicEnabled){pendingPlaylist=list;return}
+ tracks=list;trackIndex=0;updateAudioStatus();
 }).catch(()=>{});
-
+ 
 // --- Story manager: prewritten, bounded and independently testable ---
 const storyProgress=new Map();
 function showStory(obj){
