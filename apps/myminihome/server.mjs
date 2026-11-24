@@ -71,8 +71,9 @@ async function handle(msg) {
         return response(msg.id,{contents:[{
           uri:RESOURCE,mimeType:'text/html;profile=mcp-app',text:html,
           _meta:{ui:{prefersBorder:false,csp:resourceCsp},
+            'openai/ui':{availableDisplayModes:['inline','pip','fullscreen']},
             'openai/widgetCSP':{resource_domains:['https://raw.githubusercontent.com'],connect_domains:['https://raw.githubusercontent.com'],redirect_domains:['https://chatgpt.com']},
-            'openai/widgetDescription':'동물 캐릭터를 누르면 프로필과 기존 ChatGPT 프로젝트·GPT 링크를 열 수 있는 숲 마을입니다.'},
+            'openai/widgetDescription':'동물 캐릭터를 들어 올려 옮기고, 음악과 짧은 이야기를 즐길 수 있는 MyMiniHome 숲 마을입니다.'},
         }]});
       }catch(e){return failure(msg.id,-32000,'Scene cannot be loaded: '+e.message)}
     case 'resources/templates/list': return response(msg.id,{resourceTemplates:[]});
