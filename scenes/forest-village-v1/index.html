@@ -163,7 +163,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
    <p id="previewMessage" hidden></p>
   </section>
  </div>
- <p class="legend" id="statusNote">동물 클릭 → 데롱데롱 들기 → 새 장소 클릭 → 착지 후 움직이기. 음악은 '음악 켜기'로 시작해. 짧은 이야기는 프로필에서 이어 볼 수 있어.</p>
+ <p class="legend" id="statusNote">동물 한 번 클릭 → 데롱데롱 들기 → 새 장소 클릭 → 착지. 같은 동물을 빠르게 두 번 누르면 상세 프로필이 열려. 음악은 '음악 켜기'로 시작해. 짧은 이야기는 프로필에서 이어 볼 수 있어.</p>
  <p class="legend" id="responsiveNote">가로·세로에 맞춰 원본 1774×887 비율을 유지해 보여줘. 확대 보기에서는 화면을 스크롤하여 탐색할 수 있어.</p>
 </div>
 <script id="scene" type="application/json">
@@ -741,7 +741,8 @@ const walkFrameSrc=(id,direction,n)=>walkRoot+'frames/'+id+'/'+id+'_walk_'+direc
 const objectButtons=new Map(),characterNodes=new Map(),manualLinks=new Map();
 const motionQuery=window.matchMedia('(prefers-reduced-motion: reduce)');
 let paused=motionQuery.matches,userChoseMotion=false,selected=null,clock=0,lastTime=0,lastScale=0,fitAll=true;
-let carried=null,carryPointer=null;
+let carried=null,carryPointer=null,carryTap=null;
+const DOUBLE_TAP_MS=340,DOUBLE_TAP_DISTANCE=26;
 const reactionIndexes=new Map();
 
 // --- Sound Manager: user-activated audio, folder playlist or original synthesized themes ---
@@ -901,7 +902,10 @@ for(const actor of scene.characters){
  btn.append(img);
  const homeX=actor.patrol?(actor.patrol.startX+actor.patrol.endX)/2:actor.x,homeY=actor.patrol?actor.patrol.y:actor.y;
  const info={btn,img,actor,frame:actor.idleFrames?actor.idleFrames[0]:1,direction:'',walkReady:false,x:homeX,y:homeY,homeX,homeY,patrolShiftX:0,landingZone:null,wasRelocated:false};
- btn.addEventListener('click',e=>{e.stopPropagation();if(!carried)pickUpActor(info)});
+ btn.addEventListener('click',e=>{e.stopPropagation();if(!carried)pickUpActor(info,e)});
+ // Keyboard activation may also open details without relying on multi-tap timing.
+ btn.addEventListener('keydown',e=>{if(e.key==='i'||e.key==='I'){e.preventDefault();cancelCarry();openInfo(info.actor)}});
+
  $('actors').append(btn);
  characterNodes.set(actor.id,info);btn.dataset.animation='legacy-gestures';
  for(let n=2;n<=6;n++){const pre=new Image();pre.src=frameSrc(actor.id,n)}
@@ -943,10 +947,14 @@ function inAllowedZone(actor,point){
  const zones=actor.motion==='pond-idle'?scene.movementZones.water:scene.movementZones.land;
  return zones.some(z=>point.x>=z.x&&point.x<=z.x+z.w&&point.y>=z.y&&point.y<=z.y+z.h);
 }
-function pickUpActor(info){
+function pickUpActor(info,event){
  if(carried)return;
- openInfo(info.actor);
+ // Single click is for movement, not the detailed profile.
+ if(!panel.hidden)closeInfo();
  carried=info;carryPointer={x:info.x,y:info.y};
+ const at=Number.isFinite(event?.timeStamp)?event.timeStamp:Date.now();
+ carryTap=Number.isFinite(event?.clientX)&&Number.isFinite(event?.clientY)
+  ?{id:info.actor.id,x:event.clientX,y:event.clientY,at}:null;
  info.btn.classList.remove('is-reacting','is-landing');
  info.btn.classList.add('is-carried');
  stage.classList.add('is-placing');
@@ -957,7 +965,7 @@ function pickUpActor(info){
 }
 function cancelCarry(){
  if(!carried)return;
- const info=carried;carried=null;carryPointer=null;
+ const info=carried;carried=null;carryPointer=null;carryTap=null;
  info.btn.classList.remove('is-carried');
  info.x=info.homeX;info.y=info.homeY;
  stage.classList.remove('is-placing');$('placementHint').hidden=true;$('dropOverlay').hidden=true;
@@ -970,7 +978,7 @@ function landActor(point){
   playSfx('invalid',info.actor.id);
   return false;
  }
- carried=null;carryPointer=null;
+ carried=null;carryPointer=null;carryTap=null;
  info.homeX=point.x;info.homeY=point.y;info.x=point.x;info.y=point.y;info.wasRelocated=true;
  info.landingZone=(info.actor.motion==='pond-idle'?scene.movementZones.water:scene.movementZones.land).find(z=>point.x>=z.x&&point.x<=z.x+z.w&&point.y>=z.y&&point.y<=z.y+z.h)||null;
  if(info.actor.patrol)info.patrolShiftX=point.x-track(info.actor,clock).x;
@@ -992,6 +1000,16 @@ stage.addEventListener('pointermove',event=>{
 stage.addEventListener('click',event=>{
  if(!carried)return;
  event.preventDefault();event.stopPropagation();
+ // The carried sprite has pointer-events:none; the second click lands on the stage.
+ // Recognize a second tap at the first tap point before evaluating landing.
+ const at=Number.isFinite(event.timeStamp)?event.timeStamp:Date.now();
+ const sameTap=carryTap&&carried.actor.id===carryTap.id&&
+  Number.isFinite(event.clientX)&&Number.isFinite(event.clientY)&&
+  at>=carryTap.at&&at-carryTap.at<=DOUBLE_TAP_MS&&
+  Math.hypot(event.clientX-carryTap.x,event.clientY-carryTap.y)<=DOUBLE_TAP_DISTANCE;
+ if(sameTap){
+  const actor=carried.actor;cancelCarry();openInfo(actor);return;
+ }
  landActor(scenePoint(event));
 },true);
 
