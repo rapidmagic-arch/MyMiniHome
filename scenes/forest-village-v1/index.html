@@ -1017,6 +1017,10 @@ stage.addEventListener('click',event=>{
  if(sameTap){
   const actor=carried.actor;cancelCarry();openInfo(actor);return;
  }
+ // A different animal can be picked without first cancelling the current carry.
+ const targetActor=Array.from(characterNodes.values()).find(info=>
+  info!==carried&&(event.target===info.btn||(typeof info.btn.contains==='function'&&info.btn.contains(event.target))));
+ if(targetActor){cancelCarry();pickUpActor(targetActor,event);return}
  landActor(scenePoint(event));
 },true);
 
