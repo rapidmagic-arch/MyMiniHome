@@ -728,7 +728,8 @@ const walkRoot='../../assets/review/walk-v0.1/';
 const walkFrameSrc=(id,direction,n)=>walkRoot+'frames/'+id+'/'+id+'_walk_'+direction+'_'+String(n).padStart(2,'0')+'.png';
 const objectButtons=new Map(),characterNodes=new Map(),manualLinks=new Map();
 const motionQuery=window.matchMedia('(prefers-reduced-motion: reduce)');
-let paused=motionQuery.matches,userChoseMotion=false,selected=null,clock=0,lastTime=0,lastScale=0,fitAll=false;
+let paused=motionQuery.matches,userChoseMotion=false,selected=null,clock=0,lastTime=0,lastScale=0,fitAll=true;
+let carried=null,carryPointer=null;
 const reactionIndexes=new Map();
 
 // --- Sound Manager: user-activated audio, folder playlist or original synthesized themes ---
@@ -871,11 +872,15 @@ for(const obj of scene.hotspots){
 }
 for(const actor of scene.characters){
  const btn=document.createElement('button');btn.type='button';btn.className='actor';btn.title=actor.label+' 프로필';btn.dataset.kind=actor.motion==='pond-idle'?'water':'land';
- btn.setAttribute('aria-label',actor.label+' 프로필 열기');btn.style.setProperty('--size',actor.size+'px');const range=actor.patrol?actor.patrol.endX-actor.patrol.startX:0;btn.style.setProperty('--hit-width',(range+actor.size*(actor.patrol?0.68:0.95))+'px');btn.style.left=(actor.patrol?(actor.patrol.startX+actor.patrol.endX)/2:actor.x)+'px';btn.style.top=(actor.patrol?actor.patrol.y:actor.y)+'px';
+ btn.setAttribute('aria-label',actor.label+' 클릭하여 들어 올리기');btn.style.setProperty('--size',actor.size+'px');btn.style.setProperty('--hit-width',(actor.size*.93)+'px');btn.style.left=(actor.patrol?(actor.patrol.startX+actor.patrol.endX)/2:actor.x)+'px';btn.style.top=(actor.patrol?actor.patrol.y:actor.y)+'px';
  btn.style.setProperty('--foot',(actor.footFraction*100)+'%');btn.style.setProperty('--foot-neg',(-actor.footFraction*100)+'%');
  const img=document.createElement('img');img.src=frameSrc(actor.id,actor.idleFrames?actor.idleFrames[0]:1);img.alt='';img.decoding='async';img.draggable=false;
- btn.append(img);btn.addEventListener('click',()=>openInfo(actor));$('actors').append(btn);
- characterNodes.set(actor.id,{btn,img,actor,frame:actor.idleFrames?actor.idleFrames[0]:1,direction:'',walkReady:false,x:actor.x,y:actor.y});btn.dataset.animation='legacy-gestures';
+ btn.append(img);
+ const homeX=actor.patrol?(actor.patrol.startX+actor.patrol.endX)/2:actor.x,homeY=actor.patrol?actor.patrol.y:actor.y;
+ const info={btn,img,actor,frame:actor.idleFrames?actor.idleFrames[0]:1,direction:'',walkReady:false,x:homeX,y:homeY,homeX,homeY,wasRelocated:false};
+ btn.addEventListener('click',e=>{e.stopPropagation();if(!carried)pickUpActor(info)});
+ $('actors').append(btn);
+ characterNodes.set(actor.id,info);btn.dataset.animation='legacy-gestures';
  for(let n=2;n<=6;n++){const pre=new Image();pre.src=frameSrc(actor.id,n)}
 }
 // Activate a candidate walk cycle only when its complete published pack is available.
@@ -903,12 +908,74 @@ function preloadWalkPack(){
   }).catch(()=>{}); // File missing or denied: keep previous working visuals.
 }
 preloadWalkPack();
+
+// --- Two-click carry: first tap lifts, second tap chooses a valid landing point. ---
+function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+function scenePoint(event){
+ const rect=stage.getBoundingClientRect();
+ const scale=rect.width/scene.designSize.width||lastScale||1;
+ return {x:(event.clientX-rect.left)/scale,y:(event.clientY-rect.top)/scale};
+}
+function inAllowedZone(actor,point){
+ const zones=actor.motion==='pond-idle'?scene.movementZones.water:scene.movementZones.land;
+ return zones.some(z=>point.x>=z.x&&point.x<=z.x+z.w&&point.y>=z.y&&point.y<=z.y+z.h);
+}
+function pickUpActor(info){
+ if(carried)return;
+ openInfo(info.actor);
+ carried=info;carryPointer={x:info.x,y:info.y};
+ info.btn.classList.remove('is-reacting','is-landing');
+ info.btn.classList.add('is-carried');
+ stage.classList.add('is-placing');
+ $('placementHint').hidden=false;
+ $('placementHint').textContent=info.actor.label+'를 들고 있어! 숲길의 새 위치를 클릭하면 착지해. (Esc: 취소)';
+ playSfx('pickup',info.actor.id);
+}
+function cancelCarry(){
+ if(!carried)return;
+ const info=carried;carried=null;carryPointer=null;
+ info.btn.classList.remove('is-carried');
+ info.x=info.homeX;info.y=info.homeY;
+ stage.classList.remove('is-placing');$('placementHint').hidden=true;
+}
+function landActor(point){
+ if(!carried)return false;
+ const info=carried;
+ if(!Number.isFinite(point.x)||!Number.isFinite(point.y)||!inAllowedZone(info.actor,point)){
+  $('placementHint').textContent=info.actor.label+'가 안전하게 내려올 수 없는 곳이야. '+(info.actor.motion==='pond-idle'?'연못':'잔디나 다리')+'를 눌러 줘!';
+  playSfx('invalid',info.actor.id);
+  return false;
+ }
+ carried=null;carryPointer=null;
+ info.homeX=point.x;info.homeY=point.y;info.x=point.x;info.y=point.y;info.wasRelocated=true;
+ info.btn.classList.remove('is-carried');info.btn.classList.add('is-landing');
+ info.btn.style.left=point.x+'px';info.btn.style.top=point.y+'px';
+ stage.classList.remove('is-placing');$('placementHint').hidden=true;
+ if(selected===info.actor.id){
+  $('panelGreeting').textContent=info.actor.label+'가 새로운 장소에 도착했어!';
+  const bubble=$('speechBubble');bubble.textContent='새 장소에 도착했어!';bubble.hidden=false;bubble.style.left=clamp(point.x,130,1640)+'px';bubble.style.top=(point.y-info.actor.size*.88-16)+'px';
+ }
+ playSfx('land',info.actor.id);
+ return true;
+}
+stage.addEventListener('pointermove',event=>{
+ if(!carried)return;
+ const p=scenePoint(event);
+ if(Number.isFinite(p.x)&&Number.isFinite(p.y))carryPointer={x:clamp(p.x,32,1742),y:clamp(p.y,100,867)};
+});
+stage.addEventListener('click',event=>{
+ if(!carried)return;
+ event.preventDefault();event.stopPropagation();
+ landActor(scenePoint(event));
+},true);
+
 const clearEffects=()=>{
  for(const btn of objectButtons.values())btn.classList.remove('is-active');
  for(const info of characterNodes.values()){info.btn.classList.remove('is-selected');info.btn.classList.remove('is-reacting');}
  $('bridgeGuide').setAttribute('hidden','');$('pondRipple').hidden=true;$('pondRipple').classList.remove('play');$('mailboxSignal').hidden=true;$('ambience').classList.remove('ambient-ripple-intense');$('speechBubble').hidden=true;
 };
 function closeInfo(){
+ cancelCarry();
  panel.hidden=true;$('noteForm').hidden=true;$('noteNotice').hidden=true;$('previewMessage').hidden=true;
  $('noteInput').value='';$('linkInput').value='';$('linkForm').hidden=true;$('linkNotice').hidden=true;$('toggleLinkForm').hidden=true;$('actorReaction').hidden=true;$('storyBox').hidden=true;selected=null;clearEffects();
 }
@@ -980,7 +1047,7 @@ $('noteForm').addEventListener('submit',e=>{
 });
 $('close').addEventListener('click',closeInfo);
 $('reset').addEventListener('click',closeInfo);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)closeInfo()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&carried){cancelCarry();return}if(e.key==='Escape'&&!panel.hidden)closeInfo()});
 $('toggleGuides').addEventListener('click',()=>{
  const on=stage.classList.toggle('debug');$('toggleGuides').setAttribute('aria-pressed',String(on));
 });
@@ -1000,15 +1067,25 @@ $('toggleMotion').addEventListener('click',()=>{userChoseMotion=true;paused=!pau
 if(motionQuery.addEventListener)motionQuery.addEventListener('change',()=>{if(!userChoseMotion)paused=motionQuery.matches;updateMotionLabel()});
 updateMotionLabel();
 function layout(){
- const width=viewport.clientWidth;
- const nativeFit=Math.min(1,width/scene.designSize.width);const scale=fitAll?nativeFit:Math.min(1,Math.max(scene.minSceneScale,nativeFit));
- if(Math.abs(scale-lastScale)<0.0001)return;
- lastScale=scale;
+ const width=viewport.clientWidth||viewport.getBoundingClientRect().width;
+ const top=viewport.getBoundingClientRect().top;
+ const visibleHeight=Math.max(220,(window.innerHeight||800)-Math.max(0,top)-30);
+ const nativeFit=Math.min(1,width/scene.designSize.width,visibleHeight/scene.designSize.height);
+ // Fit both dimensions by default; enlarged mode deliberately enables scrolling.
+ const scale=fitAll?nativeFit:Math.max(nativeFit,scene.minSceneScale);
  const sw=scene.designSize.width*scale,sh=scene.designSize.height*scale;
+ viewport.style.overflow=fitAll?'hidden':'auto';
+ $('toggleFit').textContent=fitAll?'확대 보기':'전체 보기';
+ $('toggleFit').setAttribute('aria-pressed',String(!fitAll));
+ if(Math.abs(scale-lastScale)<.0001&&$('frameSizer').style.width===sw+'px')return;
+ lastScale=scale;
  $('frameSizer').style.width=sw+'px';$('frameSizer').style.height=sh+'px';
- viewport.style.height=sh+'px';stage.style.transform='scale('+scale+')';
+ viewport.style.height=Math.min(sh,visibleHeight)+'px';stage.style.transform='scale('+scale+')';
 }
-$('toggleFit').addEventListener('click',()=>{fitAll=!fitAll;lastScale=0;layout();$('toggleFit').textContent=fitAll?'확대 보기':'전체 보기';$('toggleFit').setAttribute('aria-pressed',String(fitAll));});new ResizeObserver(layout).observe(viewport);layout();
+$('toggleFit').addEventListener('click',()=>{fitAll=!fitAll;lastScale=0;layout()});
+new ResizeObserver(layout).observe(viewport);
+window.addEventListener('resize',layout);
+layout();
 function track(actor,t){
  const p=actor.patrol,walk=p.walkMs,pause=p.pauseMs;
  const cycle=2*(walk+pause),phase=(t+p.offsetMs)%cycle;
@@ -1024,29 +1101,45 @@ function render(t){
  if(canMove)clock+=delta;
  for(const info of characterNodes.values()){
   const a=info.actor;
+  if(carried===info){
+   info.x=carryPointer?.x??info.x;info.y=carryPointer?.y??info.y;
+   info.btn.style.left=info.x+'px';info.btn.style.top=info.y+'px';
+   const idle=a.idleFrames?.[0]||1;
+   if(info.frame!==idle){info.frame=idle;info.img.src=frameSrc(a.id,idle)}
+   info.img.style.transform='translate(0px,0px)';
+   continue;
+  }
+  let align=[0,0],bob=0;
   if(!a.patrol){
    const frames=a.idleFrames||[1],stepTime=a.idleFrameMs||1600;
    const next=(canMove&&frames.length>1)?frames[Math.floor((clock+(a.idleOffsetMs||0))/stepTime)%frames.length]:frames[0];
-   if(info.frame!==next){info.frame=next;info.img.src=frameSrc(a.id,next);}
-   const idx=frames.indexOf(next),shift=(a.idleAlign||[])[idx]||[0,0];info.img.style.transform='translate('+shift[0]+'px,'+shift[1]+'px)';
+   if(info.frame!==next){info.frame=next;info.img.src=frameSrc(a.id,next)}
+   const idx=frames.indexOf(next);
+   align=(a.idleAlign||[])[idx]||[0,0];
+   // Actors without walk sprites have a gentle wandering fallback only after relocation.
+   const drift=info.wasRelocated&&canMove?Math.sin(clock/680+(a.idleOffsetMs||0)/1000)*14:0;
+   info.x=info.homeX+drift;info.y=info.homeY;
    info.btn.style.setProperty('--sprite-dx','0px');
-   continue;
+  }else{
+   const step=track(a,clock);
+   const center=(a.patrol.startX+a.patrol.endX)/2;
+   info.x=step.x+(info.homeX-center);info.y=info.homeY;
+   const isWalk=info.walkReady,dir=step.left?'left':'right';
+   const nextFrame=isWalk?(canMove&&step.moving?1+(Math.floor(clock/160)%6):1):(canMove&&step.moving?[1,2,3,6][Math.floor(clock/900)%4]:1);
+   if(info.frame!==nextFrame||info.direction!==dir){
+    info.img.src=isWalk?walkFrameSrc(a.id,dir,nextFrame):frameSrc(a.id,nextFrame);
+    info.frame=nextFrame;info.direction=dir;
+   }
+   align=isWalk?[0,0]:(a.alignmentPx[info.frame-1]||[0,0]);
+   bob=isWalk?0:((canMove&&step.moving)?Math.sin(clock/170)*1.1:0);
+   info.btn.style.setProperty('--sprite-dx','0px');
   }
-  const step=track(a,clock);
-  info.x=step.x;info.y=step.y;
-  if(selected===a.id&&!$('speechBubble').hidden)$('speechBubble').style.left=Math.max(135,Math.min(1639,info.x))+'px';
-  // Keep the clickable button stationary; only the sprite moves inside its corridor.
-  const isWalk=info.walkReady,dir=step.left?'left':'right';
-  const nextFrame=isWalk?(canMove&&step.moving?1+(Math.floor(clock/160)%6):1):(canMove&&step.moving?[1,2,3,6][Math.floor(clock/900)%4]:1);
-  if(info.frame!==nextFrame||info.direction!==dir){
-   info.img.src=isWalk?walkFrameSrc(a.id,dir,nextFrame):frameSrc(a.id,nextFrame);
-   info.frame=nextFrame;info.direction=dir;
+  info.btn.style.left=info.x+'px';info.btn.style.top=info.y+'px';
+  info.img.style.transform='translate('+align[0]+'px,'+(align[1]+bob)+'px)';
+  if(selected===a.id&&!$('speechBubble').hidden){
+   $('speechBubble').style.left=clamp(info.x,130,1640)+'px';
+   $('speechBubble').style.top=(info.y-a.size*.88-16)+'px';
   }
-  const center=(a.patrol.startX+a.patrol.endX)/2;
-  const align=isWalk?[0,0]:(a.alignmentPx[info.frame-1]||[0,0]);
-  info.btn.style.setProperty('--sprite-dx',(step.x-center)+'px');
-  const bob=isWalk?0:((canMove&&step.moving)?Math.sin(clock/170)*1.1:0);
-  info.img.style.transform='translate('+(step.x-center+align[0])+'px,'+(align[1]+bob)+'px)';
  }
  requestAnimationFrame(render);
 }
