@@ -1,4 +1,18 @@
-# MyMiniHome — 최신 상태 / 다음 작업 인계 (2026-11-24)
+# MyMiniHome — 최신 상태 / 다음 작업 인계 (2026-11-25)
+
+## 현재 최우선 기준 (2026-11-25, 아래 이전 이력보다 우선)
+
+- **현재 파일·버전:** `scenes/forest-village-v1/index.html`, `scene-v1-playful-widget-draft`; 단일 마스터 장면 1종과 8종 동물·7개 장소 유지. 확정 Q1~Q6 + [추가 사용자 조건](requirements.md) 반영.
+- **구현:** 첫 동물 클릭 → 프로필 A안 좌측 하단 표시 및 데롱데롱 매달림 → 장면 내 유효한 새 위치 클릭 → 착지 후 왕복·제자리 반응 재개. 허용 위치 표시, 무효 위치 거부, Esc 취소. 캐릭터별/장소별 짧은 스토리, 합성 효과음, 자체 오리지널 BGM 3종 루프, 정적 폴더 플레이리스트, 기본 가로세로 전체 맞춤·수동 확대.
+- **신규 파일:** `assets/audio/bgm/playlist.json` (현재 비어 있음), `assets/audio/README.md`, `scripts/build_audio_playlist.py`, `scripts/test_scene_runtime.cjs`.
+- **검증:** [의견도출·코드 리뷰·변경과 모의 QA](scene-interaction-review-v0.4.md). 실제 GitHub 소스 JS를 가짜 DOM으로 실행한 들기/착지/이동/스토리/BGM 제어/반응형 검사 PASS. 독립 Node 테스트 스크립트가 리포에 있음. 기존 자산 경로 보존.
+- **필수 미검증:** 사용자의 Windows 브라우저 실제 재현·청음, 태블릿 터치/가로·세로, 앉는 지점의 아트/물리 자연스러움, 동물 4종 폴백 품질, ChatGPT 앱 설치·PiP/전체화면/오디오 호스트 검증. 로컬 stdio MCP에 모드 메타데이터를 추가했지만 **ChatGPT 사이트에 연결한 것은 아님**.
+- **다음 사용:** `git -C "$HOME\MyMiniHome" pull --ff-only origin main` 후 로컬 서버에서 `/scenes/forest-village-v1/index.html?v=playful-20261125` 강력 새로고침. `node scripts/test_scene_runtime.cjs` 모의 회귀 실행. 실제 자산 BGM을 넣었다면 `python scripts/build_audio_playlist.py` 후 manifest와 파일을 모두 Git 반영.
+- **승인·범위:** 별도 챗봇 재구현, ChatGPT 계정 설치, 외부 공개 배포, 유료·외부 저작권 음악 다운로드, 레거시 review 이미지 삭제 없음. `prototype_not_approved` 상태 유지.
+
+---
+
+## 이전 2026-11-24 이력 (참고; 위 최신 상태로 읽을 것)
 
 **중요:** 1개 기본 장면 `scenes/forest-village-v1/index.html`만 유지한다. 이전 자료 속 '4종 배치', '보행 이미지 미업로드', '오브젝트 5곳'은 **이전 상태**다. 현재 상태는 아래와 같다.
 
