@@ -17,7 +17,9 @@ button{cursor:pointer}
 .tools button,.panel button{background:var(--cream);color:#293c2e;border:2px solid var(--brown);border-radius:8px;padding:8px 11px;font-weight:700}
 button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offset:3px}
 .scene-area{position:relative}
-.viewport{width:100%;overflow:auto;overscroll-behavior:contain;scrollbar-color:#779c7c #274a42;border:4px solid #53774b;border-radius:10px;background:#88d6b1;box-shadow:0 10px 26px #071b185c}
+.viewport{width:100%;overflow:hidden;overscroll-behavior:contain;scrollbar-color:#779c7c #274a42;border:4px solid #53774b;border-radius:10px;background:#88d6b1;box-shadow:0 10px 26px #071b185c}
+.frame-sizer{margin-inline:auto}
+
 .frame-sizer{position:relative}
 .stage{position:absolute;left:0;top:0;width:1774px;height:887px;transform-origin:top left}
 .base{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none}
@@ -29,6 +31,14 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 .actor::before{content:"";position:absolute;width:46%;height:8%;left:27%;top:calc(var(--foot) - 5%);background:#1b38194d;filter:blur(5px);border-radius:50%;transform:translateX(var(--sprite-dx,0px))}
 .actor img{position:absolute;display:block;left:calc((100% - var(--size))/2);top:0;width:var(--size);height:var(--size);object-fit:contain;pointer-events:none}
 .actor[data-kind=water]::before{display:none}
+.actor.is-carried{z-index:15;pointer-events:none;filter:drop-shadow(0 9px 7px #2f452eaa);animation:carry-dangle .75s ease-in-out infinite alternate;transform-origin:50% 10%}
+.actor.is-carried::before{opacity:.16}
+.actor.is-landing{animation:land-bounce .7s ease-out 1}
+@keyframes carry-dangle{0%{transform:translate(-50%,var(--foot-neg)) rotate(-9deg) translateY(-20px)}100%{transform:translate(-50%,var(--foot-neg)) rotate(9deg) translateY(-10px)}}
+@keyframes land-bounce{0%{transform:translate(-50%,var(--foot-neg)) translateY(-50px)}45%{transform:translate(-50%,var(--foot-neg)) translateY(5px)}70%{transform:translate(-50%,var(--foot-neg)) translateY(-9px)}100%{transform:translate(-50%,var(--foot-neg))}}
+.stage.is-placing{cursor:crosshair}
+.stage.is-placing .hotspot{cursor:crosshair}
+
 .actor.is-selected{filter:drop-shadow(0 0 6px #fff8a5)}
 .debug .actor{outline:2px dashed #fddc77}
 .debug .actor::after{content:"";position:absolute;width:8px;height:8px;background:#ff3b64;border:2px solid #fff;border-radius:50%;left:calc(50% - 4px);top:calc(var(--foot) - 4px);pointer-events:none}
@@ -73,7 +83,17 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 .panel input{flex:1;min-width:0;padding:9px;border:2px solid #79573a;background:white;color:#253e2b;border-radius:7px;font-size:15px}
 .panel form button{white-space:nowrap}
 .panel .notice{font-size:12px;color:#6d5945}
-.motion-indicator{background:#203e35;border:1px solid #638776;border-radius:7px;padding:8px 12px;margin:0 0 10px!important;font-weight:650;line-height:1.5}
+.motion-indicator{background:#203e35;border:1px solid #638776;border-radius:7px;padding:8px 12px;margin:0 0 6px!important;font-weight:650;line-height:1.5}
+.placement-hint{padding:8px 12px;background:#fff0b4;color:#4f4026;font-weight:700;border-radius:8px;margin:0 0 8px!important}
+.audio-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 0 10px}
+.audio-controls button{background:#fff4d7;color:#29402e;border:2px solid #765233;border-radius:7px;padding:6px 9px;font-weight:700}
+.audio-controls label{display:flex;align-items:center;gap:6px;font-size:13px}
+.audio-controls input{width:95px;accent-color:#d9ac60}
+.audio-controls .audio-status{color:#c9e3d1;font-size:12px;flex:1;min-width:110px}
+.story-box{border-top:1px dashed #bda17d;padding-top:9px;margin-top:7px}
+.story-box p{font-size:14px!important}
+.story-box button{font-size:13px;padding:6px 9px}
+
 .actor-reaction{display:flex;gap:12px;align-items:center;margin:9px 0 12px;padding:10px;background:#f0eac9;border:2px solid #dbbd88;border-radius:10px}
 .actor-reaction img{width:76px;height:76px;object-fit:contain;image-rendering:pixelated;flex-shrink:0}
 .actor-reaction p{margin:0 0 8px!important;font-size:15px!important;font-weight:650}
@@ -95,7 +115,15 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
  <div class="toolbar"><div><strong>MyMiniHome · 기본 숲 마을 템플릿 1종</strong> <small>v1 · 움직임/반응 검토용</small></div>
   <div class="tools"><button id="toggleFit" type="button" aria-pressed="false">전체 보기</button><button id="toggleMotion" type="button" aria-pressed="false">움직임 정지</button><button id="toggleGuides" type="button" aria-pressed="false">앵커 표시</button><button id="reset" type="button">팝업 닫기</button></div>
  </div>
+ <div class="audio-controls" role="group" aria-label="마을 음악과 효과음">
+  <button id="musicToggle" type="button" aria-pressed="false">음악 켜기</button>
+  <button id="musicNext" type="button">다음 곡</button>
+  <label>음량 <input id="musicVolume" type="range" min="0" max="100" value="30" aria-label="배경음악 음량"/></label>
+  <button id="sfxToggle" type="button" aria-pressed="true">효과음 켜짐</button>
+  <span id="audioStatus" class="audio-status" role="status">음악: 사용자 재생 대기 · 내장 테마 3곡</span>
+ </div>
  <p id="motionStatus" class="legend motion-indicator" role="status">움직임 확인 중…</p>
+ <p id="placementHint" class="legend placement-hint" role="status" hidden></p>
  <div class="scene-area">
   <div class="viewport" id="viewport" role="region" tabindex="0" aria-label="숲 마을 장면. 좁은 화면에서는 가로로 스크롤하여 탐색">
    <div class="frame-sizer" id="frameSizer"><div class="stage" id="stage">
@@ -116,7 +144,9 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
    <button class="close" id="close" type="button" aria-label="정보창 닫기">×</button>
    <h2 id="panelTitle"></h2>
    <div id="actorReaction" class="actor-reaction" hidden><img id="panelAvatar" alt=""/><div><p id="panelGreeting"></p><button id="reactButton" type="button">다른 반응 보기</button></div></div>
-   <p id="panelBody"></p><p id="panelLink"></p>
+   <p id="panelBody"></p>
+   <div id="storyBox" class="story-box" hidden><p id="storyText"></p><button id="storyNext" type="button">이야기 계속</button></div>
+   <p id="panelLink"></p>
    <button type="button" id="toggleLinkForm" hidden>프로젝트·GPT 링크 설정</button>
    <form id="linkForm" hidden><input id="linkInput" type="url" maxlength="450" placeholder="https://chatgpt.com/..." aria-label="기존 프로젝트 또는 GPT 링크"/><button type="submit">주소 연결</button></form>
    <p id="linkNotice" class="notice" hidden>이 화면에서만 연결합니다. 공개 GitHub나 ChatGPT 대화로 전송·저장하지 않습니다.</p>
@@ -125,12 +155,12 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
    <p id="previewMessage" hidden></p>
   </section>
  </div>
- <p class="legend" id="statusNote">다람쥐·토끼·여우·늑대는 짧은 잔디 구간을 순찰하고, 부엉이·곰·개구리·고슴도치는 제자리에서 반응하는 시제품이야. 사물은 클릭 반응을 제공하고, 연결하지 않은 프로젝트·GPT 링크는 열리지 않아.</p>
- <p class="legend" id="responsiveNote">장면은 원본 1774×887 비율로 관리돼. 좁은 화면에서는 최소 확대율을 유지하므로 마을을 좌우로 스크롤해 탐색할 수 있어.</p>
+ <p class="legend" id="statusNote">동물 클릭 → 데롱데롱 들기 → 새 장소 클릭 → 착지 후 움직이기. 음악은 '음악 켜기'로 시작해. 짧은 이야기는 프로필에서 이어 볼 수 있어.</p>
+ <p class="legend" id="responsiveNote">가로·세로에 맞춰 원본 1774×887 비율을 유지해 보여줘. 확대 보기에서는 화면을 스크롤하여 탐색할 수 있어.</p>
 </div>
 <script id="scene" type="application/json">
 {
-  "version": "scene-v1-motion-feedback-fix",
+  "version": "scene-v1-playful-widget-draft",
   "status": "prototype_not_approved",
   "designSize": {
     "width": 1774,
@@ -575,7 +605,117 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
     "mailbox": "visible envelope on interaction",
     "status": "candidate_not_approved"
   },
-  "uxFix": "visible scene status, animal reactions, explicit motion override, optional URL form"
+  "uxFix": "visible scene status, animal reactions, explicit motion override, optional URL form",
+  "movementZones": {
+    "land": [
+      {
+        "x": 260,
+        "y": 648,
+        "w": 720,
+        "h": 205
+      },
+      {
+        "x": 698,
+        "y": 505,
+        "w": 258,
+        "h": 135
+      },
+      {
+        "x": 385,
+        "y": 580,
+        "w": 300,
+        "h": 135
+      },
+      {
+        "x": 1055,
+        "y": 537,
+        "w": 230,
+        "h": 72
+      }
+    ],
+    "water": [
+      {
+        "x": 1215,
+        "y": 705,
+        "w": 380,
+        "h": 100
+      }
+    ]
+  },
+  "stories": {
+    "squirrel": [
+      "도토리 세 알을 찾으러 숲길로 나왔어.",
+      "나무 그늘에 작은 도토리가 숨어 있었지.",
+      "하나를 친구에게 선물하기로 했어."
+    ],
+    "rabbit": [
+      "숲속 도서관에서 반짝이는 책을 발견했어.",
+      "첫 장을 넘기자 꽃잎 모양 지도가 나타났지.",
+      "지도 끝에는 따뜻한 오두막이 있었어."
+    ],
+    "fox": [
+      "나무다리 근처에서 작은 발자국을 발견했어.",
+      "조용히 따라가니 분홍 꽃밭이 나왔지.",
+      "보물은 꽃향기와 친구들의 웃음이었어."
+    ],
+    "wolf": [
+      "오늘은 숲 마을의 길을 살펴보는 날이야.",
+      "돌다리와 꽃길을 차례대로 확인했지.",
+      "모두가 안전하게 걸을 길을 찾았어."
+    ],
+    "owl": [
+      "내가 읽던 책에는 잠자는 숲 이야기가 있었어.",
+      "밤이 되자 나뭇잎마다 별이 반짝였지.",
+      "이야기 끝에는 모두 따뜻한 인사를 나눴어."
+    ],
+    "bear": [
+      "오두막에서 향긋한 차를 준비했어.",
+      "친구들이 차례대로 문을 두드렸지.",
+      "모두 모여 이야기를 나누니 마음이 포근해졌어."
+    ],
+    "frog": [
+      "연못 위에 작은 물결이 퍼졌어.",
+      "누군가 던진 꽃잎이 물 위를 둥둥 떠다녔지.",
+      "개구리는 꽃잎을 따라가며 노래했어."
+    ],
+    "hedgehog": [
+      "작은 꽃 한 송이를 찾았어.",
+      "꽃잎이 바람에 흔들리며 인사했지.",
+      "고슴도치는 꽃을 친구에게 건네주었어."
+    ],
+    "cottage": [
+      "오두막 창문에 따뜻한 불빛이 켜졌어.",
+      "숲 친구들이 하나둘 모여들었지."
+    ],
+    "reading": [
+      "책장을 넘기니 숲속 그림이 펼쳐졌어.",
+      "그림 속에서 작은 친구가 손을 흔들었어."
+    ],
+    "mailbox": [
+      "우체통에서 편지가 기다리고 있어.",
+      "오늘의 편지에는 '함께 놀자!'라고 적혀 있었어."
+    ],
+    "bridge": [
+      "나무다리를 천천히 건너 보자.",
+      "다리 아래 물소리가 반갑게 인사해."
+    ],
+    "pond": [
+      "동그란 물결이 번지며 꽃잎을 흔들어.",
+      "연못 친구들이 수면 위로 얼굴을 내밀었어."
+    ],
+    "waterfall": [
+      "시원한 물줄기가 바위 사이를 흐르고 있어.",
+      "햇빛을 만나면 작은 무지개가 생길지도 몰라."
+    ],
+    "cherry-tree": [
+      "벚꽃잎 한 장이 바람을 따라 날아왔어.",
+      "꽃잎은 마을 친구들에게 봄 인사를 전했어."
+    ]
+  },
+  "audio": {
+    "playlist": "../../assets/audio/bgm/playlist.json",
+    "mode": "manifest-or-original-synth"
+  }
 }
 </script>
 <script>
