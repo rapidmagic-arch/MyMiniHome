@@ -105,7 +105,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 .actor-reaction p{margin:0 0 8px!important;font-size:15px!important;font-weight:650}
 .actor-reaction button{font-size:13px;padding:5px 8px}
 #toggleLinkForm{font-size:13px;margin-bottom:8px}
-.speech-bubble{position:absolute;z-index:9;width:230px;max-width:230px;padding:12px;background:#fff9df;color:#3d3b24;border:5px solid #765233;box-shadow:6px 7px 0 #204e3399;border-radius:16px;transform:translate(-50%,-100%);font-size:18px;font-weight:800;text-align:center;pointer-events:none}
+.speech-bubble{position:absolute;z-index:9200;width:230px;max-width:230px;padding:12px;background:#fff9df;color:#3d3b24;border:5px solid #765233;box-shadow:6px 7px 0 #204e3399;border-radius:16px;transform:translate(-50%,-100%);font-size:18px;font-weight:800;text-align:center;pointer-events:none}
+.meeting-bubble{z-index:9100;min-width:155px;width:max-content;max-width:185px;background:#e8f9d6;color:#2f5833}
 .speech-bubble:after{content:"";position:absolute;left:calc(50% - 8px);bottom:-17px;width:18px;height:18px;background:#fff9df;border-right:4px solid #765233;border-bottom:4px solid #765233;transform:rotate(45deg)}
 .actor.is-reacting{filter:drop-shadow(0 0 6px #fff3a7);transform-origin:center var(--foot);animation:actor-greeting .45s ease-in-out 2}
 @keyframes actor-greeting{0%,100%{transform:translate(-50%,var(--foot-neg)) rotate(0deg)}30%{transform:translate(-50%,var(--foot-neg)) rotate(-3deg)}65%{transform:translate(-50%,var(--foot-neg)) rotate(3deg)}}
@@ -145,7 +146,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
      <div class="ambient-petal p1"></div><div class="ambient-petal p2"></div><div class="ambient-petal p3"></div>
      <div class="ambient-petal p4"></div><div class="ambient-petal p5"></div><div class="ambient-petal p6"></div>
     </div><div id="mailboxSignal" class="mailbox-signal" hidden aria-hidden="true"></div>
-    <div id="actors"></div><div id="speechBubble" class="speech-bubble" aria-hidden="true" hidden></div><div class="guide-line"></div>
+    <div id="actors"></div><div id="meetingBubble" class="speech-bubble meeting-bubble" aria-hidden="true" hidden></div><div id="speechBubble" class="speech-bubble" aria-hidden="true" hidden></div><div class="guide-line"></div>
    </div></div>
   </div>
   <section class="panel" id="panel" hidden aria-label="마을 상호작용 패널" aria-live="polite">
@@ -744,6 +745,7 @@ let paused=motionQuery.matches,userChoseMotion=false,selected=null,clock=0,lastT
 let carried=null,carryPointer=null,carryTap=null;
 const DOUBLE_TAP_MS=340,DOUBLE_TAP_DISTANCE=26;
 const reactionIndexes=new Map();
+const encounterCooldowns=new Map();let encounterUntil=0;
 
 // --- Sound Manager: user-activated audio, folder playlist or original synthesized themes ---
 const builtInTracks=[
@@ -901,7 +903,7 @@ for(const actor of scene.characters){
  const img=document.createElement('img');img.src=frameSrc(actor.id,actor.idleFrames?actor.idleFrames[0]:1);img.alt='';img.decoding='async';img.draggable=false;
  btn.append(img);
  const homeX=actor.patrol?(actor.patrol.startX+actor.patrol.endX)/2:actor.x,homeY=actor.patrol?actor.patrol.y:actor.y;
- const info={btn,img,actor,frame:actor.idleFrames?actor.idleFrames[0]:1,direction:'',walkReady:false,x:homeX,y:homeY,homeX,homeY,patrolShiftX:0,landingZone:null,wasRelocated:false};
+ const info={btn,img,actor,frame:actor.idleFrames?actor.idleFrames[0]:1,direction:'',walkReady:false,x:homeX,y:homeY,homeX,homeY,patrolShiftX:actor.patrol?homeX-(actor.patrol.startX+(actor.patrol.endX-actor.patrol.startX)*Math.min(1,actor.patrol.offsetMs/actor.patrol.walkMs)):0,moveClock:actor.patrol?.offsetMs||0,avoidance:null,pickupPosition:null,landingZone:null,wasRelocated:false};
  btn.addEventListener('click',e=>{e.stopPropagation();if(!carried)pickUpActor(info,e)});
  // Keyboard activation may also open details without relying on multi-tap timing.
  btn.addEventListener('keydown',e=>{if(e.key==='i'||e.key==='I'){e.preventDefault();cancelCarry();openInfo(info.actor)}});
@@ -951,7 +953,7 @@ function pickUpActor(info,event){
  if(carried)return;
  // Single click is for movement, not the detailed profile.
  if(!panel.hidden)closeInfo();
- carried=info;carryPointer={x:info.x,y:info.y};
+ carried=info;carryPointer={x:info.x,y:info.y};info.pickupPosition={x:info.x,y:info.y};info.avoidance=null;
  const at=Number.isFinite(event?.timeStamp)?event.timeStamp:Date.now();
  carryTap=Number.isFinite(event?.clientX)&&Number.isFinite(event?.clientY)
   ?{id:info.actor.id,x:event.clientX,y:event.clientY,at}:null;
@@ -967,7 +969,7 @@ function cancelCarry(){
  if(!carried)return;
  const info=carried;carried=null;carryPointer=null;carryTap=null;
  info.btn.classList.remove('is-carried');
- info.x=info.homeX;info.y=info.homeY;
+ info.x=info.pickupPosition?.x??info.homeX;info.y=info.pickupPosition?.y??info.homeY;info.pickupPosition=null;
  stage.classList.remove('is-placing');$('placementHint').hidden=true;$('dropOverlay').hidden=true;
 }
 function landActor(point){
@@ -978,10 +980,15 @@ function landActor(point){
   playSfx('invalid',info.actor.id);
   return false;
  }
+ if(Array.from(characterNodes.values()).some(other=>other!==info&&other!==carried&&positionsOverlap(info,point,other,{x:other.x,y:other.y},1.12))){
+  $('placementHint').textContent='친구가 서 있어! 다른 자리를 선택해 줘.';
+  playSfx('invalid',info.actor.id);return false;
+ }
  carried=null;carryPointer=null;carryTap=null;
  info.homeX=point.x;info.homeY=point.y;info.x=point.x;info.y=point.y;info.wasRelocated=true;
  info.landingZone=(info.actor.motion==='pond-idle'?scene.movementZones.water:scene.movementZones.land).find(z=>point.x>=z.x&&point.x<=z.x+z.w&&point.y>=z.y&&point.y<=z.y+z.h)||null;
- if(info.actor.patrol)info.patrolShiftX=point.x-track(info.actor,clock).x;
+ info.avoidance=null;info.pickupPosition=null;
+ if(info.actor.patrol)info.patrolShiftX=point.x-track(info.actor,info.moveClock).x;
  info.btn.classList.remove('is-carried');info.btn.classList.add('is-landing');
  info.btn.style.left=point.x+'px';info.btn.style.top=point.y+'px';
  stage.classList.remove('is-placing');$('placementHint').hidden=true;$('dropOverlay').hidden=true;
@@ -1152,16 +1159,88 @@ function track(actor,t){
  if(phase<2*walk+pause)return {x:p.endX-(p.endX-p.startX)*(phase-walk-pause)/walk,y:p.y,moving:true,left:true};
  return {x:p.startX,y:p.y,moving:false,left:true};
 }
+
+// Collision is handled by the approaching walker, never by pushing an idle actor.
+function collisionRadius(a,b){
+ return {x:Math.min(92,Math.max(52,(a.size+b.size)*.31)),
+         y:Math.min(67,Math.max(34,(a.size+b.size)*.19))};
+}
+function positionsOverlap(a,p,b,q,multiplier=1){
+ const r=collisionRadius(a.actor,b.actor);
+ return Math.abs(p.x-q.x)<r.x*multiplier && Math.abs(p.y-q.y)<r.y*multiplier;
+}
+function avoidLane(info,other,desiredX){
+ const gap=collisionRadius(info.actor,other.actor);
+ const spread=Math.max(60,gap.y+24);
+ const preference=scene.characters.findIndex(a=>a.id===info.actor.id)%2===0?-1:1;
+ for(const direction of [preference,-preference]){
+  const y=info.homeY+direction*spread;
+  const validAt=[info.x,desiredX,(info.x+desiredX)/2].every(x=>inAllowedZone(info.actor,{x,y}));
+  const unoccupied=Array.from(characterNodes.values()).every(a=>a===info||a===carried||
+    !positionsOverlap(info,{x:desiredX,y},a,{x:a.x,y:a.y},1.12));
+  if(validAt&&unoccupied)return y;
+ }
+ return null;
+}
+function showEncounter(info,other){
+ const id=[info.actor.id,other.actor.id].sort().join(':');
+ const previous=encounterCooldowns.get(id);
+ if(previous!==undefined&&clock-previous<6500)return;
+ encounterCooldowns.set(id,clock);
+ const bubble=$('meetingBubble');
+ bubble.textContent=info.actor.label+' : 안녕, '+other.actor.label+'!';
+ bubble.style.left=clamp(info.x,120,1650)+'px';
+ bubble.style.top=(info.y-info.actor.size*.95-18)+'px';
+ bubble.hidden=false;encounterUntil=clock+1700;
+ playSfx('greeting',info.actor.id);
+}
+function resolveWalk(info,desired,delta,canMove){
+ if(!canMove)return {x:info.x,y:info.y,advanced:false,walking:false};
+ const all=Array.from(characterNodes.values());
+ // Revert to the natural lane only after there is room to merge.
+ if(info.avoidance){
+  const target=characterNodes.get(info.avoidance.id);
+  if(!target||target===carried||Math.abs(desired.x-target.x)>collisionRadius(info.actor,target.actor).x+48)
+   info.avoidance=null;
+ }
+ const other=all.find(b=>{
+  if(b===info||b===carried)return false;
+  const limit=collisionRadius(info.actor,b.actor);
+  const approaching=Math.abs(desired.x-b.x)<Math.abs(info.x-b.x)+.01||
+    positionsOverlap(info,{x:info.x,y:info.y},b,{x:b.x,y:b.y});
+  return approaching&&Math.abs(desired.x-b.x)<limit.x+38&&Math.abs(info.y-b.y)<limit.y+22;
+ });
+ if(other&&!info.avoidance){
+  const y=avoidLane(info,other,desired.x);
+  if(y!==null)info.avoidance={id:other.actor.id,y};
+ }
+ const targetY=info.avoidance?info.avoidance.y:info.homeY;
+ const stepY=clamp(targetY-info.y,-delta*.34,delta*.34);
+ const y=info.y+stepY;
+ const blocked=all.find(b=>b!==info&&b!==carried&&
+   positionsOverlap(info,{x:desired.x,y},b,{x:b.x,y:b.y},1.03));
+ if(other||blocked)showEncounter(info,other||blocked);
+ // Stop horizontal movement while overtaking a neighbor at the same depth.
+ // A valid detour first shifts vertically and then lets the walker proceed.
+ const hold=(other&&Math.abs(y-other.y)<collisionRadius(info.actor,other.actor).y+5)||
+   Boolean(blocked);
+ if(hold)return {x:info.x,y,advanced:false,walking:false};
+ const safe=Array.from(characterNodes.values()).every(b=>b===info||b===carried||
+   !positionsOverlap(info,{x:desired.x,y},b,{x:b.x,y:b.y},1.03));
+ return {x:safe?desired.x:info.x,y,advanced:safe,walking:safe&&desired.walking};
+}
 function render(t){
  if(lastTime===0)lastTime=t;
  const delta=Math.min(Math.max(t-lastTime,0),100);lastTime=t;
  const canMove=!paused&&!document.hidden;
  if(canMove)clock+=delta;
+ if(!$('meetingBubble').hidden && clock>encounterUntil)$('meetingBubble').hidden=true;
  for(const info of characterNodes.values()){
   const a=info.actor;
   if(carried===info){
    info.x=carryPointer?.x??info.x;info.y=carryPointer?.y??info.y;
    info.btn.style.left=info.x+'px';info.btn.style.top=info.y+'px';
+   info.btn.style.zIndex='9300';
    const idle=a.idleFrames?.[0]||1;
    if(info.frame!==idle){info.frame=idle;info.img.src=frameSrc(a.id,idle)}
    info.img.style.transform='translate(0px,0px)';
@@ -1169,31 +1248,36 @@ function render(t){
   }
   let align=[0,0],bob=0;
   if(!a.patrol){
+   // A standing animal stays at its placed spot. Idle animation does not move its feet.
    const frames=a.idleFrames||[1],stepTime=a.idleFrameMs||1600;
    const next=(canMove&&frames.length>1)?frames[Math.floor((clock+(a.idleOffsetMs||0))/stepTime)%frames.length]:frames[0];
    if(info.frame!==next){info.frame=next;info.img.src=frameSrc(a.id,next)}
    const idx=frames.indexOf(next);
    align=(a.idleAlign||[])[idx]||[0,0];
-   // Actors without walk sprites have a gentle wandering fallback only after relocation.
-   const drift=info.wasRelocated&&canMove?Math.sin(clock/680+(a.idleOffsetMs||0)/1000)*14:0;
-   info.x=info.homeX+drift;info.y=info.homeY;
-   if(info.landingZone)info.x=clamp(info.x,info.landingZone.x,info.landingZone.x+info.landingZone.w);
+   info.x=info.homeX;info.y=info.homeY;
    info.btn.style.setProperty('--sprite-dx','0px');
   }else{
-   const step=track(a,clock);
-   info.x=step.x+info.patrolShiftX;info.y=info.homeY;
-   if(info.landingZone)info.x=clamp(info.x,info.landingZone.x,info.landingZone.x+info.landingZone.w);
-   const isWalk=info.walkReady,dir=step.left?'left':'right';
-   const nextFrame=isWalk?(canMove&&step.moving?1+(Math.floor(clock/160)%6):1):(canMove&&step.moving?[1,2,3,6][Math.floor(clock/900)%4]:1);
+   const nextClock=info.moveClock+(canMove?delta:0);
+   const step=track(a,nextClock);
+   const candidate={x:step.x+info.patrolShiftX,y:info.homeY,walking:step.moving};
+   if(info.landingZone)candidate.x=clamp(candidate.x,info.landingZone.x,info.landingZone.x+info.landingZone.w);
+   const move=resolveWalk(info,candidate,delta,canMove);
+   info.x=move.x;info.y=move.y;
+   if(move.advanced)info.moveClock=nextClock;
+   const isWalk=info.walkReady;
+   const dir=step.left?'left':'right';
+   const nextFrame=isWalk?(move.walking?1+(Math.floor(info.moveClock/160)%6):1):
+    (move.walking?[1,2,3,6][Math.floor(info.moveClock/900)%4]:1);
    if(info.frame!==nextFrame||info.direction!==dir){
     info.img.src=isWalk?walkFrameSrc(a.id,dir,nextFrame):frameSrc(a.id,nextFrame);
     info.frame=nextFrame;info.direction=dir;
    }
    align=isWalk?[0,0]:(a.alignmentPx[info.frame-1]||[0,0]);
-   bob=isWalk?0:((canMove&&step.moving)?Math.sin(clock/170)*1.1:0);
+   bob=isWalk?0:(move.walking?Math.sin(info.moveClock/170)*1.1:0);
    info.btn.style.setProperty('--sprite-dx','0px');
   }
   info.btn.style.left=info.x+'px';info.btn.style.top=info.y+'px';
+  info.btn.style.zIndex=String(100+Math.round(info.y));
   info.img.style.transform='translate('+align[0]+'px,'+(align[1]+bob)+'px)';
   if(selected===a.id&&!$('speechBubble').hidden){
    $('speechBubble').style.left=clamp(info.x,130,1640)+'px';
