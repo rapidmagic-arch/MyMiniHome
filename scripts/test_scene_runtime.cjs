@@ -22,13 +22,13 @@ class AudioCtx{constructor(){this.currentTime=0;this.state='running';this.destin
  createGain(){return{gain:{setValueAtTime(){},exponentialRampToValueAtTime(){}},connect(){}}}}
 const els={};
 for(const m of html.matchAll(/\bid="([A-Za-z][\w-]*)"/g))els[m[1]]=new E(m[1]);
-for(const id of ['panel','storyBox','actorReaction','linkForm','linkNotice','toggleLinkForm','speechBubble','meetingBubble','pondRipple','mailboxSignal','noteForm','noteNotice','previewMessage','placementHint','hostPip','hostFullscreen','hostModeStatus','dropOverlay'])els[id].hidden=true;
+for(const id of ['panel','storyBox','actorReaction','linkForm','linkNotice','toggleLinkForm','speechBubble','meetingBubble','pondRipple','mailboxSignal','noteForm','noteNotice','previewMessage','placementHint','hostPip','hostFullscreen','hostModeStatus','dropOverlay','placementBar','settings'])els[id].hidden=true;
 els.scene.textContent=JSON.stringify(scene);els.musicVolume.value='30';
 const doc={body:new E('body'),hidden:false,events:{},getElementById:id=>els[id],createElement:t=>new E(t),addEventListener(t,f){this.events[t]=f}};
 const win={innerHeight:800,AudioContext:AudioCtx,matchMedia:()=>({matches:false,addEventListener(){}}),events:{},addEventListener(t,f){this.events[t]=f},setTimeout(){}};
 let raf,n=0;const intervals=new Map();
 // Expose local state only in the test copy. The delivered scene remains uninstrumented.
-const instrumented=source.replace('requestAnimationFrame(render);\n})();','window.__qa={scene,characterNodes,track};\nrequestAnimationFrame(render);\n})();');
+const instrumented=source.replace('requestAnimationFrame(render);\n})();','window.__qa={scene,characterNodes,track,resolveWalk,positionsOverlap,groundAnchor,get clock(){return clock}};\nrequestAnimationFrame(render);\n})();');
 assert.notEqual(instrumented,source,'test instrumentation anchor missing');
 const runner=new Function('document','window','Image','ResizeObserver','requestAnimationFrame','fetch','URL','setInterval','clearInterval',instrumented);
 runner(doc,win,Img,class{observe(){}},f=>raf=f,async url=>({ok:true,json:async()=>url.includes('playlist.json')?{version:1,tracks:[]}:{status:'REVIEW_CANDIDATE_NOT_APPROVED',count:{totalPngs:48}}}),URL,f=>{intervals.set(++n,f);return n},id=>intervals.delete(id));
@@ -98,49 +98,53 @@ runner(doc,win,Img,class{observe(){}},f=>raf=f,async url=>({ok:true,json:async()
  win.innerHeight=350;els.viewport.clientWidth=1100;win.events.resize();
  assert.ok(Number(els.stage.style.transform.match(/scale\(([^)]+)\)/)[1])<.3);
  els.toggleFit.events.click();assert.equal(els.viewport.style.overflow,'auto');
- // Meeting on a shared path: the stationary bear must not be displaced, walker detours.
- const bear2=els.actors.children[5],walker=els.actors.children[0];
- const originalBear={x:parseFloat(bear2.style.left),y:parseFloat(bear2.style.top)};
- bear2.events.click(event(originalBear.x,originalBear.y,12000));
+ // A deliberately relocated bear may move a short distance of its own accord, then stays put.
+ const bear2=els.actors.children[5],walker=els.actors.children[0],qa=win.__qa;
+ const bi=qa.characterNodes.get('bear'),wi=qa.characterNodes.get('squirrel');
+ bear2.events.click(event(bi.x,bi.y,12000));
  els.stage.events.click(event(520,680,13000));
- assert.equal(bear2.classList.contains('is-carried'),false,'the stationary obstacle must be placed on grass');
- let overlapCount=0,greetingFrames=0,detourFrames=0,closest=1e9;
- for(let i=90;i<350;i++){
+ assert.equal(bear2.classList.contains('is-carried'),false,'bear placement');
+ assert.ok(bi.arrivalPending,'arrival activity pending until landing ends');
+ tick(90,95);
+ assert.ok(Math.abs(bi.x-520)<.001&&Math.abs(bi.y-680)<.001,'landing remains at clicked ground point');
+ tick(95,125);
+ assert.ok(!bi.arrivalPending&&!bi.activity,'arrival activity completes');
+ assert.ok(Math.abs(bi.x-520)<=26.001&&Math.abs(bi.y-680)<.001,'bear activity bounded');
+ const rest={x:bi.x,y:bi.y};
+ tick(125,150);
+ assert.ok(Math.hypot(bi.x-rest.x,bi.y-rest.y)<.001,'settled bear not displaced');
+ // Isolated collision fixture: other actors are removed from the test-only map,
+ // the original collision solver and renderer are unchanged.
+ for(const key of [...qa.characterNodes.keys()])if(!['bear','squirrel'].includes(key))qa.characterNodes.delete(key);
+ qa.scene.movementZones.land=[{x:260,y:600,w:720,h:278}];
+ Object.assign(bi,{x:520,y:680,homeX:520,homeY:680,activity:null,arrivalPending:false,landingUntil:0});
+ wi.actor.patrol={startX:360,endX:760,y:680,walkMs:6500,pauseMs:200,offsetMs:0};
+ Object.assign(wi,{x:360,y:680,homeX:360,homeY:680,moveClock:0,patrolShiftX:0,landingZone:null,avoidance:null,landingUntil:0});
+ let overlaps=0,detours=0,greetings=0,furthestX=0;
+ for(let i=150;i<340;i++){
   tick(i,i+1);
-  const wx=parseFloat(walker.style.left),wy=parseFloat(walker.style.top);
-  const bx=parseFloat(bear2.style.left),by=parseFloat(bear2.style.top);
-  const dx=Math.abs(wx-bx),dy=Math.abs(wy-by);
-  closest=Math.min(closest,Math.hypot(dx,dy));
-  if(dx<70&&dy<39)overlapCount++;
-  if(!els.meetingBubble.hidden)greetingFrames++;
-  if(Math.abs(wy-680)>8)detourFrames++;
-  assert.equal(bx,520,'idle bear must not be pushed horizontally');
-  assert.equal(by,680,'idle bear must not be pushed vertically');
+  if(qa.positionsOverlap(wi,{x:wi.x,y:wi.y},bi,{x:bi.x,y:bi.y}))overlaps++;
+  if(Math.abs(wi.y-680)>8)detours++;
+  if(!els.meetingBubble.hidden)greetings++;
+  furthestX=Math.max(furthestX,wi.x);
+  assert.ok(Math.hypot(bi.x-520,bi.y-680)<.001,'idle obstacle stays fixed');
  }
- assert.equal(overlapCount,0,'walking character never overlaps the parked one');
- assert.ok(greetingFrames>0,'close approach triggers greeting');
- assert.ok(detourFrames>0,'walker uses an alternate valid lane');
- console.log('Collision QA:',{overlapCount,greetingFrames,detourFrames,closest});
- // Blocking fallback: if no alternate lane exists, the walker waits rather than crossing a parked animal.
- const collisionQA=win.__qa,walkerInfo=collisionQA.characterNodes.get('squirrel');
- assert.ok(collisionQA,'test-only internals exposed');
- collisionQA.scene.movementZones.land=[{x:260,y:658,w:720,h:44}];
- walkerInfo.moveClock=0;walkerInfo.homeX=400;walkerInfo.homeY=680;
- walkerInfo.x=400;walkerInfo.y=680;walkerInfo.avoidance=null;walkerInfo.landingZone=null;
- walkerInfo.patrolShiftX=400-collisionQA.track(walkerInfo.actor,0).x;
- let maxBlockedX=0,waitFrames=0,previousX=400;
- for(let i=350;i<470;i++){
+ assert.equal(overlaps,0,'no collision in detour fixture');
+ assert.ok(detours>0&&furthestX>620,'walker actually bypasses obstacle');
+ assert.ok(greetings>0,'greeting appears');
+ console.log('Collision QA:',{overlaps,detours,greetings,furthestX});
+ qa.scene.movementZones.land=[{x:260,y:658,w:720,h:44}];
+ Object.assign(wi,{x:360,y:680,homeX:360,homeY:680,moveClock:0,patrolShiftX:0,landingZone:null,avoidance:null});
+ let maxBlockedX=0,waitFrames=0,previousX=360;
+ for(let i=340;i<460;i++){
   tick(i,i+1);
-  const x=parseFloat(walker.style.left);
-  maxBlockedX=Math.max(maxBlockedX,x);
-  if(Math.abs(x-previousX)<.001)waitFrames++;
-  previousX=x;
-  assert.equal(parseFloat(bear2.style.left),520,'stationary bear X unchanged during no-detour');
-  assert.equal(parseFloat(bear2.style.top),680,'stationary bear Y unchanged during no-detour');
+  maxBlockedX=Math.max(maxBlockedX,wi.x);
+  if(Math.abs(wi.x-previousX)<.001)waitFrames++;
+  previousX=wi.x;
+  assert.ok(Math.hypot(bi.x-520,bi.y-680)<.001,'stationary obstacle unchanged');
+  assert.ok(!qa.positionsOverlap(wi,{x:wi.x,y:wi.y},bi,{x:bi.x,y:bi.y}),'no collision in narrow lane');
  }
- assert.ok(maxBlockedX<450,'walker must not walk through blocker without a valid lane');
- assert.ok(waitFrames>=20,'walker waits when detour is unavailable');
+ assert.ok(maxBlockedX<450&&waitFrames>=20,'blocked walker waits');
  console.log('No-detour QA:',{maxBlockedX,waitFrames});
-
  console.log('PASS MyMiniHome: single/double tap, character switch, invalid/occupied landing, stop/detour/greet/no-detour fallback, stationary idle, story, BGM and responsive');
 })().catch(e=>{console.error('FAIL MyMiniHome regression',e);process.exitCode=1});
