@@ -73,6 +73,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 .mailbox-signal::after{content:"";position:absolute;left:8px;right:8px;top:7px;height:14px;border-bottom:3px solid #d07b69;transform:rotate(-6deg)}
 .ambient-ripple-intense .ambient-ring{animation-duration:1.7s}
 .motion-paused .ambient-fall,.motion-paused .ambient-ring,.motion-paused .ambient-petal,.motion-paused .mailbox-signal{animation-play-state:paused!important}
+.motion-paused .actor.is-carried,.motion-paused .actor.is-reacting,.motion-paused .actor.is-landing{animation-play-state:paused!important}
 @keyframes fall-flow{from{background-position:0 0}to{background-position:0 44px}}
 @keyframes water-ring{0%,25%{opacity:0;transform:scale(.4)}42%{opacity:.55}70%,100%{opacity:0;transform:scale(1.35)}}
 @keyframes fall-petal{0%{opacity:0;transform:translate(0,0) rotate(0)}8%,78%{opacity:.95}100%{opacity:0;transform:translate(-75px,155px) rotate(220deg)}}
