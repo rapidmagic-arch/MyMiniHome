@@ -56,13 +56,13 @@ runner(doc,win,Img,class{observe(){}},f=>raf=f,async url=>({ok:true,json:async()
  actor.events.click(event(firstX,firstY,2000));
  assert.equal(els.panel.hidden,true);
  els.stage.events.click(event(1460,200,2600));assert.equal(actor.classList.contains('is-carried'),true);
- els.stage.events.pointermove(event(650,680,2650));tick(20,22);
- assert.ok(Math.abs(parseFloat(actor.style.left)-650)<1);
- els.stage.events.click(event(650,680,3100));tick(22,23);
+ els.stage.events.pointermove(event(400,680,2650));tick(20,22);
+ assert.ok(Math.abs(parseFloat(actor.style.left)-400)<1);
+ els.stage.events.click(event(400,680,3100));tick(22,23);
  assert.equal(actor.classList.contains('is-carried'),false);
- assert.ok(Math.abs(parseFloat(actor.style.left)-650)<12);
+ assert.ok(Math.abs(parseFloat(actor.style.left)-400)<12);
  assert.equal(els.dropOverlay.hidden,true);
- tick(23,42);assert.ok(Math.abs(parseFloat(actor.style.left)-650)>1);
+ tick(23,42);assert.ok(Math.abs(parseFloat(actor.style.left)-400)>1);
  actor.events.click(event(parseFloat(actor.style.left),parseFloat(actor.style.top),5000));
  doc.events.keydown({key:'Escape'});
  assert.equal(actor.classList.contains('is-carried'),false,'Escape cancels carry');
