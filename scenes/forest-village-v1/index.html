@@ -38,6 +38,11 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 @keyframes land-bounce{0%{transform:translate(-50%,var(--foot-neg)) translateY(-50px)}45%{transform:translate(-50%,var(--foot-neg)) translateY(5px)}70%{transform:translate(-50%,var(--foot-neg)) translateY(-9px)}100%{transform:translate(-50%,var(--foot-neg))}}
 .stage.is-placing{cursor:crosshair}
 .stage.is-placing .hotspot{cursor:crosshair}
+.drop-overlay{position:absolute;inset:0;z-index:1;pointer-events:none}
+.drop-zone{position:absolute;border:4px dashed #e8f5a1;border-radius:28px;background:#d5ec8870;box-shadow:0 0 16px #27401b77 inset}
+.drop-zone[data-kind=water]{border-color:#a5f2ff;background:#6ad8e654}
+.drop-overlay[data-active=land] .drop-zone[data-kind=water],.drop-overlay[data-active=water] .drop-zone[data-kind=land]{display:none}
+
 
 .actor.is-selected{filter:drop-shadow(0 0 6px #fff8a5)}
 .debug .actor{outline:2px dashed #fddc77}
@@ -113,7 +118,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 <body>
 <div class="shell">
  <div class="toolbar"><div><strong>MyMiniHome · 기본 숲 마을 템플릿 1종</strong> <small>v1 · 움직임/반응 검토용</small></div>
-  <div class="tools"><button id="toggleFit" type="button" aria-pressed="false">전체 보기</button><button id="toggleMotion" type="button" aria-pressed="false">움직임 정지</button><button id="toggleGuides" type="button" aria-pressed="false">앵커 표시</button><button id="reset" type="button">팝업 닫기</button></div>
+  <div class="tools"><button id="toggleFit" type="button" aria-pressed="false">전체 보기</button><button id="hostPip" type="button" hidden>ChatGPT 위젯</button><button id="hostFullscreen" type="button" hidden>ChatGPT 전체화면</button><button id="toggleMotion" type="button" aria-pressed="false">움직임 정지</button><button id="toggleGuides" type="button" aria-pressed="false">앵커 표시</button><button id="reset" type="button">팝업 닫기</button></div>
  </div>
  <div class="audio-controls" role="group" aria-label="마을 음악과 효과음">
   <button id="musicToggle" type="button" aria-pressed="false">음악 켜기</button>
@@ -124,10 +129,12 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
  </div>
  <p id="motionStatus" class="legend motion-indicator" role="status">움직임 확인 중…</p>
  <p id="placementHint" class="legend placement-hint" role="status" hidden></p>
+ <p id="hostModeStatus" class="legend" role="status" hidden></p>
  <div class="scene-area">
   <div class="viewport" id="viewport" role="region" tabindex="0" aria-label="숲 마을 장면. 좁은 화면에서는 가로로 스크롤하여 탐색">
    <div class="frame-sizer" id="frameSizer"><div class="stage" id="stage">
     <img class="base" id="background" alt="오두막, 연못, 폭포, 다리, 독서 공간이 있는 픽셀 숲 마을"/>
+    <div id="dropOverlay" class="drop-overlay" hidden aria-hidden="true"></div>
     <div id="hotspots"></div>
     <svg class="stage-overlay" viewBox="0 0 1774 887" aria-hidden="true"><path id="bridgeGuide" class="bridge-guide" d="M1058 611 Q1165 545 1285 585" hidden/></svg>
     <div id="pondRipple" class="pond-ripple" hidden aria-hidden="true"></div>
@@ -789,6 +796,7 @@ function updateAudioStatus(extra=''){
 function musicScheduler(){
  const song=activeTrack();if(!musicEnabled||song.type!=='synth'||!audioContext)return;
  const stepLength=60/song.bpm/2;
+ if(nextNoteTime<audioContext.currentTime-.5)nextNoteTime=audioContext.currentTime+.04;
  while(nextNoteTime<audioContext.currentTime+.18&&musicEnabled){
   const i=noteStep%song.melody.length,vol=Number($('musicVolume').value)/100;
   synthTone(song.melody[i],nextNoteTime,stepLength*.83,.075*vol,'sine');
@@ -871,6 +879,14 @@ $('storyNext').addEventListener('click',()=>{
 });
 
 $('background').src=scene.background;
+// Visualize valid ground or pond regions only while carrying a character.
+for(const [kind,zones] of Object.entries(scene.movementZones)){
+ for(const z of zones){
+  const node=document.createElement('div');node.className='drop-zone';node.dataset.kind=kind;
+  node.style.left=z.x+'px';node.style.top=z.y+'px';node.style.width=z.w+'px';node.style.height=z.h+'px';
+  $('dropOverlay').append(node);
+ }
+}
 for(const obj of scene.hotspots){
  const btn=document.createElement('button');btn.type='button';btn.className='hotspot';btn.dataset.label=obj.label;
  btn.setAttribute('aria-label',obj.label+' 상호작용');btn.style.left=obj.x+'px';btn.style.top=obj.y+'px';btn.style.width=obj.w+'px';btn.style.height=obj.h+'px';
@@ -933,6 +949,7 @@ function pickUpActor(info){
  info.btn.classList.remove('is-reacting','is-landing');
  info.btn.classList.add('is-carried');
  stage.classList.add('is-placing');
+ $('dropOverlay').hidden=false;$('dropOverlay').dataset.active=info.actor.motion==='pond-idle'?'water':'land';
  $('placementHint').hidden=false;
  $('placementHint').textContent=info.actor.label+'를 들고 있어! 숲길의 새 위치를 클릭하면 착지해. (Esc: 취소)';
  playSfx('pickup',info.actor.id);
@@ -942,7 +959,7 @@ function cancelCarry(){
  const info=carried;carried=null;carryPointer=null;
  info.btn.classList.remove('is-carried');
  info.x=info.homeX;info.y=info.homeY;
- stage.classList.remove('is-placing');$('placementHint').hidden=true;
+ stage.classList.remove('is-placing');$('placementHint').hidden=true;$('dropOverlay').hidden=true;
 }
 function landActor(point){
  if(!carried)return false;
@@ -958,7 +975,7 @@ function landActor(point){
  if(info.actor.patrol)info.patrolShiftX=point.x-track(info.actor,clock).x;
  info.btn.classList.remove('is-carried');info.btn.classList.add('is-landing');
  info.btn.style.left=point.x+'px';info.btn.style.top=point.y+'px';
- stage.classList.remove('is-placing');$('placementHint').hidden=true;
+ stage.classList.remove('is-placing');$('placementHint').hidden=true;$('dropOverlay').hidden=true;
  if(selected===info.actor.id){
   $('panelGreeting').textContent=info.actor.label+'가 새로운 장소에 도착했어!';
   const bubble=$('speechBubble');bubble.textContent='새 장소에 도착했어!';bubble.hidden=false;bubble.style.left=clamp(point.x,130,1640)+'px';bubble.style.top=(point.y-info.actor.size*.88-16)+'px';
@@ -1056,6 +1073,20 @@ $('noteForm').addEventListener('submit',e=>{
 $('close').addEventListener('click',closeInfo);
 $('reset').addEventListener('click',closeInfo);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&carried){cancelCarry();return}if(e.key==='Escape'&&!panel.hidden)closeInfo()});
+for(const [id,mode] of [['hostPip','pip'],['hostFullscreen','fullscreen']]){
+ const button=$(id),host=window.openai;
+ if(host&&typeof host.requestDisplayMode==='function'){
+  button.hidden=false;
+  button.addEventListener('click',()=>{
+   const status=$('hostModeStatus');status.hidden=false;
+   status.textContent='ChatGPT 표시 모드 전환을 요청했어.';
+   Promise.resolve(host.requestDisplayMode({mode})).then(()=>{
+    status.textContent='ChatGPT에 표시 모드 요청을 전달했어. 실제 전환 여부는 화면에서 확인해 줘.';
+    layout();
+   }).catch(()=>{status.textContent='현재 ChatGPT 화면에서 이 표시 모드를 사용할 수 없어.'});
+  });
+ }
+}
 $('toggleGuides').addEventListener('click',()=>{
  const on=stage.classList.toggle('debug');$('toggleGuides').setAttribute('aria-pressed',String(on));
 });
