@@ -8,6 +8,8 @@
 ## Host integration
 - MCP tool `open_forest_village`: annotated `_meta.ui.resourceUri` and `_meta["openai/ui"].entrypoints=[{type:"thread"}]`.
 - MCP resource `ui://myminihome/forest-v1.html`: `text/html;profile=mcp-app`, with resource/connect CSP limited to public GitHub assets.
+- Resource metadata now declares `_meta["openai/ui"].availableDisplayModes=["inline","pip","fullscreen"]`. The HTML exposes PiP/fullscreen request buttons **only if** `window.openai.requestDisplayMode` is available; declaring or requesting does not guarantee a mode switch.
+- Same single scene now supports carry/drop, stories, internally synthesized BGM/SFX and optional public asset-folder playlists. Actual ChatGPT host audio/touch/fullscreen remains **untested**.
 - The widget uses ChatGPT's native conversation composer. It does not implement, replace, or send messages through a second AI chat window.
 - When `window.openai.openExternal` is present, the user clicking a configured ChatGPT link invokes the host external-link method. Otherwise standard `https://chatgpt.com/` anchors are used.
 
@@ -25,3 +27,4 @@ The server speaks newline-delimited MCP JSON-RPC on standard input/output; it is
 - Hosting/publishing/connecting a plugin still requires a supported runtime and user's connection action. Web ChatGPT does not automatically execute a local `stdio` server. A cloud version requires a deployed remote MCP endpoint or supported Sites tooling.
 - A thread entrypoint is **declared**, not actually installed. The UI must be tested on a host before production approval.
 - Current animation art and layer quality are still marked candidate until reviewed.
+- See [2026-11-25 review](../../docs/scene-interaction-review-v0.4.md). Run `node scripts/test_scene_runtime.cjs` from repository root for local dependency-free scene logic regression; it is not an interactive browser test.
