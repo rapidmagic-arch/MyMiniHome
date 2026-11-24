@@ -27,7 +27,10 @@ els.scene.textContent=JSON.stringify(scene);els.musicVolume.value='30';
 const doc={body:new E('body'),hidden:false,events:{},getElementById:id=>els[id],createElement:t=>new E(t),addEventListener(t,f){this.events[t]=f}};
 const win={innerHeight:800,AudioContext:AudioCtx,matchMedia:()=>({matches:false,addEventListener(){}}),events:{},addEventListener(t,f){this.events[t]=f},setTimeout(){}};
 let raf,n=0;const intervals=new Map();
-const runner=new Function('document','window','Image','ResizeObserver','requestAnimationFrame','fetch','URL','setInterval','clearInterval',source);
+// Expose local state only in the test copy. The delivered scene remains uninstrumented.
+const instrumented=source.replace('requestAnimationFrame(render);\n})();','window.__qa={scene,characterNodes,track};\nrequestAnimationFrame(render);\n})();');
+assert.notEqual(instrumented,source,'test instrumentation anchor missing');
+const runner=new Function('document','window','Image','ResizeObserver','requestAnimationFrame','fetch','URL','setInterval','clearInterval',instrumented);
 runner(doc,win,Img,class{observe(){}},f=>raf=f,async url=>({ok:true,json:async()=>url.includes('playlist.json')?{version:1,tracks:[]}:{status:'REVIEW_CANDIDATE_NOT_APPROVED',count:{totalPngs:48}}}),URL,f=>{intervals.set(++n,f);return n},id=>intervals.delete(id));
 (async()=>{
  for(let i=0;i<64;i++)await Promise.resolve();
@@ -118,5 +121,26 @@ runner(doc,win,Img,class{observe(){}},f=>raf=f,async url=>({ok:true,json:async()
  assert.ok(greetingFrames>0,'close approach triggers greeting');
  assert.ok(detourFrames>0,'walker uses an alternate valid lane');
  console.log('Collision QA:',{overlapCount,greetingFrames,detourFrames,closest});
- console.log('PASS MyMiniHome: single/double tap, character switch, invalid/occupied landing, stop/detour/greet, stationary idle, story, BGM and responsive');
+ // Blocking fallback: if no alternate lane exists, the walker waits rather than crossing a parked animal.
+ const collisionQA=win.__qa,walkerInfo=collisionQA.characterNodes.get('squirrel');
+ assert.ok(collisionQA,'test-only internals exposed');
+ collisionQA.scene.movementZones.land=[{x:260,y:658,w:720,h:44}];
+ walkerInfo.moveClock=0;walkerInfo.homeX=400;walkerInfo.homeY=680;
+ walkerInfo.x=400;walkerInfo.y=680;walkerInfo.avoidance=null;walkerInfo.landingZone=null;
+ walkerInfo.patrolShiftX=400-collisionQA.track(walkerInfo.actor,0).x;
+ let maxBlockedX=0,waitFrames=0,previousX=400;
+ for(let i=350;i<470;i++){
+  tick(i,i+1);
+  const x=parseFloat(walker.style.left);
+  maxBlockedX=Math.max(maxBlockedX,x);
+  if(Math.abs(x-previousX)<.001)waitFrames++;
+  previousX=x;
+  assert.equal(parseFloat(bear2.style.left),520,'stationary bear X unchanged during no-detour');
+  assert.equal(parseFloat(bear2.style.top),680,'stationary bear Y unchanged during no-detour');
+ }
+ assert.ok(maxBlockedX<450,'walker must not walk through blocker without a valid lane');
+ assert.ok(waitFrames>=20,'walker waits when detour is unavailable');
+ console.log('No-detour QA:',{maxBlockedX,waitFrames});
+
+ console.log('PASS MyMiniHome: single/double tap, character switch, invalid/occupied landing, stop/detour/greet/no-detour fallback, stationary idle, story, BGM and responsive');
 })().catch(e=>{console.error('FAIL MyMiniHome regression',e);process.exitCode=1});
