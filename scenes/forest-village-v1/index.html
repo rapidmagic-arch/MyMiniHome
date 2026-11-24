@@ -288,7 +288,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
         "안녕! 숲길을 함께 구경할래?",
         "오늘은 도토리를 세 개 찾았어!",
         "마을 소식이 궁금하면 다시 눌러 줘."
-      ]
+      ],
+      "note": "도토리를 찾아 숲길을 산책하는 다람쥐야."
     },
     {
       "id": "rabbit",
@@ -337,7 +338,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
         "반가워! 오늘 읽을 이야기가 있어?",
         "파란 목도리가 잘 어울리지?",
         "산책 끝나면 책을 읽을 거야."
-      ]
+      ],
+      "note": "그림책을 좋아하는 숲속 토끼야."
     },
     {
       "id": "fox",
@@ -386,7 +388,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
         "마을 지도를 살펴보고 있어!",
         "새로운 길을 발견했어.",
         "길을 잃으면 나를 찾아줘!"
-      ]
+      ],
+      "note": "새로운 길과 이야기를 찾아다니는 여우야."
     },
     {
       "id": "wolf",
@@ -435,7 +438,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
         "안녕! 오늘도 꼼꼼히 살펴보자.",
         "내 안경은 검토할 때 필수야.",
         "산책하면서 생각을 정리 중이야."
-      ]
+      ],
+      "note": "산책길을 꼼꼼하게 살펴보는 늑대야."
     },
     {
       "id": "owl",
@@ -455,7 +459,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
       "idleOffsetMs": 650,
       "frame": "../../assets/review/v0.2/frames/owl/owl_01.png",
       "link": null,
-      "note": "벤치 옆에서 책을 읽고 있습니다. GPT 링크 미설정.",
+      "note": "조용한 벤치에서 책을 읽는 부엉이야.",
       "idleAlign": [
         [
           0,
@@ -494,7 +498,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
       "idleOffsetMs": 300,
       "frame": "../../assets/review/v0.2/frames/bear/bear_01.png",
       "link": null,
-      "note": "오두막 아래 산책로에 머무르고 있습니다. 프로젝트 링크 미설정.",
+      "note": "따뜻한 오두막에서 친구들을 기다리는 곰이야.",
       "idleAlign": [
         [
           0,
@@ -533,7 +537,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
       "idleOffsetMs": 750,
       "frame": "../../assets/review/v0.2/frames/frog/frog_01.png",
       "link": null,
-      "note": "연못의 수련잎 위에서 쉬고 있습니다. GPT 링크 미설정.",
+      "note": "수련잎 사이를 좋아하는 연못 개구리야.",
       "idleAlign": [
         [
           0,
@@ -572,7 +576,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
       "idleOffsetMs": 1250,
       "frame": "../../assets/review/v0.2/frames/hedgehog/hedgehog_01.png",
       "link": null,
-      "note": "전경 산책로에서 꽃을 들고 있습니다. 프로젝트 링크 미설정.",
+      "note": "꽃 한 송이를 들고 산책하는 고슴도치야.",
       "idleAlign": [
         [
           0,
@@ -793,8 +797,9 @@ function musicScheduler(){
   if(noteStep%song.melody.length===0){
    completedLoops+=1;
    if(completedLoops>=4){
-    // Defer track changes until after this interval tick to prevent schedule duplication.
-    window.setTimeout(()=>{if(musicEnabled&&activeTrack()===song)advanceTrack()},30);
+    if(musicTimer!==null){clearInterval(musicTimer);musicTimer=null}
+    // Defer the playlist advance until the scheduled notes have played.
+    window.setTimeout(()=>{if(musicEnabled&&activeTrack()===song)advanceTrack()},130);
     break;
    }
   }
@@ -806,12 +811,13 @@ function playCurrentTrack(){
  if(song.type==='file'){
   if(!window.Audio){updateAudioStatus('오디오 재생을 지원하지 않는 환경');musicEnabled=false;return}
   trackPlayer=new window.Audio();
-  trackPlayer.preload='auto';trackPlayer.volume=Number($('musicVolume').value)/100;
-  trackPlayer.src=song.src;
-  trackPlayer.addEventListener('ended',()=>{if(musicEnabled)advanceTrack()});
-  trackPlayer.addEventListener('error',()=>{musicEnabled=false;stopCurrentTrack();updateAudioStatus('음악 파일을 읽을 수 없어. 파일 경로를 확인해 줘.')});
-  const playResult=trackPlayer.play();
-  if(playResult&&playResult.catch)playResult.catch(()=>{musicEnabled=false;stopCurrentTrack();updateAudioStatus('음악 재생이 차단됐어. 버튼을 다시 눌러줘.')});
+  const player=trackPlayer;
+  player.preload='auto';player.volume=Number($('musicVolume').value)/100;
+  player.src=song.src;
+  player.addEventListener('ended',()=>{if(musicEnabled&&trackPlayer===player)advanceTrack()});
+  player.addEventListener('error',()=>{if(trackPlayer!==player)return;musicEnabled=false;stopCurrentTrack();updateAudioStatus('음악 파일을 읽을 수 없어. 파일 경로를 확인해 줘.')});
+  const playResult=player.play();
+  if(playResult&&playResult.catch)playResult.catch(()=>{if(trackPlayer!==player)return;musicEnabled=false;stopCurrentTrack();updateAudioStatus('음악 재생이 차단됐어. 버튼을 다시 눌러줘.')});
  }else{
   const ctx=ensureAudioContext();
   if(!ctx){musicEnabled=false;updateAudioStatus('이 브라우저는 Web Audio를 지원하지 않아.');return}
@@ -877,7 +883,7 @@ for(const actor of scene.characters){
  const img=document.createElement('img');img.src=frameSrc(actor.id,actor.idleFrames?actor.idleFrames[0]:1);img.alt='';img.decoding='async';img.draggable=false;
  btn.append(img);
  const homeX=actor.patrol?(actor.patrol.startX+actor.patrol.endX)/2:actor.x,homeY=actor.patrol?actor.patrol.y:actor.y;
- const info={btn,img,actor,frame:actor.idleFrames?actor.idleFrames[0]:1,direction:'',walkReady:false,x:homeX,y:homeY,homeX,homeY,wasRelocated:false};
+ const info={btn,img,actor,frame:actor.idleFrames?actor.idleFrames[0]:1,direction:'',walkReady:false,x:homeX,y:homeY,homeX,homeY,patrolShiftX:0,landingZone:null,wasRelocated:false};
  btn.addEventListener('click',e=>{e.stopPropagation();if(!carried)pickUpActor(info)});
  $('actors').append(btn);
  characterNodes.set(actor.id,info);btn.dataset.animation='legacy-gestures';
@@ -948,6 +954,8 @@ function landActor(point){
  }
  carried=null;carryPointer=null;
  info.homeX=point.x;info.homeY=point.y;info.x=point.x;info.y=point.y;info.wasRelocated=true;
+ info.landingZone=(info.actor.motion==='pond-idle'?scene.movementZones.water:scene.movementZones.land).find(z=>point.x>=z.x&&point.x<=z.x+z.w&&point.y>=z.y&&point.y<=z.y+z.h)||null;
+ if(info.actor.patrol)info.patrolShiftX=point.x-track(info.actor,clock).x;
  info.btn.classList.remove('is-carried');info.btn.classList.add('is-landing');
  info.btn.style.left=point.x+'px';info.btn.style.top=point.y+'px';
  stage.classList.remove('is-placing');$('placementHint').hidden=true;
@@ -1001,7 +1009,7 @@ function openInfo(obj){
  }else{
   objectButtons.get(obj.id).classList.add('is-active');playSfx('object',obj.id);
   if(obj.action==='highlight-path')$('bridgeGuide').removeAttribute('hidden');
-  if(obj.action==='ripple'){$('pondRipple').hidden=false;$('ambience').classList.add('ambient-ripple-intense');if(!motionQuery.matches && !paused)$('pondRipple').classList.add('play')}
+  if(obj.action==='ripple'){$('pondRipple').hidden=false;$('ambience').classList.add('ambient-ripple-intense');if(!paused)$('pondRipple').classList.add('play')}
   if(obj.action==='local-note')$('mailboxSignal').hidden=false;
   if(obj.action==='local-note'){$('noteForm').hidden=false;$('noteNotice').hidden=false}
  }
@@ -1119,11 +1127,12 @@ function render(t){
    // Actors without walk sprites have a gentle wandering fallback only after relocation.
    const drift=info.wasRelocated&&canMove?Math.sin(clock/680+(a.idleOffsetMs||0)/1000)*14:0;
    info.x=info.homeX+drift;info.y=info.homeY;
+   if(info.landingZone)info.x=clamp(info.x,info.landingZone.x,info.landingZone.x+info.landingZone.w);
    info.btn.style.setProperty('--sprite-dx','0px');
   }else{
    const step=track(a,clock);
-   const center=(a.patrol.startX+a.patrol.endX)/2;
-   info.x=step.x+(info.homeX-center);info.y=info.homeY;
+   info.x=step.x+info.patrolShiftX;info.y=info.homeY;
+   if(info.landingZone)info.x=clamp(info.x,info.landingZone.x,info.landingZone.x+info.landingZone.w);
    const isWalk=info.walkReady,dir=step.left?'left':'right';
    const nextFrame=isWalk?(canMove&&step.moving?1+(Math.floor(clock/160)%6):1):(canMove&&step.moving?[1,2,3,6][Math.floor(clock/900)%4]:1);
    if(info.frame!==nextFrame||info.direction!==dir){
