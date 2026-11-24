@@ -2,6 +2,8 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const html=fs.readFileSync(path.resolve(__dirname,'../scenes/forest-village-v1/index.html'),'utf8');
 const source=html.match(/<script>\s*([\s\S]*?)<\/script>/)?.[1];
+const useFiles=process.argv.includes('--files');
+const filePlaylist=useFiles?JSON.parse(fs.readFileSync(path.resolve(__dirname,'../assets/audio/bgm/playlist.json'),'utf8')):{version:1,tracks:[]};
 const scene=JSON.parse(html.match(/<script id="scene" type="application\/json">([\s\S]*?)<\/script>/)[1]);
 assert.ok(source,'script missing');
 class E{
@@ -25,13 +27,23 @@ for(const m of html.matchAll(/\bid="([A-Za-z][\w-]*)"/g))els[m[1]]=new E(m[1]);
 for(const id of ['panel','storyBox','actorReaction','linkForm','linkNotice','toggleLinkForm','speechBubble','meetingBubble','pondRipple','mailboxSignal','noteForm','noteNotice','previewMessage','placementHint','hostPip','hostFullscreen','hostModeStatus','dropOverlay','placementBar','settings'])els[id].hidden=true;
 els.scene.textContent=JSON.stringify(scene);els.musicVolume.value='30';
 const doc={body:new E('body'),hidden:false,events:{},getElementById:id=>els[id],createElement:t=>new E(t),addEventListener(t,f){this.events[t]=f}};
-const win={innerHeight:800,AudioContext:AudioCtx,matchMedia:()=>({matches:false,addEventListener(){}}),events:{},addEventListener(t,f){this.events[t]=f},setTimeout(){}};
+let player=null,playFailure=false;
+class Media{
+ constructor(){player=this;this.events={};this.ended=false;this.error=null;this.paused=true}
+ set src(v){this.source=v;this.ended=false;this.error=null}
+ get src(){return this.source}
+ addEventListener(type,fn){this.events[type]=fn}
+ play(){if(playFailure)return Promise.reject(new Error('blocked'));this.paused=false;return Promise.resolve()}
+ pause(){this.paused=true}
+ finish(){this.ended=true;this.events.ended()}
+}
+const win={innerHeight:800,Audio:Media,AudioContext:AudioCtx,matchMedia:()=>({matches:false,addEventListener(){}}),events:{},addEventListener(t,f){this.events[t]=f},setTimeout(){}};
 let raf,n=0;const intervals=new Map();
 // Expose local state only in the test copy. The delivered scene remains uninstrumented.
 const instrumented=source.replace('requestAnimationFrame(render);\n})();','window.__qa={scene,characterNodes,track,resolveWalk,positionsOverlap,groundAnchor,get clock(){return clock}};\nrequestAnimationFrame(render);\n})();');
 assert.notEqual(instrumented,source,'test instrumentation anchor missing');
 const runner=new Function('document','window','Image','ResizeObserver','requestAnimationFrame','fetch','URL','setInterval','clearInterval',instrumented);
-runner(doc,win,Img,class{observe(){}},f=>raf=f,async url=>({ok:true,json:async()=>url.includes('playlist.json')?{version:1,tracks:[]}:{status:'REVIEW_CANDIDATE_NOT_APPROVED',count:{totalPngs:48}}}),URL,f=>{intervals.set(++n,f);return n},id=>intervals.delete(id));
+runner(doc,win,Img,class{observe(){}},f=>raf=f,async url=>({ok:true,json:async()=>url.includes('playlist.json')?filePlaylist:{status:'REVIEW_CANDIDATE_NOT_APPROVED',count:{totalPngs:48}}}),URL,f=>{intervals.set(++n,f);return n},id=>intervals.delete(id));
 (async()=>{
  for(let i=0;i<64;i++)await Promise.resolve();
  const tick=(a,b)=>{for(let i=a;i<b;i++)raf(i*120+1)};
@@ -91,8 +103,28 @@ runner(doc,win,Img,class{observe(){}},f=>raf=f,async url=>({ok:true,json:async()
  assert.equal(actor.classList.contains('is-carried'),true,'occupied landing must be rejected');
  doc.events.keydown({key:'Escape'});
  assert.equal(actor.classList.contains('is-carried'),false);
- els.musicToggle.events.click();assert.match(els.audioStatus.textContent,/재생 중/);
- els.musicNext.events.click();els.musicToggle.events.click();assert.match(els.audioStatus.textContent,/대기 중/);
+ els.musicToggle.events.click();await Promise.resolve();await Promise.resolve();
+ assert.match(els.audioStatus.textContent,/재생 중/);
+ if(useFiles){
+  assert.ok(filePlaylist.tracks.length>=2,'file playlist populated');
+  assert.ok(player.src.endsWith(encodeURIComponent(filePlaylist.tracks[0].file)),'first file loaded');
+  const firstPlayer=player;
+  for(let i=1;i<=filePlaylist.tracks.length;i++){
+   player.finish();await Promise.resolve();await Promise.resolve();
+   assert.equal(player,firstPlayer,'same media element reused');
+   assert.ok(player.src.endsWith(encodeURIComponent(filePlaylist.tracks[i%filePlaylist.tracks.length].file)),'playlist advances and wraps');
+  }
+  els.musicVolume.value='45';els.musicVolume.events.input();assert.equal(player.volume,.45);
+ }
+ els.musicNext.events.click();await Promise.resolve();await Promise.resolve();
+ els.musicToggle.events.click();assert.match(els.audioStatus.textContent,/대기 중/);
+ if(useFiles){
+  assert.equal(player.paused,true);
+  playFailure=true;els.musicToggle.events.click();for(let i=0;i<8;i++)await Promise.resolve();
+  assert.match(els.audioStatus.textContent,/차단/);
+  assert.equal(els.musicToggle.getAttribute?els.musicToggle.getAttribute('aria-pressed'):els.musicToggle.attrs['aria-pressed'],'false');
+  console.log('File audio QA: playlist wrap, volume, stop, rejected play passed');
+ }
  els.close.events.click();els.hotspots.children.find(x=>x.dataset.label==='연못').events.click();
  assert.equal(els.pondRipple.hidden,false);
  win.innerHeight=350;els.viewport.clientWidth=1100;win.events.resize();
