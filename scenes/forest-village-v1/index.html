@@ -115,25 +115,50 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
 .legend{color:#c7ded8;font-size:12px;line-height:1.6;margin:10px 3px 0}
 @media(max-width:740px){.toolbar strong{font-size:14px}.toolbar small{font-size:12px}.panel{position:relative;left:auto;bottom:auto;width:100%;margin-top:10px;box-shadow:none}.shell{padding:8px}}
 @media(prefers-reduced-motion:reduce){body:not(.manual-motion) *,body:not(.manual-motion) *::before,body:not(.manual-motion) *::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* Compact view keeps a single scene and reserves controls outside its coordinate system. */
+.shell{position:relative;padding:8px}
+.toolbar{gap:6px;margin-bottom:6px;min-height:38px}
+.brand{display:flex;align-items:baseline;gap:6px;white-space:nowrap}
+.tools{gap:5px}
+.tools button,.placement-actions button{min-height:36px;padding:5px 9px;font-size:13px}
+.settings{position:absolute;right:8px;top:48px;z-index:45;width:min(440px,calc(100% - 16px));max-height:calc(100dvh - 64px);overflow:auto;padding:12px;background:#244438f5;border:2px solid #809b73;border-radius:10px;box-shadow:0 8px 24px #071b1899}
+.settings .audio-controls{padding:0 0 8px}
+.settings .audio-status{flex-basis:100%}
+.placement-bar{position:absolute;z-index:16;bottom:8px;right:8px;left:auto;max-width:min(390px,calc(100% - 16px));padding:7px;background:#fff4d7ed;color:#4f4026;border:2px solid #94704a;border-radius:9px;pointer-events:none}
+.placement-bar .placement-hint{font-size:12px;line-height:1.4;padding:0;margin:0 0 5px!important;background:none}
+.placement-actions{display:flex;gap:6px;justify-content:flex-end;pointer-events:auto}
+.placement-actions button{background:#fff9e3;color:#3e4c31;border:1px solid #94704a;border-radius:6px;font-weight:700}
+.panel{position:absolute;bottom:8px;left:8px;width:min(370px,calc(100% - 16px));max-height:calc(100% - 16px);overflow:auto;overscroll-behavior:contain;padding:12px}
+.panel button{min-height:35px}
+.story-progress{font-size:12px;color:#79573a;font-weight:700;margin-bottom:5px}
+.footer-help{margin:4px 2px;font-size:11px}
+.actor{isolation:isolate}
+.actor.is-landing{pointer-events:auto}
+.view-only .footer-help,.view-only .brand small{display:none!important}
+@media(max-width:740px),(max-height:490px){.brand small,.footer-help{display:none!important}.shell{padding:5px}.toolbar strong{font-size:14px}.tools button{min-height:32px;padding:4px 7px;font-size:12px}.toolbar{min-height:34px}.settings{top:43px;right:5px}.panel{margin:0}.actor-reaction img{width:58px;height:58px}}
+@media(pointer:coarse){.tools button,.placement-actions button,.panel button{min-height:42px}}
 </style>
 </head>
 <body>
 <div class="shell">
- <div class="toolbar"><div><strong>MyMiniHome · 기본 숲 마을 템플릿 1종</strong> <small>v1 · 움직임/반응 검토용</small></div>
-  <div class="tools"><button id="toggleFit" type="button" aria-pressed="false">전체 보기</button><button id="hostPip" type="button" hidden>ChatGPT 위젯</button><button id="hostFullscreen" type="button" hidden>ChatGPT 전체화면</button><button id="toggleMotion" type="button" aria-pressed="false">움직임 정지</button><button id="toggleGuides" type="button" aria-pressed="false">앵커 표시</button><button id="reset" type="button">팝업 닫기</button></div>
+ <div class="toolbar"><div class="brand"><strong>MyMiniHome</strong> <small>숲 마을</small></div>
+  <div class="tools"><button id="musicToggle" type="button" aria-pressed="false">음악 켜기</button><button id="toggleMotion" type="button" aria-pressed="false">움직임 정지</button><button id="toggleFit" type="button" aria-pressed="false">확대 보기</button><button id="toggleSettings" type="button" aria-expanded="false" aria-controls="settings">설정</button></div>
  </div>
- <div class="audio-controls" role="group" aria-label="마을 음악과 효과음">
-  <button id="musicToggle" type="button" aria-pressed="false">음악 켜기</button>
-  <button id="musicNext" type="button">다음 곡</button>
-  <label>음량 <input id="musicVolume" type="range" min="0" max="100" value="30" aria-label="배경음악 음량"/></label>
-  <button id="sfxToggle" type="button" aria-pressed="true">효과음 켜짐</button>
-  <span id="audioStatus" class="audio-status" role="status">음악: 사용자 재생 대기 · 내장 테마 3곡</span>
- </div>
- <p id="motionStatus" class="legend motion-indicator" role="status">움직임 확인 중…</p>
- <p id="placementHint" class="legend placement-hint" role="status" hidden></p>
- <p id="hostModeStatus" class="legend" role="status" hidden></p>
+ <section id="settings" class="settings" hidden aria-label="마을 설정">
+  <div class="audio-controls" role="group" aria-label="마을 음악과 효과음">
+   <button id="musicNext" type="button">다음 곡</button>
+   <label>음량 <input id="musicVolume" type="range" min="0" max="100" value="30" aria-label="배경음악 음량"/></label>
+   <button id="sfxToggle" type="button" aria-pressed="true">효과음 켜짐</button>
+   <span id="audioStatus" class="audio-status" role="status">음악: 재생 대기</span>
+  </div>
+  <div class="tools"><button id="viewMode" type="button" aria-pressed="false">감상 모드</button><button id="toggleGuides" type="button" aria-pressed="false">앵커 표시</button><button id="reset" type="button">팝업 닫기</button><button id="hostPip" type="button" hidden>ChatGPT 위젯</button><button id="hostFullscreen" type="button" hidden>ChatGPT 전체화면</button></div>
+  <p id="motionStatus" class="legend" role="status">움직임 확인 중…</p>
+  <p id="hostModeStatus" class="legend" role="status" hidden></p>
+  <p class="legend">한 번 눌러 들기 · 빈 장소를 눌러 착지 · 같은 동물을 빠르게 두 번 눌러 이야기. 작은 화면에서 선택이 어려우면 확대 보기를 이용해.</p>
+ </section>
  <div class="scene-area">
-  <div class="viewport" id="viewport" role="region" tabindex="0" aria-label="숲 마을 장면. 좁은 화면에서는 가로로 스크롤하여 탐색">
+  <div class="viewport" id="viewport" role="region" tabindex="0" aria-label="숲 마을 장면. 전체 보기와 확대 보기 지원">
    <div class="frame-sizer" id="frameSizer"><div class="stage" id="stage">
     <img class="base" id="background" alt="오두막, 연못, 폭포, 다리, 독서 공간이 있는 픽셀 숲 마을"/>
     <div id="dropOverlay" class="drop-overlay" hidden aria-hidden="true"></div>
@@ -149,12 +174,13 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
     <div id="actors"></div><div id="meetingBubble" class="speech-bubble meeting-bubble" aria-hidden="true" hidden></div><div id="speechBubble" class="speech-bubble" aria-hidden="true" hidden></div><div class="guide-line"></div>
    </div></div>
   </div>
+  <div id="placementBar" class="placement-bar" hidden><p id="placementHint" class="placement-hint" role="status"></p><div class="placement-actions"><button id="carryProfileButton" type="button">프로필</button><button id="cancelCarryButton" type="button">놓기 취소</button></div></div>
   <section class="panel" id="panel" hidden aria-label="마을 상호작용 패널" aria-live="polite">
    <button class="close" id="close" type="button" aria-label="정보창 닫기">×</button>
    <h2 id="panelTitle"></h2>
    <div id="actorReaction" class="actor-reaction" hidden><img id="panelAvatar" alt=""/><div><p id="panelGreeting"></p><button id="reactButton" type="button">다른 반응 보기</button></div></div>
    <p id="panelBody"></p>
-   <div id="storyBox" class="story-box" hidden><p id="storyText"></p><button id="storyNext" type="button">이야기 계속</button></div>
+   <div id="storyBox" class="story-box" hidden><div id="storyProgress" class="story-progress"></div><p id="storyText"></p><button id="storyNext" type="button">이야기 계속</button></div>
    <p id="panelLink"></p>
    <button type="button" id="toggleLinkForm" hidden>프로젝트·GPT 링크 설정</button>
    <form id="linkForm" hidden><input id="linkInput" type="url" maxlength="450" placeholder="https://chatgpt.com/..." aria-label="기존 프로젝트 또는 GPT 링크"/><button type="submit">주소 연결</button></form>
@@ -164,12 +190,12 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
    <p id="previewMessage" hidden></p>
   </section>
  </div>
- <p class="legend" id="statusNote">동물 한 번 클릭 → 데롱데롱 들기 → 새 장소 클릭 → 착지. 같은 동물을 빠르게 두 번 누르면 상세 프로필이 열려. 음악은 '음악 켜기'로 시작해. 짧은 이야기는 프로필에서 이어 볼 수 있어.</p>
- <p class="legend" id="responsiveNote">가로·세로에 맞춰 원본 1774×887 비율을 유지해 보여줘. 확대 보기에서는 화면을 스크롤하여 탐색할 수 있어.</p>
+ <p class="legend footer-help" id="statusNote">한 번 클릭: 들기 · 두 번 클릭: 이야기 · 새 장소 클릭: 착지</p>
+ <p class="legend footer-help" id="responsiveNote" hidden>선택이 어려우면 확대 보기로 전환해 줘.</p>
 </div>
 <script id="scene" type="application/json">
 {
-  "version": "scene-v1-encounter-interaction-prototype",
+  "version": "scene-v1-play-and-view-rc1",
   "status": "prototype_not_approved",
   "designSize": {
     "width": 1774,
@@ -186,7 +212,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
       "w": 458,
       "h": 347,
       "action": "inspect",
-      "note": "마을의 중심 건물. 현재 마스터 이미지의 고정 요소이며 독립 이동은 지원하지 않습니다."
+      "note": "따뜻한 차와 이야기가 기다리는 숲 마을의 오두막."
     },
     {
       "id": "reading",
@@ -196,7 +222,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
       "w": 295,
       "h": 260,
       "action": "inspect",
-      "note": "책을 읽는 공간. 클릭하면 장소 정보를 보여주며 저장이나 예약 기능은 없습니다."
+      "note": "그림책을 펼치고 잠시 쉬어 가는 작은 독서 쉼터."
     },
     {
       "id": "mailbox",
@@ -206,7 +232,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
       "w": 86,
       "h": 113,
       "action": "local-note",
-      "note": "우체통에 적을 한 줄 메시지를 이 화면에서만 미리 볼 수 있습니다."
+      "note": "친구에게 전할 마음을 한 줄 적어 보는 마을 우체통."
     },
     {
       "id": "bridge",
@@ -216,7 +242,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
       "w": 350,
       "h": 144,
       "action": "highlight-path",
-      "note": "다리의 통행 구간을 표시합니다. 실제 캐릭터 경로 탐색은 아직 지원하지 않습니다."
+      "note": "연못 건너편으로 이어지는 조용한 나무다리."
     },
     {
       "id": "pond",
@@ -226,7 +252,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
       "w": 688,
       "h": 256,
       "action": "ripple",
-      "note": "연못 수면에 시범 물결 표시를 켭니다. 실제 수면 프레임 애니메이션은 별도 제작이 필요합니다."
+      "note": "꽃잎과 물결, 개구리가 함께 쉬는 연못."
     },
     {
       "id": "waterfall",
@@ -236,7 +262,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
       "w": 100,
       "h": 286,
       "action": "inspect-motion",
-      "note": "상·하단 물줄기의 별도 강조 애니메이션을 확인할 수 있습니다. 실제 물리 시뮬레이션은 아닙니다."
+      "note": "바위 사이로 내려오는 시원한 숲의 물줄기."
     },
     {
       "id": "cherry-tree",
@@ -246,7 +272,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
       "w": 248,
       "h": 327,
       "action": "inspect-motion",
-      "note": "벚꽃잎이 떨어지는 환경 효과를 표시합니다. 원본 나무 이미지는 고정돼 있습니다."
+      "note": "봄바람에 꽃잎을 날리는 마을의 벚꽃나무."
     }
   ],
   "characters": [
@@ -609,7 +635,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
   ],
   "walkSpriteCandidate": "assets/review/walk-v0.1",
   "placementStatus": "eight_characters_provisional_layout",
-  "notes": "Four walk cycles use walk-v0.1; owl, bear, frog, hedgehog use gesture frames and are intentionally stationary.",
+  "notes": "Four dedicated walk cycles; four existing gesture sprite packs use a short deliberate species-specific arrival activity and rest at the resulting ground anchor.",
   "environment": {
     "type": "css-pixel-overlays",
     "waterfall": "2 animated water highlights",
@@ -657,72 +683,94 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
   },
   "stories": {
     "squirrel": [
-      "도토리 세 알을 찾으러 숲길로 나왔어.",
-      "나무 그늘에 작은 도토리가 숨어 있었지.",
-      "하나를 친구에게 선물하기로 했어."
+      "오늘은 숲 마을에 봄 편지를 전하는 날이야.",
+      "도토리 세 알을 찾다가 나뭇잎에 그려진 작은 화살표를 봤어.",
+      "화살표를 따라가니 토끼가 읽던 책 옆에 편지가 놓여 있었지.",
+      "친구와 도토리를 나누고 편지를 우체통으로 가져가자!"
     ],
     "rabbit": [
-      "숲속 도서관에서 반짝이는 책을 발견했어.",
-      "첫 장을 넘기자 꽃잎 모양 지도가 나타났지.",
-      "지도 끝에는 따뜻한 오두막이 있었어."
+      "숲속 책장에서 바람 냄새가 나는 그림책을 발견했어.",
+      "책을 펼치자 꽃잎 모양의 지도가 나타났어.",
+      "지도에는 오두막 창문과 나무다리, 그리고 작은 우체통이 그려져 있었지.",
+      "마을 친구들에게 봄 소식을 전해 주기로 했어."
     ],
     "fox": [
-      "나무다리 근처에서 작은 발자국을 발견했어.",
-      "조용히 따라가니 분홍 꽃밭이 나왔지.",
-      "보물은 꽃향기와 친구들의 웃음이었어."
+      "나무다리 근처에서 낯선 작은 발자국을 발견했어.",
+      "발자국을 조심조심 따라가니 분홍 꽃잎이 길을 알려 주었지.",
+      "꽃밭에는 누군가 떨어뜨린 봄 편지 한 장이 있었어.",
+      "편지의 주인을 찾아 주는 일이 오늘의 보물찾기야."
     ],
     "wolf": [
-      "오늘은 숲 마을의 길을 살펴보는 날이야.",
-      "돌다리와 꽃길을 차례대로 확인했지.",
-      "모두가 안전하게 걸을 길을 찾았어."
+      "오늘도 마을 친구들이 안전하게 다닐 길을 살펴보고 있어.",
+      "좁은 길에서 곰을 만나자 잠깐 멈춰 인사했지.",
+      "옆으로 돌아갈 수 있는 길을 발견했어. 서로 양보하면 모두 편해.",
+      "이제 나무다리를 건너 친구들에게 좋은 소식을 전하자."
     ],
     "owl": [
-      "내가 읽던 책에는 잠자는 숲 이야기가 있었어.",
-      "밤이 되자 나뭇잎마다 별이 반짝였지.",
-      "이야기 끝에는 모두 따뜻한 인사를 나눴어."
+      "오래된 책 속에 숲의 밤하늘 이야기가 있었어.",
+      "별 하나가 내려와 길을 잃은 동물에게 방향을 알려 주었지.",
+      "부엉이는 책장을 넘기며 친구들이 돌아올 때까지 기다렸어.",
+      "해가 지면 오두막에서 모두 함께 그 이야기를 읽어 줄 거야."
     ],
     "bear": [
-      "오두막에서 향긋한 차를 준비했어.",
-      "친구들이 차례대로 문을 두드렸지.",
-      "모두 모여 이야기를 나누니 마음이 포근해졌어."
+      "오늘은 오두막에 따뜻한 차를 준비했어.",
+      "창밖에 꽃잎이 날리더니 친구들이 하나둘 도착했지.",
+      "토끼는 그림책을, 다람쥐는 도토리를 가져왔어.",
+      "모두 둘러앉아 봄 편지를 읽으며 쉬어 가자."
     ],
     "frog": [
-      "연못 위에 작은 물결이 퍼졌어.",
-      "누군가 던진 꽃잎이 물 위를 둥둥 떠다녔지.",
-      "개구리는 꽃잎을 따라가며 노래했어."
+      "연못에 작은 꽃잎이 둥둥 떠왔어.",
+      "꽃잎을 따라 폴짝 뛰어가니 수련잎 아래로 물결이 번졌지.",
+      "나무다리 위의 친구에게 개굴개굴 인사를 했어.",
+      "다음 꽃잎이 올 때까지 햇살 아래 쉬어 볼까?"
     ],
     "hedgehog": [
-      "작은 꽃 한 송이를 찾았어.",
-      "꽃잎이 바람에 흔들리며 인사했지.",
-      "고슴도치는 꽃을 친구에게 건네주었어."
+      "작은 꽃 한 송이를 찾아 숲길을 나섰어.",
+      "바람이 불자 꽃잎이 살짝 흔들리며 인사했지.",
+      "오두막 앞에 꽃을 놓으면 친구들이 기뻐할 것 같았어.",
+      "꽃을 선물하고 함께 따뜻한 차를 마시기로 했어."
     ],
     "cottage": [
       "오두막 창문에 따뜻한 불빛이 켜졌어.",
-      "숲 친구들이 하나둘 모여들었지."
+      "차 향기가 숲길을 타고 퍼지자 친구들이 모여들었지.",
+      "각자 발견한 봄 소식을 이야기하기 시작했어.",
+      "오늘의 숲 마을은 모두에게 편안한 쉼터가 되었어."
     ],
     "reading": [
-      "책장을 넘기니 숲속 그림이 펼쳐졌어.",
-      "그림 속에서 작은 친구가 손을 흔들었어."
+      "책장 사이에 분홍 꽃잎 하나가 끼어 있었어.",
+      "책을 펼치니 마을의 숨은 장소를 그린 지도가 나왔지.",
+      "토끼와 부엉이가 지도를 보며 다음 이야기를 상상했어.",
+      "책을 덮고 다시 숲길을 산책하러 가자."
     ],
     "mailbox": [
-      "우체통에서 편지가 기다리고 있어.",
-      "오늘의 편지에는 '함께 놀자!'라고 적혀 있었어."
+      "우체통에 작은 봉투가 도착했어.",
+      "봉투에는 ‘오늘은 친구와 따뜻한 인사를 나누는 날!’이라고 적혀 있었지.",
+      "친구에게 전할 말을 한 줄 적어 보는 건 어때?",
+      "편지는 이 마을에서만 볼 수 있어. 소중한 마음을 나눠 보자."
     ],
     "bridge": [
-      "나무다리를 천천히 건너 보자.",
-      "다리 아래 물소리가 반갑게 인사해."
+      "나무다리 아래로 반짝이는 물이 흘러가.",
+      "개구리가 물 위에서 폴짝 뛰며 인사했어.",
+      "다리 위에서는 서로 지나갈 자리를 양보했지.",
+      "한 걸음씩 건너편의 꽃길로 가 보자."
     ],
     "pond": [
-      "동그란 물결이 번지며 꽃잎을 흔들어.",
-      "연못 친구들이 수면 위로 얼굴을 내밀었어."
+      "연못 위에 작은 물결이 퍼지고 있어.",
+      "꽃잎이 수련잎 곁으로 살며시 흘러갔지.",
+      "개구리가 나타나 물 위의 작은 음악을 들려주었어.",
+      "잠시 눈을 쉬고 물결을 바라봐도 좋아."
     ],
     "waterfall": [
-      "시원한 물줄기가 바위 사이를 흐르고 있어.",
-      "햇빛을 만나면 작은 무지개가 생길지도 몰라."
+      "시원한 물줄기가 바위 사이를 내려오고 있어.",
+      "햇살이 물방울에 닿자 작은 반짝임이 생겼지.",
+      "바람과 물소리가 마을의 조용한 음악이 되었어.",
+      "숲길을 걷던 친구들도 잠시 멈춰 그 소리를 들었어."
     ],
     "cherry-tree": [
-      "벚꽃잎 한 장이 바람을 따라 날아왔어.",
-      "꽃잎은 마을 친구들에게 봄 인사를 전했어."
+      "벚꽃잎 한 장이 나뭇가지에서 내려왔어.",
+      "바람을 따라 우체통과 나무다리 사이를 여행했지.",
+      "마침내 고슴도치의 꽃 옆에 살며시 내려앉았어.",
+      "봄이 왔다는 작은 인사를 마을 전체에 전했어."
     ]
   },
   "audio": {
@@ -735,10 +783,42 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffb41e;outline-offse
     "doubleTapScreenDistancePx": 26,
     "otherCharacterTap": "switch-carry",
     "drop": "safe-zone-unoccupied",
-    "collision": "walker-yields-or-detours",
+    "collision": "swept-foot-anchor clearance, valid-zone detour, wait fallback",
     "stationary": "fixed-ground-anchor",
     "depth": "feet-y-sorted",
-    "profile": "bottom-left-on-double-tap"
+    "profile": "bottom-left-on-double-tap",
+    "doubleTapPriority": "different actor target before same-point double tap",
+    "landing": "settle-before-motion; reserve pickup origin"
+  },
+  "activityProfiles": {
+    "owl": {
+      "name": "짧은 날갯짓",
+      "distance": 34,
+      "duration": 850,
+      "lift": 24,
+      "hops": 1
+    },
+    "bear": {
+      "name": "느긋한 걸음",
+      "distance": 26,
+      "duration": 1050,
+      "lift": 4,
+      "hops": 3
+    },
+    "frog": {
+      "name": "연못 폴짝",
+      "distance": 42,
+      "duration": 850,
+      "lift": 25,
+      "hops": 2
+    },
+    "hedgehog": {
+      "name": "종종걸음",
+      "distance": 30,
+      "duration": 800,
+      "lift": 7,
+      "hops": 4
+    }
   }
 }
 </script>
@@ -880,6 +960,7 @@ function showStory(obj){
  if(!lines.length){$('storyBox').hidden=true;return}
  $('storyBox').hidden=false;
  const index=storyProgress.get(obj.id)||0;
+ $('storyProgress').textContent='숲 마을 이야기 · '+(index%lines.length+1)+' / '+lines.length;
  $('storyText').textContent=lines[index%lines.length];
  $('storyNext').textContent=index%lines.length===lines.length-1?'이야기 처음부터':'이야기 계속';
 }
@@ -908,13 +989,13 @@ for(const obj of scene.hotspots){
  btn.addEventListener('click',()=>openInfo(obj));objectButtons.set(obj.id,btn);$('hotspots').append(btn);
 }
 for(const actor of scene.characters){
- const btn=document.createElement('button');btn.type='button';btn.className='actor';btn.title=actor.label+' 프로필';btn.dataset.kind=actor.motion==='pond-idle'?'water':'land';
- btn.setAttribute('aria-label',actor.label+' 클릭하여 들어 올리기');btn.style.setProperty('--size',actor.size+'px');btn.style.setProperty('--hit-width',(actor.size*.93)+'px');btn.style.left=(actor.patrol?(actor.patrol.startX+actor.patrol.endX)/2:actor.x)+'px';btn.style.top=(actor.patrol?actor.patrol.y:actor.y)+'px';
+ const btn=document.createElement('button');btn.type='button';btn.className='actor';btn.title=actor.label+' — 한 번 눌러 들기, 두 번 눌러 프로필';btn.dataset.kind=actor.motion==='pond-idle'?'water':'land';
+ btn.setAttribute('aria-label',actor.label+' 클릭하여 들어 올리기, I 키로 프로필');btn.style.setProperty('--size',actor.size+'px');btn.style.setProperty('--hit-width',(actor.size*.93)+'px');btn.style.left=(actor.patrol?(actor.patrol.startX+actor.patrol.endX)/2:actor.x)+'px';btn.style.top=(actor.patrol?actor.patrol.y:actor.y)+'px';
  btn.style.setProperty('--foot',(actor.footFraction*100)+'%');btn.style.setProperty('--foot-neg',(-actor.footFraction*100)+'%');
  const img=document.createElement('img');img.src=frameSrc(actor.id,actor.idleFrames?actor.idleFrames[0]:1);img.alt='';img.decoding='async';img.draggable=false;
  btn.append(img);
  const homeX=actor.patrol?(actor.patrol.startX+actor.patrol.endX)/2:actor.x,homeY=actor.patrol?actor.patrol.y:actor.y;
- const info={btn,img,actor,frame:actor.idleFrames?actor.idleFrames[0]:1,direction:'',walkReady:false,x:homeX,y:homeY,homeX,homeY,patrolShiftX:actor.patrol?homeX-(actor.patrol.startX+(actor.patrol.endX-actor.patrol.startX)*Math.min(1,actor.patrol.offsetMs/actor.patrol.walkMs)):0,moveClock:actor.patrol?.offsetMs||0,avoidance:null,pickupPosition:null,landingZone:null,wasRelocated:false};
+ const info={btn,img,actor,frame:actor.idleFrames?actor.idleFrames[0]:1,direction:'',walkReady:false,x:homeX,y:homeY,homeX,homeY,patrolShiftX:actor.patrol?homeX-track(actor,0).x:0,moveClock:0,avoidance:null,pickupPosition:null,landingZone:null,wasRelocated:false,landingUntil:0,activity:null,arrivalPending:false};
  btn.addEventListener('click',e=>{e.stopPropagation();if(!carried)pickUpActor(info,e)});
  // Keyboard activation may also open details without relying on multi-tap timing.
  btn.addEventListener('keydown',e=>{if(e.key==='i'||e.key==='I'){e.preventDefault();cancelCarry();openInfo(info.actor)}});
@@ -964,7 +1045,9 @@ function pickUpActor(info,event){
  if(carried)return;
  // Single click is for movement, not the detailed profile.
  if(!panel.hidden)closeInfo();
- carried=info;carryPointer={x:info.x,y:info.y};info.pickupPosition={x:info.x,y:info.y};info.avoidance=null;
+ if(!info.actor.patrol){info.homeX=info.x;info.homeY=info.y;info.activity=null;info.arrivalPending=false}
+ info.landingUntil=0;
+ carried=info;carryPointer={x:info.x,y:info.y};info.pickupPosition={x:info.x,y:info.y};
  const at=Number.isFinite(event?.timeStamp)?event.timeStamp:Date.now();
  carryTap=Number.isFinite(event?.clientX)&&Number.isFinite(event?.clientY)
   ?{id:info.actor.id,x:event.clientX,y:event.clientY,at}:null;
@@ -972,8 +1055,8 @@ function pickUpActor(info,event){
  info.btn.classList.add('is-carried');
  stage.classList.add('is-placing');
  $('dropOverlay').hidden=false;$('dropOverlay').dataset.active=info.actor.motion==='pond-idle'?'water':'land';
- $('placementHint').hidden=false;
- $('placementHint').textContent=info.actor.label+'를 들고 있어! 숲길의 새 위치를 클릭하면 착지해. (Esc: 취소)';
+ $('placementBar').hidden=false;$('placementHint').hidden=false;
+ $('placementHint').textContent=info.actor.label+'를 들고 있어! '+(info.actor.motion==='pond-idle'?'연못':'빈 숲길')+'에 놓아 줘.';
  playSfx('pickup',info.actor.id);
 }
 function cancelCarry(){
@@ -981,7 +1064,8 @@ function cancelCarry(){
  const info=carried;carried=null;carryPointer=null;carryTap=null;
  info.btn.classList.remove('is-carried');
  info.x=info.pickupPosition?.x??info.homeX;info.y=info.pickupPosition?.y??info.homeY;info.pickupPosition=null;
- stage.classList.remove('is-placing');$('placementHint').hidden=true;$('dropOverlay').hidden=true;
+ info.btn.style.left=info.x+'px';info.btn.style.top=info.y+'px';
+ stage.classList.remove('is-placing');$('placementHint').hidden=true;$('placementBar').hidden=true;$('dropOverlay').hidden=true;
 }
 function landActor(point){
  if(!carried)return false;
@@ -991,18 +1075,20 @@ function landActor(point){
   playSfx('invalid',info.actor.id);
   return false;
  }
- if(Array.from(characterNodes.values()).some(other=>other!==info&&other!==carried&&positionsOverlap(info,point,other,{x:other.x,y:other.y},1.12))){
+ if(Array.from(characterNodes.values()).some(other=>other!==info&&positionsOverlap(info,point,other,groundAnchor(other),1.12))){
   $('placementHint').textContent='친구가 서 있어! 다른 자리를 선택해 줘.';
   playSfx('invalid',info.actor.id);return false;
  }
  carried=null;carryPointer=null;carryTap=null;
  info.homeX=point.x;info.homeY=point.y;info.x=point.x;info.y=point.y;info.wasRelocated=true;
  info.landingZone=(info.actor.motion==='pond-idle'?scene.movementZones.water:scene.movementZones.land).find(z=>point.x>=z.x&&point.x<=z.x+z.w&&point.y>=z.y&&point.y<=z.y+z.h)||null;
- info.avoidance=null;info.pickupPosition=null;
+ info.avoidance=null;info.pickupPosition=null;info.activity=null;
+ info.landingUntil=paused?clock:clock+620;info.arrivalPending=!info.actor.patrol;
  if(info.actor.patrol)info.patrolShiftX=point.x-track(info.actor,info.moveClock).x;
- info.btn.classList.remove('is-carried');info.btn.classList.add('is-landing');
+ info.btn.classList.remove('is-carried','is-landing');void info.btn.offsetWidth;
+ if(!paused)info.btn.classList.add('is-landing');
  info.btn.style.left=point.x+'px';info.btn.style.top=point.y+'px';
- stage.classList.remove('is-placing');$('placementHint').hidden=true;$('dropOverlay').hidden=true;
+ stage.classList.remove('is-placing');$('placementHint').hidden=true;$('placementBar').hidden=true;$('dropOverlay').hidden=true;
  if(selected===info.actor.id){
   $('panelGreeting').textContent=info.actor.label+'가 새로운 장소에 도착했어!';
   const bubble=$('speechBubble');bubble.textContent='새 장소에 도착했어!';bubble.hidden=false;bubble.style.left=clamp(point.x,130,1640)+'px';bubble.style.top=(point.y-info.actor.size*.88-16)+'px';
@@ -1018,22 +1104,22 @@ stage.addEventListener('pointermove',event=>{
 stage.addEventListener('click',event=>{
  if(!carried)return;
  event.preventDefault();event.stopPropagation();
- // The carried sprite has pointer-events:none; the second click lands on the stage.
- // Recognize a second tap at the first tap point before evaluating landing.
+ // Another visible character takes precedence over proximity on a small screen.
+ const targetActor=Array.from(characterNodes.values()).find(info=>
+  info!==carried&&(event.target===info.btn||(typeof info.btn.contains==='function'&&info.btn.contains(event.target))));
+ if(targetActor){cancelCarry();pickUpActor(targetActor,event);return}
  const at=Number.isFinite(event.timeStamp)?event.timeStamp:Date.now();
  const sameTap=carryTap&&carried.actor.id===carryTap.id&&
   Number.isFinite(event.clientX)&&Number.isFinite(event.clientY)&&
   at>=carryTap.at&&at-carryTap.at<=DOUBLE_TAP_MS&&
   Math.hypot(event.clientX-carryTap.x,event.clientY-carryTap.y)<=DOUBLE_TAP_DISTANCE;
- if(sameTap){
-  const actor=carried.actor;cancelCarry();openInfo(actor);return;
- }
- // A different animal can be picked without first cancelling the current carry.
- const targetActor=Array.from(characterNodes.values()).find(info=>
-  info!==carried&&(event.target===info.btn||(typeof info.btn.contains==='function'&&info.btn.contains(event.target))));
- if(targetActor){cancelCarry();pickUpActor(targetActor,event);return}
+ if(sameTap){const actor=carried.actor;cancelCarry();openInfo(actor);return}
  landActor(scenePoint(event));
 },true);
+$('cancelCarryButton').addEventListener('click',cancelCarry);
+$('carryProfileButton').addEventListener('click',()=>{if(carried){const a=carried.actor;cancelCarry();openInfo(a)}});
+$('toggleSettings').addEventListener('click',()=>{const open=$('settings').hidden;$('settings').hidden=!open;$('toggleSettings').setAttribute('aria-expanded',String(open))});
+$('viewMode').addEventListener('click',()=>{const on=document.body.classList.toggle('view-only');$('viewMode').textContent=on?'일반 모드':'감상 모드';$('viewMode').setAttribute('aria-pressed',String(on));$('settings').hidden=true;$('toggleSettings').setAttribute('aria-expanded','false');layout()});
 
 const clearEffects=()=>{
  for(const btn of objectButtons.values())btn.classList.remove('is-active');
@@ -1113,7 +1199,7 @@ $('noteForm').addEventListener('submit',e=>{
 });
 $('close').addEventListener('click',closeInfo);
 $('reset').addEventListener('click',closeInfo);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&carried){cancelCarry();return}if(e.key==='Escape'&&!panel.hidden)closeInfo()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&carried){cancelCarry();return}if(e.key==='Escape'&&!panel.hidden){closeInfo();return}if(e.key==='Escape'&&!$('settings').hidden){$('settings').hidden=true;$('toggleSettings').setAttribute('aria-expanded','false')}});
 for(const [id,mode] of [['hostPip','pip'],['hostFullscreen','fullscreen']]){
  const button=$(id),host=window.openai;
  if(host&&typeof host.requestDisplayMode==='function'){
@@ -1140,31 +1226,33 @@ function updateMotionLabel(){
  if(!$('pondRipple').hidden)$('pondRipple').classList.toggle('play',!isStopped);
  stage.classList.toggle('motion-paused',isStopped);
  const ready=Array.from(characterNodes.values()).filter(info=>info.walkReady).length;
- const state=isStopped?(motionQuery.matches&&!userChoseMotion?'시스템 설정에 따라 정지됨 — 움직임 재생 버튼으로 켤 수 있어':'움직임 정지 중 — 재생 버튼을 눌러줘'):'움직임 재생 중 — 산책하는 동물 4종 · 환경 효과 실행';
+ const state=isStopped?(motionQuery.matches&&!userChoseMotion?'시스템 움직임 감소 설정 · 재생 버튼으로 켤 수 있어':'움직임 정지 중'):'움직임 재생 중 · 4종 보행, 4종 착지 활동 및 제자리 반응';
  $('motionStatus').textContent=state+' · 전용 보행 프레임 '+ready+'/4종';
 }
 $('toggleMotion').addEventListener('click',()=>{userChoseMotion=true;paused=!paused;updateMotionLabel()});
 if(motionQuery.addEventListener)motionQuery.addEventListener('change',()=>{if(!userChoseMotion)paused=motionQuery.matches;updateMotionLabel()});
 updateMotionLabel();
 function layout(){
- const width=viewport.clientWidth||viewport.getBoundingClientRect().width;
+ const width=Math.max(1,viewport.clientWidth||viewport.getBoundingClientRect().width);
  const top=viewport.getBoundingClientRect().top;
- const visibleHeight=Math.max(220,(window.innerHeight||800)-Math.max(0,top)-30);
- const nativeFit=Math.min(1,width/scene.designSize.width,visibleHeight/scene.designSize.height);
- // Fit both dimensions by default; enlarged mode deliberately enables scrolling.
- const scale=fitAll?nativeFit:Math.max(nativeFit,scene.minSceneScale);
+ const height=window.visualViewport?.height||window.innerHeight||800;
+ const visibleHeight=Math.max(64,height-Math.max(0,top)-18);
+ const nativeFit=Math.min(1,width/scene.designSize.width,Math.max(1,visibleHeight-8)/scene.designSize.height);
+ const scale=fitAll?nativeFit:Math.max(nativeFit,.66);
  const sw=scene.designSize.width*scale,sh=scene.designSize.height*scale;
  viewport.style.overflow=fitAll?'hidden':'auto';
  $('toggleFit').textContent=fitAll?'확대 보기':'전체 보기';
  $('toggleFit').setAttribute('aria-pressed',String(!fitAll));
- if(Math.abs(scale-lastScale)<.0001&&$('frameSizer').style.width===sw+'px')return;
+ $('responsiveNote').hidden=scale>=.44||!fitAll;
  lastScale=scale;
  $('frameSizer').style.width=sw+'px';$('frameSizer').style.height=sh+'px';
- viewport.style.height=Math.min(sh,visibleHeight)+'px';stage.style.transform='scale('+scale+')';
+ viewport.style.height=Math.min(sh+8,visibleHeight)+'px';stage.style.transform='scale('+scale+')';
+ for(const info of characterNodes.values())info.btn.style.setProperty('--hit-width',Math.max(info.actor.size*.93,Math.min(info.actor.size*1.12,44/Math.max(scale,.01)))+'px');
 }
-$('toggleFit').addEventListener('click',()=>{fitAll=!fitAll;lastScale=0;layout()});
+$('toggleFit').addEventListener('click',()=>{fitAll=!fitAll;layout()});
 new ResizeObserver(layout).observe(viewport);
 window.addEventListener('resize',layout);
+if(window.visualViewport)window.visualViewport.addEventListener('resize',layout);
 layout();
 function track(actor,t){
  const p=actor.patrol,walk=p.walkMs,pause=p.pauseMs;
@@ -1184,16 +1272,29 @@ function positionsOverlap(a,p,b,q,multiplier=1){
  const r=collisionRadius(a.actor,b.actor);
  return Math.abs(p.x-q.x)<r.x*multiplier && Math.abs(p.y-q.y)<r.y*multiplier;
 }
+function groundAnchor(info){
+ // A carried animal reserves its pickup point so cancellation cannot collide with a walker.
+ return info===carried&&info.pickupPosition?info.pickupPosition:{x:info.x,y:info.y};
+}
+function blockingActor(info,p){
+ return Array.from(characterNodes.values()).find(b=>b!==info&&positionsOverlap(info,p,b,groundAnchor(b),1.02));
+}
+function safeSegment(info,from,to){
+ const count=Math.max(1,Math.ceil(Math.hypot(to.x-from.x,to.y-from.y)/5));
+ for(let i=1;i<=count;i++){
+  const p={x:from.x+(to.x-from.x)*i/count,y:from.y+(to.y-from.y)*i/count};
+  if(!inAllowedZone(info.actor,p)||blockingActor(info,p))return false;
+ }
+ return true;
+}
 function avoidLane(info,other,desiredX){
  const gap=collisionRadius(info.actor,other.actor);
  const spread=Math.max(60,gap.y+24);
  const preference=scene.characters.findIndex(a=>a.id===info.actor.id)%2===0?-1:1;
+ const from={x:info.x,y:info.y};
  for(const direction of [preference,-preference]){
-  const y=info.homeY+direction*spread;
-  const validAt=[info.x,desiredX,(info.x+desiredX)/2].every(x=>inAllowedZone(info.actor,{x,y}));
-  const unoccupied=Array.from(characterNodes.values()).every(a=>a===info||a===carried||
-    !positionsOverlap(info,{x:desiredX,y},a,{x:a.x,y:a.y},1.12));
-  if(validAt&&unoccupied)return y;
+  const y=info.homeY+direction*spread,corner={x:info.x,y},end={x:desiredX,y};
+  if(safeSegment(info,from,corner)&&safeSegment(info,corner,end))return y;
  }
  return null;
 }
@@ -1207,42 +1308,53 @@ function showEncounter(info,other){
  bubble.style.left=clamp(info.x,120,1650)+'px';
  bubble.style.top=(info.y-info.actor.size*.95-18)+'px';
  bubble.hidden=false;encounterUntil=clock+1700;
- playSfx('greeting',info.actor.id);
+ // Autonomous events never attempt to unlock audio without a user gesture.
+ if(audioContext&&audioContext.state==='running')playSfx('greeting',info.actor.id);
 }
 function resolveWalk(info,desired,delta,canMove){
- if(!canMove)return {x:info.x,y:info.y,advanced:false,walking:false};
+ const from={x:info.x,y:info.y};
+ if(!canMove)return {...from,advanced:false,walking:false};
  const all=Array.from(characterNodes.values());
- // Revert to the natural lane only after there is room to merge.
  if(info.avoidance){
-  const target=characterNodes.get(info.avoidance.id);
-  if(!target||target===carried||Math.abs(desired.x-target.x)>collisionRadius(info.actor,target.actor).x+48)
-   info.avoidance=null;
+  const target=characterNodes.get(info.avoidance.id),q=target?groundAnchor(target):null;
+  if(!target||Math.abs(desired.x-q.x)>collisionRadius(info.actor,target.actor).x+48)info.avoidance=null;
  }
  const other=all.find(b=>{
-  if(b===info||b===carried)return false;
-  const limit=collisionRadius(info.actor,b.actor);
-  const approaching=Math.abs(desired.x-b.x)<Math.abs(info.x-b.x)+.01||
-    positionsOverlap(info,{x:info.x,y:info.y},b,{x:b.x,y:b.y});
-  return approaching&&Math.abs(desired.x-b.x)<limit.x+38&&Math.abs(info.y-b.y)<limit.y+22;
+  if(b===info)return false;
+  const q=groundAnchor(b),r=collisionRadius(info.actor,b.actor);
+  const approaching=Math.abs(desired.x-q.x)<Math.abs(info.x-q.x)-.001;
+  return approaching&&Math.abs(desired.x-q.x)<r.x+38&&Math.abs(info.y-q.y)<r.y+22;
  });
  if(other&&!info.avoidance){
   const y=avoidLane(info,other,desired.x);
   if(y!==null)info.avoidance={id:other.actor.id,y};
  }
  const targetY=info.avoidance?info.avoidance.y:info.homeY;
- const stepY=clamp(targetY-info.y,-delta*.34,delta*.34);
- const y=info.y+stepY;
- const blocked=all.find(b=>b!==info&&b!==carried&&
-   positionsOverlap(info,{x:desired.x,y},b,{x:b.x,y:b.y},1.03));
+ const side={x:info.x,y:info.y+clamp(targetY-info.y,-delta*.23,delta*.23)};
+ const lateral=safeSegment(info,from,side)?side:from;
+ const candidate={x:desired.x,y:lateral.y};
+ const blocked=blockingActor(info,candidate);
  if(other||blocked)showEncounter(info,other||blocked);
- // Stop horizontal movement while overtaking a neighbor at the same depth.
- // A valid detour first shifts vertically and then lets the walker proceed.
- const hold=(other&&Math.abs(y-other.y)<collisionRadius(info.actor,other.actor).y+5)||
-   Boolean(blocked);
- if(hold)return {x:info.x,y,advanced:false,walking:false};
- const safe=Array.from(characterNodes.values()).every(b=>b===info||b===carried||
-   !positionsOverlap(info,{x:desired.x,y},b,{x:b.x,y:b.y},1.03));
- return {x:safe?desired.x:info.x,y,advanced:safe,walking:safe&&desired.walking};
+ const q=other?groundAnchor(other):null;
+ const hold=other&&Math.abs(lateral.y-q.y)<collisionRadius(info.actor,other.actor).y+5;
+ const safe=!hold&&safeSegment(info,lateral,candidate);
+ if(!safe)return {...lateral,advanced:false,walking:Math.abs(lateral.y-from.y)>.05};
+ return {...candidate,advanced:true,walking:Math.hypot(candidate.x-from.x,candidate.y-from.y)>.05};
+}
+function startArrival(info){
+ info.arrivalPending=false;
+ const p=scene.activityProfiles?.[info.actor.id];if(!p)return;
+ const from={x:info.x,y:info.y};
+ for(const direction of [1,-1]){
+  const to={x:from.x+direction*p.distance,y:from.y};
+  if(safeSegment(info,from,to)){
+   info.activity={from,to,elapsed:0,duration:p.duration,lift:p.lift,hops:p.hops};return;
+  }
+ }
+ // No safe movement: stay at the chosen spot and continue idle gestures.
+}
+function finishArrival(info){
+ info.homeX=info.x;info.homeY=info.y;info.activity=null;
 }
 function render(t){
  if(lastTime===0)lastTime=t;
@@ -1262,6 +1374,12 @@ function render(t){
    continue;
   }
   let align=[0,0],bob=0;
+  if(info.landingUntil>clock){
+   info.btn.style.left=info.x+'px';info.btn.style.top=info.y+'px';info.btn.style.zIndex=String(100+Math.round(info.y));
+   continue;
+  }
+  if(info.btn.classList.contains('is-landing'))info.btn.classList.remove('is-landing');
+  if(info.arrivalPending&&canMove)startArrival(info);
   if(!a.patrol){
    // A standing animal stays at its placed spot. Idle animation does not move its feet.
    const frames=a.idleFrames||[1],stepTime=a.idleFrameMs||1600;
@@ -1269,7 +1387,15 @@ function render(t){
    if(info.frame!==next){info.frame=next;info.img.src=frameSrc(a.id,next)}
    const idx=frames.indexOf(next);
    align=(a.idleAlign||[])[idx]||[0,0];
-   info.x=info.homeX;info.y=info.homeY;
+   if(info.activity&&canMove){
+    const q=info.activity,elapsed=Math.min(q.duration,q.elapsed+delta),p=elapsed/q.duration;
+    const target={x:q.from.x+(q.to.x-q.from.x)*p,y:q.from.y+(q.to.y-q.from.y)*p};
+    if(safeSegment(info,{x:info.x,y:info.y},target)){
+     info.x=target.x;info.y=target.y;q.elapsed=elapsed;
+     bob=-Math.abs(Math.sin(p*Math.PI*q.hops))*q.lift;
+     if(elapsed>=q.duration)finishArrival(info);
+    }else finishArrival(info);
+   }else if(!info.activity){info.x=info.homeX;info.y=info.homeY}
    info.btn.style.setProperty('--sprite-dx','0px');
   }else{
    const nextClock=info.moveClock+(canMove?delta:0);
@@ -1281,7 +1407,8 @@ function render(t){
    if(move.advanced)info.moveClock=nextClock;
    const isWalk=info.walkReady;
    const dir=step.left?'left':'right';
-   const nextFrame=isWalk?(move.walking?1+(Math.floor(info.moveClock/160)%6):1):
+   const gaitClock=move.walking?clock:info.moveClock;
+   const nextFrame=isWalk?(move.walking?1+(Math.floor(gaitClock/160)%6):1):
     (move.walking?[1,2,3,6][Math.floor(info.moveClock/900)%4]:1);
    if(info.frame!==nextFrame||info.direction!==dir){
     info.img.src=isWalk?walkFrameSrc(a.id,dir,nextFrame):frameSrc(a.id,nextFrame);
