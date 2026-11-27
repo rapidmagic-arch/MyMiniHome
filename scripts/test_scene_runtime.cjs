@@ -40,7 +40,7 @@ class Media{
 const win={innerHeight:800,Audio:Media,AudioContext:AudioCtx,matchMedia:()=>({matches:false,addEventListener(){}}),events:{},addEventListener(t,f){this.events[t]=f},setTimeout(){}};
 let raf,n=0;const intervals=new Map();
 // Expose local state only in the test copy. The delivered scene remains uninstrumented.
-const instrumented=source.replace('requestAnimationFrame(render);\n})();','window.__qa={scene,characterNodes,track,resolveWalk,positionsOverlap,groundAnchor,get clock(){return clock}};\nrequestAnimationFrame(render);\n})();');
+const instrumented=source.replace(/requestAnimationFrame\\(render\\);\\r?\\n\\}\\)\\(\\);/,'window.__qa={scene,characterNodes,track,resolveWalk,positionsOverlap,groundAnchor,get clock(){return clock}};\\nrequestAnimationFrame(render);\\n})();');
 assert.notEqual(instrumented,source,'test instrumentation anchor missing');
 const runner=new Function('document','window','Image','ResizeObserver','requestAnimationFrame','fetch','URL','setInterval','clearInterval',instrumented);
 runner(doc,win,Img,class{observe(){}},f=>raf=f,async url=>({ok:true,json:async()=>url.includes('playlist.json')?filePlaylist:{status:'REVIEW_CANDIDATE_NOT_APPROVED',count:{totalPngs:48}}}),URL,f=>{intervals.set(++n,f);return n},id=>intervals.delete(id));
